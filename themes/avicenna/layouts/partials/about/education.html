@@ -1,0 +1,71 @@
+{{ $content_type := .Params.content_type }}
+
+{{ $aboutPage := .Site.GetPage $content_type }}
+
+
+<!--
+{{ if $aboutPage.Params.interests }}
+<div class="interests col ">
+    <h4 class="main_color">Interests</h4>
+    <ul>
+        {{range $aboutPage.Params.interests }}
+        <li>
+            {{.}}
+        </li>
+        {{end}}
+    </ul>
+</div>
+{{end}}
+-->
+{{if $aboutPage.Params.education}}
+<div class="education col">
+    <h2 class="main_bold_color">Education</h2>
+    {{range $education := $aboutPage.Params.education}}
+    <div class="row">
+        <div class="course col">
+            <div class="institution_dates row">
+                <div class="institution col font_weight" id="institution_title">
+                    {{$education.course.institution}}
+                </div>
+                <div class=" col-md-auto  justify-content-end">
+                    {{ if $education.course.loc }}
+                    {{$education.course.loc }}
+                    {{end}}
+                </div>
+            </div>
+            <div class="degree_major row">
+                <div class=" col">
+                   {{$education.course.degree}} 
+                </div>
+                 <div class="text-muted dates col-md-auto  justify-content-end">
+                    <i>{{$education.course.start_date}}
+                    {{ if $education.course.end_date }}
+                    - {{$education.course.end_date}}
+                    {{else}}
+                    - Present
+                    {{end}}
+                    </i>
+                </div>
+            </div>
+
+            {{if $education.course.other_info}}
+            <div class="other_info row text-muted">
+                <div class="col">
+                    {{$education.course.other_info}}
+                </div>
+            </div>
+            {{end}}
+
+            {{if $education.course.other_info2}}
+            <div class="other_info row text-muted">
+                <div class="col">
+                    {{$education.course.other_info2}}
+                </div>
+            </div>
+            {{end}}
+        </div>
+    </div>
+    {{end}}
+</div>
+{{end}}
+

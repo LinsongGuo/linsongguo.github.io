@@ -1,0 +1,95 @@
+{{ $content_type := .Params.content_type }}
+
+{{ $aboutPage := .Site.GetPage $content_type }}
+
+
+<!--
+{{ if $aboutPage.Params.interests }}
+<div class="interests col ">
+    <h4 class="main_color">Interests</h4>
+    <ul>
+        {{range $aboutPage.Params.interests }}
+        <li>
+            {{.}}
+        </li>
+        {{end}}
+    </ul>
+</div>
+{{end}}
+-->
+{{if $aboutPage.Params.experience}}
+<div class="experience col">
+    <h2 class="main_bold_color">Research Experience</h2>
+    {{range $experience := $aboutPage.Params.experience}}
+    <div class="row">
+        <div class="course col">
+            <div class="institution_dates row">
+                <div class="institution col font_weight" id="institution_title">
+                    {{$experience.course.institution}}
+                </div>  
+                <div class=" col-md-auto  justify-content-end">
+                    {{ if $experience.course.loc }}
+                    {{$experience.course.loc }}
+                    {{end}}
+                </div>
+            </div>
+            <div class="degree_major row">
+                <div class=" col">
+                   {{$experience.course.degree}}
+                </div>
+                 <div class="text-muted dates col-md-auto  justify-content-end">
+                    <i>{{$experience.course.start_date}}
+                    {{ if $experience.course.end_date }}
+                    - {{$experience.course.end_date}}
+                    {{else}}
+                    - Present
+                    {{end}}
+                    </i>
+                </div>
+            </div>
+
+            <!--
+            {{if $experience.course.other_info}}
+            <div class="other_info row text-muted">
+                <div class="col">
+                    {{$experience.course.other_info}}
+                </div>
+            </div>
+            {{end}}
+            -->
+            <!--
+            <h3 class="experience_project">Projects:</h3>
+            --> 
+
+            {{range $projects := $experience.course.projects}}
+            {{if $projects.project.name}}
+            <div class=" row margin:5px">
+                <div class="col project_color">
+                    {{$projects.project.name}}
+                    <i> {{if $projects.project.beizhu}} ({{$projects.project.beizhu}}) {{end}}</i>
+                </div>
+            </div>
+             <div class="row">
+                <!-- <ul> -->
+                <ul >
+                    {{range $infos := $projects.project.infos}}
+                    <!-- <li> -->
+                    <li>
+                        <div class="project_info">
+                           <font size="3px">
+                           {{$infos.info}}
+                           </font>
+                        </div>
+                    </li>
+                     <!-- </li> -->
+                    {{end}}
+                </ul>
+                <!-- </ul> -->
+            </div>
+             {{end}}
+            {{end}}
+        </div>
+    </div>
+    {{end}}
+</div>
+{{end}}

@@ -1,0 +1,29 @@
+{{ $content_type := .Params.content_type }}
+
+{{ $aboutPage := .Site.GetPage $content_type }}
+
+{{if $aboutPage.Params.project}}
+<div class="experience col">
+    <h2 class="main_bold_color">Projects</h2>
+    {{range $project := $aboutPage.Params.project}}
+    <div class="row">
+        <div class="col font_weight">
+            {{$project.course.name}}
+            <a class="main_color text-decoration-none rounded " href="{{$project.course.github}}" target="_blank">
+            [github]
+            </a>
+        </div>  
+    </div>
+
+    <div class="project_info2">
+        <font size="3em">
+            {{$project.course.info}}
+        </font>
+    </div>
+
+    <p></p>
+
+    {{end}}
+</div>
+{{end}}
+

@@ -63,8 +63,16 @@ h2 code {
 }
 
 .project_info {
-/*font-family: "Times New Roman", Times, serif;*/
-font-family: Comic Sans MS;
+font-family: "Times New Roman", Times, serif;
+/* font-family: Comic Sans MS;*/
+/*font-family: Georgia, Times, "Times New Roman", serif;*/
+/* font-family: "Consolas", serif;*/
+letter-spacing: 0px;
+}
+
+.project_info2 {
+    /*font-family: "Times New Roman", Times, serif;*/
+    font-family: "Times New Roman", Times, serif;
 }
 
 .main_bold_color  {
@@ -73,7 +81,16 @@ font-family: Comic Sans MS;
 }
 
 .font_weight {
-    font-weight:bold;
+    font-weight: bold;
+    font-size: 20px;
+}
+
+.large_font {
+
+}
+
+.font_weight2 {
+    font-weight: bold;
 }
 
 .row2 {

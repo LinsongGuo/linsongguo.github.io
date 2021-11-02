@@ -1,0 +1,87 @@
+{{ $content_type := .Params.content_type }}
+
+{{ $aboutPage := .Site.GetPage $content_type }}
+
+{{if $aboutPage.Params.honor}}
+<div class="honor col">
+    <h2 class="main_bold_color">Honors And Awards</h2>
+    <div class="row">
+        <div class="col">
+           <b>1st Runner-Up</b>, ACM-ICPC Asia Regional Contest, Nakhon Pathom Site
+        </div>  
+        <div class="text-muted dates col-md-auto  justify-content-end">
+            <i> 
+               2018
+            </i>
+        </div>
+    </div>
+
+     <div class="row">
+        <div class="col">
+            <b>Gold Medal</b>, ACM-ICPC Asia Regional Contest, Qingdao Site
+        </div>  
+        <div class="text-muted dates col-md-auto  justify-content-end">
+            <i> 
+               2018
+            </i>
+        </div>
+    </div>
+
+     <div class="row">
+        <div class="col">
+           <b>Gold Medal</b>, China Collegiate Programming Contest, Guilin Site
+        </div>  
+        <div class="text-muted dates col-md-auto  justify-content-end">
+            <i> 
+               2018
+            </i>
+        </div>
+    </div>
+
+     <div class="row">
+        <div class="col">
+           <b>Silver Medal</b>, China Collegiate Programming Contest, Final
+        </div>  
+        <div class="text-muted dates col-md-auto  justify-content-end">
+            <i> 
+               2018
+            </i>
+        </div>
+    </div>
+
+     <div class="row">
+        <div class="col">
+            <b>Gold Medal</b>, ACM-ICPC invitational Contest, Xi’an Site
+        </div>  
+        <div class="text-muted dates col-md-auto  justify-content-end">
+            <i> 
+               2018
+            </i>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col">
+            <b>Zhiyuan Honorary Scholarship</b>, Award for top 5% students
+        </div>  
+        <div class="text-muted dates col-md-auto  justify-content-end">
+            <i> 
+               2018~2020
+            </i>
+        </div>
+    </div>
+
+     <div class="row">
+        <div class="col">
+            <b>Excellence Scholarship for Undergraduates</b>
+        </div>  
+        <div class="text-muted dates col-md-auto  justify-content-end">
+            <i> 
+               2019~2020
+            </i>
+        </div>
+    </div>
+    
+    <p> </p>
+</div>
+{{end}}

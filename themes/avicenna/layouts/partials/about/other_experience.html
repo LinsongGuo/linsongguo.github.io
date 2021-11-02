@@ -1,0 +1,45 @@
+{{ $content_type := .Params.content_type }}
+
+{{ $aboutPage := .Site.GetPage $content_type }}
+
+
+{{if $aboutPage.Params.other_experience}}
+<div class="experience col">
+    <h2 class="main_bold_color">Other Experience</h2>
+    {{range $experience := $aboutPage.Params.other_experience}}
+    <div class="row">
+        <div class="col font_weight" id="institution_title">
+            {{$experience.course.institution}}
+        </div>  
+        <div class=" col-md-auto  justify-content-end">
+            {{ if $experience.course.loc }}
+            {{$experience.course.loc }}
+            {{end}}
+        </div>
+    </div>
+
+    <div class="degree_major row">
+        <div class="col large_font">
+            {{$experience.course.degree | markdownify}}
+        </div>
+            <div class="text-muted dates col-md-auto  justify-content-end">
+            <i>{{$experience.course.start_date}}
+            {{ if $experience.course.end_date }}
+            - {{$experience.course.end_date}}
+            {{else}}
+            - Present
+            {{end}}
+            </i>
+        </div>
+    </div>
+
+    <div class="project_info2">
+        <font size="3em">
+            {{$experience.course.info | markdownify}}
+        </font>
+    </div>
+     <p></p>
+   
+    {{end}}
+</div>
+{{end}}

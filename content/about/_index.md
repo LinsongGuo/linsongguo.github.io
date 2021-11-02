@@ -39,7 +39,7 @@ experience:
                 name: Alleviating Cold Startup in Serverless Computing By Safe Inter-Function Container Sharing
                 infos:
                     - info: Proposed **an effective inter-function container sharing policy based on startup frequency**, which helped our system to alleviate 87.9% of cold startup.
-                    - info: Implemented most of the system, designed and ran experiments, especially **a large-scale evaluationin cloud environment**.
+                    - info: Implemented most of the system, designed and ran experiments, especially **a large-scale evaluation in cloud environment**.
             - project:
                 name: Enable Efficient Workflow Execution for Function-as-a-Service
                 infos:

@@ -69,7 +69,7 @@ project:
     - course:
         name: Java-and-C-like Language Compiler (∼16K lines in Java)
         github: https://github.com/LinsongGuo/Mxstar-compiler
-        info: Given a piece of code, the compiler could convert it into an AST, then LLVM IR, and finally RISC-Vassembly. Due to my interest in exploring the compiler back-end, I added some optimizations to it, including mem2reg, inlining, CSE(Common SubExpression Elimination), LICM(Loop Invariant Code Motion), SCCP(Sparse Conditional Constant Propagation), and so on.
+        info: Given a piece of code, the compiler could convert it into an AST, then LLVM IR, and finally RISC-V assembly. Due to my interest in exploring the compiler back-end, I added some optimizations to it, including mem2reg, inlining, CSE(Common SubExpression Elimination), LICM(Loop Invariant Code Motion), SCCP(Sparse Conditional Constant Propagation), and so on.
     - course:
         name: Replicated KV Store Based on Raft Consensus Protocol (∼1.5K lines in C++)
         github: https://github.com/LinsongGuo/Raft
@@ -78,6 +78,10 @@ project:
         name: RISC-V CPU with 5-Stage Pipeline (∼3.7K lines in Verilog)
         github: https://github.com/LinsongGuo/risc-v-cpu
         info: To explore more about computer architecture, I add some components like d-cache, i-cache, and branchpredictor combining BTB and BHT. The CPU could run successfully on an FPGA board.
+    - course:
+        name: Playing Atari Games
+        github: https://github.com/LinsongGuo/Atari-Games
+        info: To explore reinforcement learning, I trained several DQN models, including DoubleDQN, DuelingDQN, RainbowDQN, and so on, to play some Atari games.
 
 honor:
     - course:

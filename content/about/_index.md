@@ -49,7 +49,7 @@ experience:
                     - info: Proposed **an effective inter-function container sharing policy based on startup frequency**, which helped our system to alleviate 87.9% of cold startup.
                     - info: Implemented most of the system, designed and ran experiments, especially **a large-scale evaluation in cloud environment**.
             - project:
-                name: Eﬀicient Workflows Scheduling in Serverless Computing
+                name: Eﬀicient Application Workflows Scheduling in Serverless Computing
                 infos:
                    - info: Co-proposed **an efficient workflow scheduling mechanism**, which mitigates data transmission overhead by 50.1%.
                    - info: Designed **an adaptive storage library** which automatically chooses the appropriate storage between local memory and remote database for user workflows.

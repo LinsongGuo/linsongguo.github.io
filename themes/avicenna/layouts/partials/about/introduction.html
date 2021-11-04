@@ -2,13 +2,10 @@
 
 {{ $aboutPage := .Site.GetPage $content_type }}
 
-<div class="row w-100 justify-content-center">
-    <img class="rounded-circle  " src="images/profile.png" alt="profile_picture" id="profile_picture" />
-</div>
-
+<div class="left_div">
 
 {{ if $aboutPage.Params.full_name }}
-<div class=" row w-100 justify-content-center main_color" id="full_name">
+<div class="row w-100 justify-content-center main_color" id="full_name">
     {{ $aboutPage.Params.full_name }}
 </div>
 {{end}}
@@ -25,73 +22,6 @@
         <div class="row w-100 justify-content-center text-muted" id="email">
             {{$value.affiliation.email}}
         </div>
-
-
-        {{ end }}
-    </div>
-</div>
-{{end}}
-
-{{ if $aboutPage.Params.socials }}
-<div class="socials row w-100  justify-content-center">
-    <div class="row w-100 justify-content-center">
-        {{ $google_scholar := index $aboutPage.Params.socials "google_scholar"}}
-        {{ $facebook := index $aboutPage.Params.socials "facebook"}}
-        {{ $twitter := index $aboutPage.Params.socials "twitter"}}
-        {{ $twitch := index $aboutPage.Params.socials "twitch"}}
-        {{ $github := index $aboutPage.Params.socials "github"}}
-        {{ $linkedin := index $aboutPage.Params.socials "linkedin"}}
-        {{ $cv := $aboutPage.Params.cv }}
-        {{ $blog := $aboutPage.Params.blog}}
-
-
-        {{if $google_scholar}}
-        <a class="main_color" rel="me" href='https://scholar.google.com/{{$google_scholar}}' target="_blank">
-            <i class="ai ai-2x ai-google-scholar academic_icons_customize"></i>
-        </a>
-        {{end}}
-
-        {{ if $github }}
-        <a class="main_color" rel="me" href='https://github.com/{{$github}}' target="_blank">
-            <i data-feather="github"></i>
-        </a>
-        {{end}}
-
-        {{ if $twitter }}
-        <a class="main_color" rel="me" href='https://twitter.com/{{$twitter}}' target="_blank">
-            <i data-feather="twitter"></i>
-        </a>
-        {{end}}
-
-        {{ if $facebook }}
-        <a class="main_color" rel="me" href='https://facebook.com/{{$facebook}}' target="_blank">
-            <i data-feather="facebook"></i>
-        </a>
-        {{end}}
-
-        {{ if $linkedin }}
-        <a class="main_color" rel="me" href='https://linkedin.com/in/{{$linkedin}}' target="_blank">
-            <i data-feather="linkedin"></i>
-        </a>
-        {{end}}
-
-        {{ if $twitch }}
-        <a class="main_color" rel="me" href='https://twitch.com/{{$twitch}}' target="_blank">
-            <i data-feather="twitch"></i>
-        </a>
-        {{end}}
-
-        {{if $cv}}
-        <a class="main_color" href='{{$cv}}' target="_blank">
-            <i class="ai ai-2x ai-cv academic_icons_customize"></i>
-        </a>
-        {{end}}
-
-        {{ if $blog }}
-        <a id="blog_logo" class="main_color" href='/blog' target="_blank">
-            <i class="ai ai-2x ai-blog academic_icons_customize">Blog</i>
-
-        </a>
         {{ end }}
     </div>
 </div>
@@ -106,11 +36,18 @@
     </div>
 </div>
 
+<p></p>
 
 <div class="introduction row w-100 text-justify">
     <div class="col w-100">
-    In addition, I am highly interested in and skilled in programming. I won three gold medals (one first runner-up) in ACM-ICPC Asia regional contests. 
+    In addition, I am highly interested in and skilled in programming. I won three gold medals (one first runner-up) in ACM-ICPC Asia regional contests. 
     Also, I acted as a teaching assistant of the SJTU programming course, where I taught some students about programming and algorithms.
     My curriculum vitae is available <a href="cv.pdf"> <b> here </b> </a>.
     </div>
 </div>
+</div>
+
+<div class="right_div">
+<img  class="img_style" src="images/profile.png" id="Weiqi-image"  width="100%" height="100%">
+</div>
+

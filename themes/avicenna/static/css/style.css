@@ -33,6 +33,20 @@ h2 code {
     margin: auto;
 }
 
+.left_div {
+    width: 60%;
+    padding-top: 30px;
+}
+
+.right_div {
+    width: 40%;
+    padding-top: 5%;
+}
+
+.img_style {
+    border-radius: 100px;
+}
+
 .toc {
     margin-top: 1.5%;
     margin-bottom: 1.5%;

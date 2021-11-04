@@ -41,6 +41,16 @@
         </div>
     </div>
 
+    {{if eq $experience.course.flag 0}}
+        <div class=" row ">
+            <div class="col">
+                <font size="3.5em">
+                    I concentrate on the two issues of serverless computing under disaggregated storage architecture:
+                </font>
+            </div>
+        </div>
+    {{end}}
+
     <div class="row">
         <ul>
             {{range $infos := $projects.project.infos}}
@@ -54,6 +64,19 @@
             {{end}}
         </ul>
     </div>
+
+    {{if eq $experience.course.flag 0}}
+        <div class=" row ">
+            <div class="col">
+                <font size="3.5em">
+                   Therefore, shipping functions to the storage server could save CPU, 
+                   thus improving the hroughput of the storage server and reducing the latency of functions. 
+                   However, the throughput is hurt if the saved CPU is not enough to handle compute introduced by these functions on the storage server. 
+                   I focus on <b>the tradeoff</b> and explore it idea on <b>the distributed environment</b> to make it more practical.
+                </font>
+            </div>
+        </div>
+    {{end}}
 
     {{end}}
     {{end}}

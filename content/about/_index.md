@@ -17,7 +17,7 @@ affiliations:
 
 education:
     - course:
-        degree: "B.S. in Computer Science (Zhiyuan Honors Program)."
+        degree: "B.S. in Computer Science (Member of ACM class)."
         institution:  "Shanghai Jiao Tong University"
         start_date: "Sep 2018"
         loc: Shanghai, China
@@ -29,6 +29,14 @@ experience:
         degree: Supervised by [**Prof. Dong Xie**](https://sites.psu.edu/dongx)
         institution: 'Database System Group, Pennsylvania State University'
         start_date: 'Jun 2021'
+        flag: 0
+        projects:
+            - project:
+                name: Serverless Functions Placement for Disaggregated Architecture on Distributed Environment
+                infos:
+                    - info: Functions running on the compute server need several data transmissions including *get()/put()* with the storage server, which hurts **e2e latency** of functions.
+                    - info: These *get()/put()* requests waste storage server's CPU dispatching requests from NIC to userspace and unpacking requests, which hurts the **throughput**.
+                
     - course:
         degree: Supervised by [**Prof. Quan Chen**](https://www.cs.sjtu.edu.cn/~chen-quan/index_EN.html)
         institution: 'Emerging Parallel Computing Center (EPCC Lab), SJTU'
@@ -36,20 +44,31 @@ experience:
         end_date: 'Jun 2021'
         projects:
             - project:
-                name: Alleviating Cold Startup in Serverless Computing By Safe Inter-Function Container Sharing
+                name: Eliminating Cold Startup in Serverless Computing by Sharing Containers between Functions
                 infos:
                     - info: Proposed **an effective inter-function container sharing policy based on startup frequency**, which helped our system to alleviate 87.9% of cold startup.
                     - info: Implemented most of the system, designed and ran experiments, especially **a large-scale evaluation in cloud environment**.
             - project:
-                name: Enable Efficient Workflow Execution for Function-as-a-Service
+                name: Eﬀicient Workflows Scheduling in Serverless Computing
                 infos:
-                   - info: Co-proposed **an efficient workflow scheduling mechanism**, which mitigates the workflow scheduling and data transmission overhead by 42.7% and 50.1%.
-                   - info: Designed **an adaptive storage library** which automatically chooses the most appropriate storage service between local memory and remote database for user workflows.
+                   - info: Co-proposed **an efficient workflow scheduling mechanism**, which mitigates data transmission overhead by 50.1%.
+                   - info: Designed **an adaptive storage library** which automatically chooses the appropriate storage between local memory and remote database for user workflows.
                    - info: Designed a workflow parser which could parse hierarchy workflows into DAGs for better scheduling workflows.
-            - project:
-                name: A Serverless Computing Survey
-                infos:
-                   - info: Contributed one subsection to the survey.
+            # - project:
+            #     name: Alleviating Cold Startup in Serverless Computing By Safe Inter-Function Container Sharing
+            #     infos:
+            #         - info: Proposed **an effective inter-function container sharing policy based on startup frequency**, which helped our system to alleviate 87.9% of cold startup.
+            #         - info: Implemented most of the system, designed and ran experiments, especially **a large-scale evaluation in cloud environment**.
+            # - project:
+            #     name: Enable Efficient Workflow Execution for Function-as-a-Service
+            #     infos:
+            #        - info: Co-proposed **an efficient workflow scheduling mechanism**, which mitigates the workflow scheduling and data transmission overhead by 42.7% and 50.1%.
+            #        - info: Designed **an adaptive storage library** which automatically chooses the appropriate storage between local memory and remote database for user workflows.
+            #        - info: Designed a workflow parser which could parse hierarchy workflows into DAGs for better scheduling workflows.
+            # - project:
+            #     name: A Serverless Computing Survey
+            #     infos:
+            #        - info: Contributed one subsection to the survey.
 
 other_experience:
     - course:
@@ -63,7 +82,7 @@ other_experience:
         institution: 'Member in ACM-ICPC Team, SJTU'
         start_date: 'Jun 2018'
         end_date: 'Jul 2019'
-        info: I was a member of a team named **Quasar**. In this team, I practiced programming and algorithms with two other team members at least twice each week. And we won **three gold medals (one 1st runner-up)** in ACM-ICPC Asia regional contests and one gold medal in China Collegiate Programming Contest. Therefore, my programming and algorithmic abilities have greatly improved in the ACM-ICPC team.
+        info: I was a member of a team named **Quasar**. In this team, I practiced programming and algorithms with two other team members at least twice each week. And we won **three gold medals (one 1st runner-up)** in ACM-ICPC Asia regional contests and one gold medal in China Collegiate Programming Contest. Therefore, my programming and algorithmic abilities have been improved in the ACM-ICPC team.
 
 project:
     - course:

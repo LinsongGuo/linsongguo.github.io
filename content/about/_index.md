@@ -32,7 +32,7 @@ experience:
         flag: 0
         projects:
             - project:
-                name: Adaptive Serverless Functions Placement for Disaggregated Storage Datacenters
+                name: Adaptive Functions Placement for Disaggregated Storage Datacenters
                 infos:
                     - info: Functions running on the compute server need several data transmissions including *get()/put()* with the storage server, which hurts **e2e latency** of functions.
                     - info: These *get()/put()* requests waste storage server's CPU dispatching requests from NIC to userspace and unpacking requests, which hurts the **throughput**.

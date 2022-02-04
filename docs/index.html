@@ -212,7 +212,7 @@
             <li>
                 <div class="project_info">
                 <font size="3.5em">
-                    Functions running on the compute server need several data transmissions including <em>get()/put()</em> with the storage server, which hurts <strong>e2e latency</strong> of functions.
+                    Functions running in the compute server need several data transmissions including <em>get()/put()</em> with the storage server, which hurts <strong>end-to-end latency</strong> of functions.
                 </font>
                 </div>
             </li>
@@ -220,7 +220,7 @@
             <li>
                 <div class="project_info">
                 <font size="3.5em">
-                    These <em>get()/put()</em> requests waste storage server&rsquo;s CPU dispatching requests from NIC to userspace and unpacking requests, which hurts the <strong>throughput</strong>.
+                    The storage server wastes some CPU on processing these <em>get()/put()</em> network requests, which hurts the <strong>throughput</strong> of both the compute and storage server.
                 </font>
                 </div>
             </li>
@@ -232,10 +232,11 @@
         <div class=" row ">
             <div class="col">
                 <font size="3.5em">
-                   Shipping functions to the storage server could reduce their e2e latency. 
-                   Also, this can save the storage server's CPU, thus improving throughput. 
-                   However, the throughput is hurt if the saved CPU is not enough to handle compute introduced by these functions on the storage server. 
-                   I focus on <b>the tradeoff</b> and explore it on <b>the distributed environment</b> to make it more practical.
+                    Moving functions from the compute server to the storage server benefit their end-to-end latency 
+                    by minimizing their network interactions with the storage servers. 
+                    Also, this could save the storage server’s CPU, thereby <b>improving throughput</b>. 
+                    However, the throughput is hurt if the saved CPU is not enough to handle the computation introduced by these moved functions. 
+                    I am developing the <b>placement model</b> and extending it to <b>the distributed environment</b>.
                 </font>
             </div>
         </div>
@@ -320,7 +321,7 @@
             <li>
                 <div class="project_info">
                 <font size="3.5em">
-                    Co-proposed <strong>an efficient workflow scheduling mechanism</strong>, which mitigates data transmission overhead by 50.1%.
+                    Proposed <strong>a QoS-aware workflow partitioning policy</strong> that divides a workflow into several groups.
                 </font>
                 </div>
             </li>
@@ -328,15 +329,7 @@
             <li>
                 <div class="project_info">
                 <font size="3.5em">
-                    Designed <strong>an adaptive storage library</strong> which automatically chooses the appropriate storage between local memory and remote database for user functions.
-                </font>
-                </div>
-            </li>
-            
-            <li>
-                <div class="project_info">
-                <font size="3.5em">
-                    Designed a parser which could parse hierarchy application workflows into DAGs for better scheduling workflows.
+                    Developed <strong>group-level granularity scheduling</strong>, reducing the data transmission overhead in real-world stateless workflows by 50.1%.
                 </font>
                 </div>
             </li>
@@ -386,7 +379,7 @@
     <div class="row ">
         <div class="col">
             <span>
-               2nd author, 
+                Zijun Li, <b>Linsong Guo</b>, Jiagan Cheng, Quan Chen, Bingsheng He, Minyi Guo.
             </span>
             <span>
             <i>
@@ -394,7 +387,10 @@
             </i>
             </span>
             <span>
-                Under Review in ACM Computing Surveys.
+                ACM Computing Surveys (Accepted).
+            </span>
+            <span>
+                Now at <a href="https://arxiv.org/abs/2112.12921"> <b> arxiv</b></a>.
             </span>
         </div>
     </div>
@@ -503,7 +499,7 @@
 
     <div class="project_info2">
         <font size="3em">
-            Given a piece of code, the compiler could convert it into an AST, then LLVM IR, and finally RISC-V assembly. Due to my interest in exploring the compiler back-end, I added some optimizations to it, including mem2reg, inlining, CSE(Common SubExpression Elimination), LICM(Loop Invariant Code Motion), SCCP(Sparse Conditional Constant Propagation), and so on.
+            The compiler can convert a piece of code to an AST, then to LLVM IR, and eventually to RISC-V assembly. I enhanced the compiler’s back-end with numerous optimizations, including mem2reg, inlining, CSE(Common SubExpression Elimination), LICM(Loop Invariant Code Motion), SCCP(Sparse Condtional Constant Propagation), and so on.
         </font>
     </div>
 
@@ -521,7 +517,7 @@
 
     <div class="project_info2">
         <font size="3em">
-            The store could run on a cluster of servers communicated via gRPC and support basic operations, including get and put.
+            The replicated store could run on a cluster of servers communicated via gRPC and support basic operations such as get and put.
         </font>
     </div>
 
@@ -539,25 +535,7 @@
 
     <div class="project_info2">
         <font size="3em">
-            To explore more about computer architecture, I add some components like d-cache, i-cache, and branchpredictor combining BTB and BHT. The CPU could run successfully on an FPGA board.
-        </font>
-    </div>
-
-    <p></p>
-
-    
-    <div class="row">
-        <div class="col font_weight">
-            Playing Atari Games
-            <a class="main_color text-decoration-none rounded " href="https://github.com/LinsongGuo/Atari-Games" target="_blank">
-            [github]
-            </a>
-        </div>  
-    </div>
-
-    <div class="project_info2">
-        <font size="3em">
-            To explore reinforcement learning, I trained several DQN models, including DoubleDQN, DuelingDQN, RainbowDQN, and so on, to play some Atari games.
+            To gain a better understanding of computer architecture, I added components including d-cache, i-cache, and a branch predictor combining BTB and BHT. The CPU could run successfully on an FPGA board.
         </font>
     </div>
 
@@ -680,7 +658,7 @@
 
 
 <footer class="mt-auto d-flex justify-content-center text-muted small secondary_font">
-    <span class="text-muted">Copyright (c) 2021, Linsong Guo,
+    <span class="text-muted">Copyright (c) 2022, Linsong Guo,
         <a class="text-muted" href="https://github.com/hadisinaee/avicenna" target="_blank"> created by Avicenna
             (MIT)</a>
     </span>

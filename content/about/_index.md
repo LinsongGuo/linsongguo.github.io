@@ -34,8 +34,8 @@ experience:
             - project:
                 name: Adaptive Functions Placement for Disaggregated Storage Datacenters
                 infos:
-                    - info: Functions running on the compute server need several data transmissions including *get()/put()* with the storage server, which hurts **e2e latency** of functions.
-                    - info: These *get()/put()* requests waste storage server's CPU dispatching requests from NIC to userspace and unpacking requests, which hurts the **throughput**.
+                    - info: Functions running in the compute server need several data transmissions including *get()/put()* with the storage server, which hurts **end-to-end latency** of functions.
+                    - info: The storage server wastes some CPU on processing these *get()/put()* network requests, which hurts the **throughput** of both the compute and storage server.
                 
     - course:
         degree: Supervised by [**Prof. Quan Chen**](https://www.cs.sjtu.edu.cn/~chen-quan/index_EN.html)
@@ -51,9 +51,8 @@ experience:
             - project:
                 name: Optimizing Data Communication across Functions within Serverless Applications
                 infos:
-                   - info: Co-proposed **an efficient workflow scheduling mechanism**, which mitigates data transmission overhead by 50.1%.
-                   - info: Designed **an adaptive storage library** which automatically chooses the appropriate storage between local memory and remote database for user functions.
-                   - info: Designed a parser which could parse hierarchy application workflows into DAGs for better scheduling workflows.
+                   - info: Proposed **a QoS-aware workflow partitioning policy** that divides a workflow into several groups.
+                   - info: Developed **group-level granularity scheduling**, reducing the data transmission overhead in real-world stateless workflows by 50.1%.
             # - project:
             #     name: Alleviating Cold Startup in Serverless Computing By Safe Inter-Function Container Sharing
             #     infos:
@@ -88,19 +87,15 @@ project:
     - course:
         name: Java-and-C-like Language Compiler (∼16K lines in Java)
         github: https://github.com/LinsongGuo/Mxstar-compiler
-        info: Given a piece of code, the compiler could convert it into an AST, then LLVM IR, and finally RISC-V assembly. Due to my interest in exploring the compiler back-end, I added some optimizations to it, including mem2reg, inlining, CSE(Common SubExpression Elimination), LICM(Loop Invariant Code Motion), SCCP(Sparse Conditional Constant Propagation), and so on.
+        info: The compiler can convert a piece of code to an AST, then to LLVM IR, and eventually to RISC-V assembly. I enhanced the compiler’s back-end with numerous optimizations, including mem2reg, inlining, CSE(Common SubExpression Elimination), LICM(Loop Invariant Code Motion), SCCP(Sparse Condtional Constant Propagation), and so on.
     - course:
         name: Replicated KV Store Based on Raft Consensus Protocol (∼1.5K lines in C++)
         github: https://github.com/LinsongGuo/Raft
-        info: The store could run on a cluster of servers communicated via gRPC and support basic operations, including get and put.
+        info: The replicated store could run on a cluster of servers communicated via gRPC and support basic operations such as get and put.
     - course:
         name: RISC-V CPU with 5-Stage Pipeline (∼3.7K lines in Verilog)
         github: https://github.com/LinsongGuo/risc-v-cpu
-        info: To explore more about computer architecture, I add some components like d-cache, i-cache, and branchpredictor combining BTB and BHT. The CPU could run successfully on an FPGA board.
-    - course:
-        name: Playing Atari Games
-        github: https://github.com/LinsongGuo/Atari-Games
-        info: To explore reinforcement learning, I trained several DQN models, including DoubleDQN, DuelingDQN, RainbowDQN, and so on, to play some Atari games.
+        info: To gain a better understanding of computer architecture, I added components including d-cache, i-cache, and a branch predictor combining BTB and BHT. The CPU could run successfully on an FPGA board.
 
 honor:
     - course:

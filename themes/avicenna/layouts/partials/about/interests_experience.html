@@ -69,10 +69,11 @@
         <div class=" row ">
             <div class="col">
                 <font size="3.5em">
-                   Shipping functions to the storage server could reduce their e2e latency. 
-                   Also, this can save the storage server's CPU, thus improving throughput. 
-                   However, the throughput is hurt if the saved CPU is not enough to handle compute introduced by these functions on the storage server. 
-                   I focus on <b>the tradeoff</b> and explore it on <b>the distributed environment</b> to make it more practical.
+                    Moving functions from the compute server to the storage server benefit their end-to-end latency 
+                    by minimizing their network interactions with the storage servers. 
+                    Also, this could save the storage server’s CPU, thereby <b>improving throughput</b>. 
+                    However, the throughput is hurt if the saved CPU is not enough to handle the computation introduced by these moved functions. 
+                    I am developing the <b>placement model</b> and extending it to <b>the distributed environment</b>.
                 </font>
             </div>
         </div>

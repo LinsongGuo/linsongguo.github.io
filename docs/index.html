@@ -78,8 +78,8 @@
 <div class="introduction row w-100 text-justify">
     <div class="col w-100">
     I am currently a senior student from <a href="https://acm.sjtu.edu.cn/home"><b> ACM Honored Class</b> </a> in Shanghai Jiao Tong University (SJTU). 
-    My primary research interests are in systems.
-    I am currently a research intern at <a href="https://sites.psu.edu/dongx/"><b>Prof. Dong Xie</b></a>'s Database System Group at Pennsylvania State University.
+    My research interests are broadly in computer systems.
+    I interned at <a href="https://sites.psu.edu/dongx/"><b>Prof. Dong Xie</b></a>'s Database System Group at Penn State University.
     Prior to that, I researched on serverless computing in SJTU EPCC lab, supervised by <a href="https://www.cs.sjtu.edu.cn/~chen-quan/index_EN.html"><b>Prof. Quan Chen</b></a>.
     </div>
 </div>
@@ -90,7 +90,7 @@
     <div class="col w-100">
     In addition, I am highly interested in and skilled in programming. I won three gold medals (one first runner-up) in ACM-ICPC Asia regional contests. 
     Also, I acted as a teaching assistant of the SJTU programming course, where I taught some students about programming and algorithms.
-    My curriculum vitae is available <a href="cv.pdf"> <b> here</b></a>.
+    
     </div>
 </div>
 </div>
@@ -127,7 +127,7 @@
         </div>
         <div class="degree_major row">
             <div class=" col">
-                B.S. in Computer Science (Member of ACM class). 
+                B.Eng. in Computer Science (Member of ACM class). 
             </div>
                 <div class="text-muted dates col-md-auto  justify-content-end">
                 <i>Sep 2018
@@ -167,6 +167,23 @@
     <div class="row ">
         <div class="col">
             <span>
+            Zijun Li, <b>Linsong Guo</b>, Quan Chen, Jiagan Cheng, Chuhao Xu, Zhuo Song, Tao Ma, Yong Yang, Chao Li and Minyi Guo.
+            </span>
+            <span>
+            <i>
+            <a href="https://www.usenix.org/conference/atc22/technical-sessions"> <b> Help Rather Than Recycle: Alleviating Cold Startup in Serverless Computing Through Inter-Function Container Sharing. </b></a>
+            </i>
+            </span>
+            <span>
+            <b>ATC 2022.</b>
+            </span>
+        </div>
+    </div>
+
+
+    <div class="row ">
+        <div class="col">
+            <span>
             Zijun Li, Yushi Liu, <b>Linsong Guo</b>, Quan Chen, Jiagan Cheng, Wenli Zheng, Minyi Guo. 
             </span>
             <span>
@@ -175,7 +192,7 @@
             </i>
             </span>
             <span>
-            ASPLOS 2022.
+            <b> ASPLOS 2022.</b>
             </span>
         </div>
     </div>
@@ -193,7 +210,7 @@
             </i>
             </span>
             <span>
-                ACM Computing Surveys.
+                <b>ACM Computing Surveys.</b>
             </span>
         </div>
     </div>
@@ -231,7 +248,7 @@
             <div class=" text-muted dates col-md-auto  justify-content-end">
             <i>Jun 2021
             
-            - Present
+            - Jan 2022
             
             </i>
         </div>
@@ -241,55 +258,19 @@
     
     <div class=" row margin:5px">
         <div class="col large_font project_color">
-            Adaptive Functions Placement for Disaggregated Storage Datacenters
+            Exploring Functions Placement on Disaggregated Storage Datacenters
             <i> </i>
         </div>
     </div>
 
     
-        <div class=" row ">
-            <div class="col">
-                <font size="3.5em">
-                    I concentrate on the two issues of serverless computing under disaggregated storage architecture:
-                </font>
-            </div>
-        </div>
-    
 
     <div class="row">
         <ul>
             
-            <li>
-                <div class="project_info">
-                <font size="3.5em">
-                    Functions running in the compute server need several data transmissions including <em>get()/put()</em> with the storage server, which hurts <strong>end-to-end latency</strong> of functions.
-                </font>
-                </div>
-            </li>
-            
-            <li>
-                <div class="project_info">
-                <font size="3.5em">
-                    The storage server wastes some CPU on processing these <em>get()/put()</em> network requests, which hurts the <strong>throughput</strong> of both the compute and storage server.
-                </font>
-                </div>
-            </li>
-            
         </ul>
     </div>
 
-    
-        <div class=" row ">
-            <div class="col">
-                <font size="3.5em">
-                    Moving functions from the compute server to the storage server benefit their end-to-end latency 
-                    by minimizing their network interactions with the storage servers. 
-                    Also, this could save the storage server’s CPU, thereby <b>improving throughput</b>. 
-                    However, the throughput is hurt if the saved CPU is not enough to handle the computation introduced by these moved functions. 
-                    I am developing the <b>placement model</b> and extending it to <b>the distributed environment</b>.
-                </font>
-            </div>
-        </div>
     
 
     
@@ -332,22 +313,6 @@
     <div class="row">
         <ul>
             
-            <li>
-                <div class="project_info">
-                <font size="3.5em">
-                    Proposed <strong>an effective inter-function container sharing policy based on startup frequency</strong>, which helped our system to alleviate 87.9% of cold startup.
-                </font>
-                </div>
-            </li>
-            
-            <li>
-                <div class="project_info">
-                <font size="3.5em">
-                    Implemented most of the system, designed and ran experiments, especially <strong>a large-scale evaluation in cloud environment</strong>.
-                </font>
-                </div>
-            </li>
-            
         </ul>
     </div>
 
@@ -367,22 +332,6 @@
 
     <div class="row">
         <ul>
-            
-            <li>
-                <div class="project_info">
-                <font size="3.5em">
-                    Proposed <strong>a QoS-aware workflow partitioning policy</strong> that divides a workflow into several groups.
-                </font>
-                </div>
-            </li>
-            
-            <li>
-                <div class="project_info">
-                <font size="3.5em">
-                    Developed <strong>group-level granularity scheduling</strong>, reducing the data transmission overhead in real-world stateless workflows by 50.1%.
-                </font>
-                </div>
-            </li>
             
         </ul>
     </div>
@@ -635,15 +584,6 @@
 
 </div>
 
-<p> </p>
- <div class="about row w-100 ">
-    <div class="col">
-        <font size="5em">
-        My girl friend's webpage <a href="https://yinsiyuan97.github.io"> <b> here</b></a>.
-         </font>
-    </div>
-</div>
-<p> </p>
 </div>
 </div>
 

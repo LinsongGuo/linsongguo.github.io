@@ -17,7 +17,7 @@ affiliations:
 
 education:
     - course:
-        degree: "B.S. in Computer Science (Member of ACM class)."
+        degree: "B.Eng. in Computer Science (Member of ACM class)."
         institution:  "Shanghai Jiao Tong University"
         start_date: "Sep 2018"
         loc: Shanghai, China
@@ -29,13 +29,14 @@ experience:
         degree: Supervised by [**Prof. Dong Xie**](https://sites.psu.edu/dongx)
         institution: 'Database System Group, Pennsylvania State University'
         start_date: 'Jun 2021'
+        end_date: 'Jan 2022'
         flag: 0
         projects:
             - project:
-                name: Adaptive Functions Placement for Disaggregated Storage Datacenters
-                infos:
-                    - info: Functions running in the compute server need several data transmissions including *get()/put()* with the storage server, which hurts **end-to-end latency** of functions.
-                    - info: The storage server wastes some CPU on processing these *get()/put()* network requests, which hurts the **throughput** of both the compute and storage server.
+                name: Exploring Functions Placement on Disaggregated Storage Datacenters
+                # infos:
+                #     - info: Functions running in the compute server need several data transmissions including *get()/put()* with the storage server, which hurts **end-to-end latency** of functions.
+                #     - info: The storage server wastes some CPU on processing these *get()/put()* network requests, which hurts the **throughput** of both the compute and storage server.
                 
     - course:
         degree: Supervised by [**Prof. Quan Chen**](https://www.cs.sjtu.edu.cn/~chen-quan/index_EN.html)
@@ -45,14 +46,14 @@ experience:
         projects:
             - project:
                 name: Eliminating Cold Startup in Serverless Computing by Sharing Containers between Functions
-                infos:
-                    - info: Proposed **an effective inter-function container sharing policy based on startup frequency**, which helped our system to alleviate 87.9% of cold startup.
-                    - info: Implemented most of the system, designed and ran experiments, especially **a large-scale evaluation in cloud environment**.
+                # infos:
+                #     - info: Proposed **an effective inter-function container sharing policy based on startup frequency**, which helped our system to alleviate 87.9% of cold startup.
+                #     - info: Implemented most of the system, designed and ran experiments, especially **a large-scale evaluation in cloud environment**.
             - project:
                 name: Optimizing Data Communication across Functions within Serverless Applications
-                infos:
-                   - info: Proposed **a QoS-aware workflow partitioning policy** that divides a workflow into several groups.
-                   - info: Developed **group-level granularity scheduling**, reducing the data transmission overhead in real-world stateless workflows by 50.1%.
+                # infos:
+                #    - info: Proposed **a QoS-aware workflow partitioning policy** that divides a workflow into several groups.
+                #    - info: Developed **group-level granularity scheduling**, reducing the data transmission overhead in real-world stateless workflows by 50.1%.
             # - project:
             #     name: Alleviating Cold Startup in Serverless Computing By Safe Inter-Function Container Sharing
             #     infos:

@@ -12,24 +12,41 @@ blog: false
 
 affiliations:
     - affiliation:
-        name: "Shanghai Jiao Tong University"
-        email: "gls1196@sjtu.edu.cn"
+        # name: "Shanghai Jiao Tong University"
+        email: "l1guo@ucsd.edu"
 
 education:
     - course:
+        degree: "Ph.D. in Computer Science and Engineering."
+        institution:  "University of California San Diego (UCSD)"
+        start_date: "Sep 2022"
+        loc: La Jolla, CA
+
+    - course:
         degree: "B.Eng. in Computer Science (Member of ACM class)."
-        institution:  "Shanghai Jiao Tong University"
+        institution:  "Shanghai Jiao Tong University (SJTU)"
         start_date: "Sep 2018"
         loc: Shanghai, China
-        # other_info: "Member of ACM Class, an elite CS program for the top 5% talented students."
         other_info2: "GPA: 88/100"
+
+   
 
 experience:
     - course:
+        degree: Supervised by [**Prof. Yiying Zhang**](https://cseweb.ucsd.edu/~yiying/)
+        institution: 'WukLab, UCSD'
+        start_date: 'Sep 2022'
+        end_date: 'Present'
+        flag: 0
+        projects:
+            - project:
+                name: Currently Working on Memory Disaggregation.
+    
+    - course:
         degree: Supervised by [**Prof. Dong Xie**](https://sites.psu.edu/dongx)
         institution: 'Database System Group, Pennsylvania State University'
-        start_date: 'Jun 2021'
-        end_date: 'Jan 2022'
+        start_date: 'Jul 2021'
+        end_date: 'Dec 2021'
         flag: 0
         projects:
             - project:
@@ -50,7 +67,7 @@ experience:
                 #     - info: Proposed **an effective inter-function container sharing policy based on startup frequency**, which helped our system to alleviate 87.9% of cold startup.
                 #     - info: Implemented most of the system, designed and ran experiments, especially **a large-scale evaluation in cloud environment**.
             - project:
-                name: Optimizing Data Communication across Functions within Serverless Applications
+                name: Reducing data movement overhead in real-world stateless workflows
                 # infos:
                 #    - info: Proposed **a QoS-aware workflow partitioning policy** that divides a workflow into several groups.
                 #    - info: Developed **group-level granularity scheduling**, reducing the data transmission overhead in real-world stateless workflows by 50.1%.
@@ -76,13 +93,13 @@ other_experience:
         institution: 'Teaching Assistant of C++ Programming Course, SJTU'
         start_date: 'Sep 2019'
         end_date: 'Jan 2020'
-        info: Designed some assignments, gave a lecture about the introduction to C++ programming, guided a group of students in programming and algorithms, and contributed one programming problem to the final exam.
+        # info: Designed some assignments, gave a lecture about the introduction to C++ programming, guided a group of students in programming and algorithms, and contributed one programming problem to the final exam.
     - course:
         degree: Guided by [**Prof. Yong Yu**](http://apex.sjtu.edu.cn/members/yyu)
         institution: 'Member in ACM-ICPC Team, SJTU'
         start_date: 'Jun 2018'
         end_date: 'Jul 2019'
-        info: I was a member of a team named **Quasar**. In this team, I practiced programming and algorithms with two other team members at least twice each week. And we won **three gold medals (one 1st runner-up)** in ACM-ICPC Asia regional contests and one gold medal in China Collegiate Programming Contest. Therefore, my programming and algorithmic abilities have been improved in the ACM-ICPC team.
+        info: A member of a team named Quasar. Earned three gold medals (one 1st runner-up) in ACM-ICPC Asia regional contests and one gold medal in China Collegiate Programming Contest.
 
 project:
     - course:

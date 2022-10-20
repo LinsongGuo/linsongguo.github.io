@@ -34,13 +34,13 @@ h2 code {
 }
 
 .left_div {
-    width: 60%;
+    width: 75%;
     padding-top: 30px;
 }
 
 .right_div {
-    width: 40%;
-    padding-top: 3%;
+    width: 25%;
+    padding-top: 80px;
 }
 
 .img_style {
@@ -50,7 +50,7 @@ h2 code {
     height: auto;
     max-width: 100%;
     max-height: 100%;
-    border-radius: 30%;
+    border-radius: 50%;
 }
 
 .toc {

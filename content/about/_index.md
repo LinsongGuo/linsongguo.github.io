@@ -26,6 +26,7 @@ education:
         degree: "B.Eng. in Computer Science (Member of ACM class)."
         institution:  "Shanghai Jiao Tong University (SJTU)"
         start_date: "Sep 2018"
+        end_date: "Jun 2022"
         loc: Shanghai, China
         other_info2: "GPA: 88/100"
 
@@ -36,11 +37,11 @@ experience:
         degree: Supervised by [**Prof. Yiying Zhang**](https://cseweb.ucsd.edu/~yiying/)
         institution: 'WukLab, UCSD'
         start_date: 'Sep 2022'
-        end_date: 'Present'
+        end_date: 'Dec 2022'
         flag: 0
         projects:
             - project:
-                name: Currently Working on Memory Disaggregation.
+                name: Worked on Memory Disaggregation.
     
     - course:
         degree: Supervised by [**Prof. Dong Xie**](https://sites.psu.edu/dongx)

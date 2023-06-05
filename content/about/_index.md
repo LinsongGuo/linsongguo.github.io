@@ -13,7 +13,7 @@ blog: false
 affiliations:
     - affiliation:
         # name: "Shanghai Jiao Tong University"
-        email: "l1guo@ucsd.edu"
+        email: "l1guo at ucsd dot edu"
 
 education:
     - course:
@@ -30,21 +30,29 @@ education:
         loc: Shanghai, China
         other_info2: "GPA: 88/100"
 
-   
-
 experience:
+    # - course:
+    #     degree: Supervised by [**Prof. Yiying Zhang**](https://cseweb.ucsd.edu/~yiying/)
+    #     institution: 'WukLab, UCSD'
+    #     start_date: 'Sep 2022'
+    #     end_date: 'Dec 2022'
+    #     flag: 0
+    #     projects:
+    #         - project:
+    #             name: Worked on Memory Disaggregation.
+
     - course:
-        degree: Supervised by [**Prof. Yiying Zhang**](https://cseweb.ucsd.edu/~yiying/)
-        institution: 'WukLab, UCSD'
+        degree: Graduate Student Researcher (GSR)
+        institution: 'UCSD'
         start_date: 'Sep 2022'
         end_date: 'Dec 2022'
         flag: 0
-        projects:
-            - project:
-                name: Worked on Memory Disaggregation.
+        # projects:
+        #     - project:
+        #         name: Worked on Memory Disaggregation.
     
     - course:
-        degree: Supervised by [**Prof. Dong Xie**](https://sites.psu.edu/dongx)
+        degree: Advised by [**Prof. Dong Xie**](https://sites.psu.edu/dongx)
         institution: 'Database System Group, Pennsylvania State University'
         start_date: 'Jul 2021'
         end_date: 'Dec 2021'
@@ -57,7 +65,7 @@ experience:
                 #     - info: The storage server wastes some CPU on processing these *get()/put()* network requests, which hurts the **throughput** of both the compute and storage server.
                 
     - course:
-        degree: Supervised by [**Prof. Quan Chen**](https://www.cs.sjtu.edu.cn/~chen-quan/index_EN.html)
+        degree: Advised by [**Prof. Quan Chen**](https://www.cs.sjtu.edu.cn/~chen-quan/index_EN.html)
         institution: 'Emerging Parallel Computing Center (EPCC Lab), SJTU'
         start_date: 'Jul 2020'
         end_date: 'Jun 2021'

@@ -661,9 +661,46 @@
   /* Channels — slot 0 center is at x = 40 (zone) + 24 (buffer left) + 220 (label) + 30 (gap) + 115 (half-slot) = 429. Channel width 3 centered at 429 → left:427.5; round to 427.
      Arrow heights stop just BEFORE the next box; the 13px arrowhead lands at the box top edge. */
   .reveal .s56-slide .s56-write-channel { top: 208px; left: 427px; width: 3px; height: 31px; }
-  .reveal .s56-slide .s56-write-lbl { position: absolute; top: 215px; left: 441px; font-size: 17px; font-weight: 700; color: #c23b3b; font-style: italic; white-space: nowrap; opacity: 0; transition: opacity 0.35s; }
+  /* Channel labels live to the LEFT of each arrow (right-aligned), framing the channel from outside. */
+  .reveal .s56-slide .s56-write-lbl { position: absolute; top: 220px; right: 864px; font-size: 19px; font-weight: 700; color: #c23b3b; font-style: italic; white-space: nowrap; text-align: right; opacity: 0; transition: opacity 0.35s; }
   .reveal .s56-slide .s56-read-channel  { top: 330px; left: 427px; width: 3px; height: 31px; }
-  .reveal .s56-slide .s56-read-lbl  { position: absolute; top: 337px; left: 441px; font-size: 17px; font-weight: 700; color: #c23b3b; font-style: italic; white-space: nowrap; opacity: 0; transition: opacity 0.35s; }
+  .reveal .s56-slide .s56-read-lbl-l { position: absolute; top: 342px; right: 864px; font-size: 19px; font-weight: 700; color: #c23b3b; font-style: italic; white-space: nowrap; text-align: right; opacity: 0; transition: opacity 0.35s; }
+  .reveal .s56-slide .s56-read-lbl  { position: absolute; top: 336px; left: 441px; font-size: 17px; font-weight: 700; color: #c23b3b; font-style: italic; white-space: nowrap; opacity: 0; transition: opacity 0.35s; }
+  .reveal .s56-slide .s56-tick-extra {
+    display: inline-flex; align-items: center; gap: 5px;
+    padding: 3px 10px;
+    background: #fff0f0; border: 1.6px solid #c23b3b; border-radius: 14px;
+  }
+  .reveal .s56-slide .s56-clock {
+    display: inline-block; width: 16px; height: 16px;
+    border: 2px solid #c23b3b; border-radius: 50%;
+    position: relative; flex-shrink: 0;
+  }
+  .reveal .s56-slide .s56-clock::before {
+    content: ''; position: absolute; top: 2px; left: 50%;
+    width: 1.5px; height: 5px; background: #c23b3b;
+    transform: translateX(-50%);
+  }
+  .reveal .s56-slide .s56-clock::after {
+    content: ''; position: absolute; top: 50%; left: 50%;
+    width: 1.5px; height: 4px; background: #c23b3b;
+    transform-origin: top;
+    animation: s56-clockSpin 4s linear infinite;
+  }
+  @keyframes s56-clockSpin {
+    0%   { transform: rotate(0deg)   translateX(-50%); }
+    100% { transform: rotate(360deg) translateX(-50%); }
+  }
+  /* Once the tick has fired (state >= 6), freeze the minute hand wherever it was. */
+  .reveal .s56-slide .s56-clock.fixed::after { animation-play-state: paused; }
+  .reveal .s56-slide .s56-clock.firing {
+    animation: s56-clockFire 0.8s cubic-bezier(0.4, 0, 0.2, 1) 1;
+  }
+  @keyframes s56-clockFire {
+    0%   { transform: scale(1);   box-shadow: 0 0 0 rgba(255,80,80,0); }
+    20%  { transform: scale(1.5); box-shadow: 0 0 24px rgba(255,80,80,1); }
+    100% { transform: scale(1);   box-shadow: 0 0 0 rgba(255,80,80,0); }
+  }
 
   /* Scheduler box */
   .reveal .s56-slide .s56-sched {
@@ -677,50 +714,57 @@
   .reveal .s56-slide .s56-sched-hr { border: none; border-top: 1px solid #cfd9ea; position: absolute; top: 46px; left: 22px; right: 22px; margin: 0; }
 
   /* Mechanism column (left) */
-  .reveal .s56-slide .s56-rbtree { position: absolute; top: 60px; left: 22px; width: 462px; bottom: 16px; opacity: 0; transition: opacity 0.35s; display: flex; flex-direction: column; }
-  .reveal .s56-slide .s56-mech-head { display: flex; gap: 10px; align-items: baseline; margin-bottom: 4px; flex-wrap: wrap; }
+  .reveal .s56-slide .s56-rbtree { position: absolute; top: 52px; left: 22px; width: 542px; bottom: 10px; opacity: 0; transition: opacity 0.35s; display: flex; flex-direction: column; }
+  .reveal .s56-slide .s56-mech-head { display: flex; gap: 10px; align-items: baseline; margin-bottom: 2px; flex-wrap: wrap; }
   .reveal .s56-slide .s56-mech-label { font-size: 19px; font-weight: 700; color: #0b4d9c; letter-spacing: 0.5px; }
-  .reveal .s56-slide .s56-mech-cap { font-size: 18px; color: #6c7385; font-style: italic; flex-basis: 100%; }
-  .reveal .s56-slide .s56-mech-chips { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; margin-bottom: 8px; }
-  .reveal .s56-slide .s56-mech-chip { background: white; border: 1.4px solid #0b4d9c; border-radius: 12px; padding: 4px 8px; font-size: 13px; font-weight: 600; color: #0b4d9c; white-space: nowrap; }
+  .reveal .s56-slide .s56-mech-cap { font-size: 18px; color: #0b4d9c; font-style: italic; }
+  .reveal .s56-slide .s56-mech-chips { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; margin-bottom: 4px; }
+  .reveal .s56-slide .s56-mech-chip { background: white; border: 1.6px solid #0b4d9c; border-radius: 14px; padding: 6px 14px; font-size: 16px; font-weight: 600; color: #0b4d9c; white-space: nowrap; }
   .reveal .s56-slide .s56-mech-chip-hero { background: #0b4d9c; color: white; }
-  .reveal .s56-slide .s56-tree-box { background: white; border: 1.5px solid #0b4d9c; border-radius: 6px; padding: 6px 10px; flex: 1; display: flex; flex-direction: column; min-height: 0; }
+  .reveal .s56-slide .s56-tree-box { background: white; border: 1.5px solid #0b4d9c; border-radius: 6px; padding: 6px 10px; position: absolute; top: 66px; left: 0; right: 0; bottom: 0; display: flex; flex-direction: column; }
   .reveal .s56-slide .s56-ds-head { display: flex; gap: 12px; align-items: baseline; margin-bottom: 2px; }
   .reveal .s56-slide .s56-ds-cap { font-size: 16px; color: #6c7385; font-style: italic; }
   .reveal .s56-slide .s56-ds-cap .s56-em { color: #0b4d9c; font-weight: 700; font-style: normal; }
   .reveal .s56-slide .s56-tree-svg { width: 100%; flex: 1; min-height: 0; }
 
-  /* Policy */
+  /* Policy column (right) — mirrors mechanism column structure on the left. */
   .reveal .s56-slide .s56-policy {
-    position: absolute; top: 60px; left: 506px; right: 22px; bottom: 16px;
-    background: #fff5e0; border: 2px solid #d9862a; border-radius: 10px; padding: 12px 16px;
+    position: absolute; top: 52px; left: 586px; right: 22px; bottom: 10px;
     opacity: 0; transition: opacity 0.35s;
+    display: flex; flex-direction: column;
   }
-  .reveal .s56-slide .s56-policy-header { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; flex-wrap: wrap; }
+  .reveal .s56-slide .s56-policy-box {
+    background: white; border: 1.5px solid #d9862a; border-radius: 6px; padding: 52px 10px 6px;
+    position: absolute; top: 62px; left: 0; right: 0; bottom: 0;
+    display: flex; flex-direction: column;
+  }
+  .reveal .s56-slide .s56-policy-header { display: flex; align-items: center; gap: 12px; margin-bottom: 8px; flex-wrap: wrap; }
   .reveal .s56-slide .s56-policy-title { font-size: 19px; font-weight: 700; color: #8a5a00; letter-spacing: 0.5px; }
   .reveal .s56-slide .s56-policy-badge { background: #d9862a; color: white; font-size: 17px; font-weight: 700; padding: 4px 13px; border-radius: 11px; }
-  .reveal .s56-slide .s56-policy-sub { font-size: 18px; color: #8a5a00; font-style: italic; flex-basis: 100%; }
+  .reveal .s56-slide .s56-policy-sub { font-size: 18px; color: #8a5a00; font-style: italic; }
   .reveal .s56-slide .s56-policy-mutable {
-    margin-left: auto; background: white; border: 1.5px solid #c23b3b; color: #c23b3b;
-    font-size: 14px; font-weight: 700; padding: 3px 11px; border-radius: 10px;
+    position: absolute; top: 6px; left: 50%; transform: translateX(-50%);
+    background: white; border: 1.8px solid #d9862a; color: #8a5a00;
+    font-size: 21px; font-weight: 700; padding: 5px 16px; border-radius: 13px;
     opacity: 0; transition: opacity 0.35s;
     animation: s56-pulseborder 1.6s infinite;
+    z-index: 2; white-space: nowrap;
   }
   .reveal .s56-slide .s56-policy-mutable.show { opacity: 1; }
-  @keyframes s56-pulseborder { 0%,100% { box-shadow: 0 0 0 rgba(194,59,59,0); } 50% { box-shadow: 0 0 12px rgba(194,59,59,0.55); } }
+  @keyframes s56-pulseborder { 0%,100% { box-shadow: 0 0 0 rgba(217,134,42,0); } 50% { box-shadow: 0 0 12px rgba(217,134,42,0.6); } }
 
-  .reveal .s56-slide .s56-fn-grid { display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 1fr; gap: 12px; height: calc(100% - 70px); }
-  .reveal .s56-slide .s56-fn-box { background: white; border: 1.6px solid #d9862a; border-radius: 6px; padding: 10px 8px; display: flex; flex-direction: column; justify-content: center; transition: all 0.3s; min-width: 0; }
-  .reveal .s56-slide .s56-fn-box .s56-sig { font-family: 'SF Mono', Menlo, Consolas, monospace; font-size: 15.5px; font-weight: 700; color: #8a5a00; white-space: nowrap; line-height: 1.3; }
-  .reveal .s56-slide .s56-fn-box .s56-note { font-family: 'SF Mono', Menlo, Consolas, monospace; font-size: 13.5px; color: #a77838; font-style: italic; margin-top: 10px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .reveal .s56-slide .s56-fn-grid { display: grid; grid-template-columns: auto auto; grid-template-rows: auto auto; gap: 12px; flex: 1; align-content: space-evenly; justify-content: space-evenly; }
+  .reveal .s56-slide .s56-fn-box { background: white; border: 1.6px solid #d9862a; border-radius: 6px; padding: 8px 5px; display: flex; flex-direction: column; justify-content: center; transition: all 0.3s; min-width: 0; }
+  .reveal .s56-slide .s56-fn-box .s56-sig { font-family: 'SF Mono', Menlo, Consolas, monospace; font-size: 14px; font-weight: 700; color: #8a5a00; white-space: nowrap; line-height: 1.3; }
+  .reveal .s56-slide .s56-fn-box .s56-note { font-family: 'SF Mono', Menlo, Consolas, monospace; font-size: 12px; color: #a77838; font-style: italic; margin-top: 6px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .reveal .s56-slide .s56-fn-box.hot { background: #d9862a; border-color: #8a5a00; transform: translateY(-2px) scale(1.03); box-shadow: 0 6px 20px rgba(217, 134, 42, 0.45); }
   .reveal .s56-slide .s56-fn-box.hot .s56-sig, .reveal .s56-slide .s56-fn-box.hot .s56-note { color: white; }
 
   /* RB tree node */
   .reveal .s56-slide .s56-nrect { fill: #eef5fc; stroke: #0b4d9c; stroke-width: 1.5; }
-  .reveal .s56-slide .s56-ntxt { font-family: 'SF Mono', Menlo, Consolas, monospace; font-weight: 700; font-size: 19px; fill: #0b4d9c; }
-  .reveal .s56-slide .s56-npri { font-family: 'SF Mono', Menlo, Consolas, monospace; font-weight: 700; font-size: 16px; fill: #8a5a00; }
-  .reveal .s56-slide .s56-next-marker { font-family: 'SF Mono', Menlo, Consolas, monospace; font-size: 20px; font-weight: 700; fill: #c23b3b; }
+  .reveal .s56-slide .s56-ntxt { font-family: 'SF Mono', Menlo, Consolas, monospace; font-weight: 700; font-size: 26px; fill: #0b4d9c; }
+  .reveal .s56-slide .s56-npri { font-family: 'SF Mono', Menlo, Consolas, monospace; font-weight: 700; font-size: 20px; fill: #8a5a00; }
+  .reveal .s56-slide .s56-next-marker { font-family: 'SF Mono', Menlo, Consolas, monospace; font-size: 32px; font-weight: 700; fill: #c23b3b; }
   .reveal .s56-slide .s56-hot-flush .s56-nrect { fill: #fff0d6; stroke: #c23b3b; stroke-width: 2.4; filter: drop-shadow(0 0 4px rgba(255,184,77,0.45)); }
   .reveal .s56-slide .s56-hot-flush .s56-ntxt { fill: #c23b3b; }
   .reveal .s56-slide .s56-hot-flush .s56-npri { fill: #c23b3b; }
@@ -2019,8 +2063,7 @@
 <section>
   <h2 class="slide-title">Aspen-Go provides limited gains.</h2>
   <p style="font-size: 0.85em; margin: 0;">BadgerDB workload: 99% GET task (~5 &mu;s) and 1% SCAN task (~800 &mu;s).</p>
-  <img src="assets/figures/slide28.png" alt="BadgerDB GET 99.9% latency vs load: Aspen-Go User Interrupts vs unmodified Go" style="display:block; margin: 0.5em auto 0; width: 50%; max-height: 65vh; image-rendering: -webkit-optimize-contrast;">
-  <p style="font-size: 0.7em; font-style: italic; color: #6c7385; text-align: center; margin: 0.5em 0 0;">Will replace with a higher-resolution figure for the final version.</p>
+  <img src="assets/figures/slide28.png" alt="BadgerDB GET 99.9% latency vs load: Aspen-Go User Interrupts vs unmodified Go" style="display:block; margin: 0.5em auto 0; width: 44%; max-height: 60vh; image-rendering: -webkit-optimize-contrast;">
 </section>
 
 <!-- ============================================================
@@ -3147,14 +3190,7 @@
 </section>
 
 <!-- ============================================================
-     SLIDE 44: RESERVED (placeholder for future content)
-============================================================ -->
-<section>
-  <div style="display: flex; align-items: center; justify-content: center; height: 100%; color: #9aa3b1; font-style: italic; font-size: 0.7em;">(will remove the empty slide)</div>
-</section>
-
-<!-- ============================================================
-     SLIDE 45: Implementing HARD × SEPARATE (forked from slide 41)
+     SLIDE 44: Implementing HARD × SEPARATE (forked from slide 41)
 ============================================================ -->
 <section>
   <h2 class="slide-title">Example: <code class="api">thread_wakeup(W, HARD, SEPARATE)</code></h2>
@@ -3378,23 +3414,32 @@ Draft content (modes need updating to urgency+placement enums):
 
 
 <!-- ============================================================
-     SLIDE 46: Memcached results
+     SLIDE 45: Memcached results
 ============================================================ -->
 <section>
-  <h2 class="slide-title">Memcached: GET-only workload.</h2>
-  <div class="placeholder">[Borrow work3-minutes slide 119 &mdash; memcached YCSB skewed, GET-only results]</div>
+  <h2 class="slide-title">Performance on lock-contention workloads.</h2>
+  <ul style="font-size: 0.85em; margin: 0.2em 0 0; padding-left: 1.2em;">
+    <li>Memcached workload: GETs only.</li>
+    <li>Each GET acquires a lock on its key; keys with the same hash share the lock.</li>
+    <li>Key accesses follow a skewed Zipfian distribution (&alpha;=0.99).
+      <div style="font-style: italic; color: #6c7385; font-size: 0.9em; margin-top: 0.1em;">Top 10% of keys receive ~80% of GETs.</div>
+    </li>
+  </ul>
+  <img src="assets/figures/slide46.png" alt="Memcached YCSB skewed GET-only results" style="display:block; margin: 0.5em auto 0; width: 70%; max-height: 60vh; image-rendering: -webkit-optimize-contrast;">
 </section>
 
 <!-- ============================================================
-     SLIDE 47: Synthetic
+     SLIDE 46: Synthetic
 ============================================================ -->
 <section>
-  <h2 class="slide-title">Synthetic benchmark: the approaches work across a large config space.</h2>
-  <div class="placeholder">[Borrow work3-minutes slide 130 &mdash; goodput across configurations]</div>
+  <h2 class="slide-title">Synthetic benchmark.</h2>
+  <p style="font-size: 0.85em; margin: 0;">Gains hold across a wide config space.</p>
+  <img src="assets/figures/slide47.png" alt="Synthetic benchmark goodput across configurations" style="display:block; margin: 0.5em auto 0; width: 90%; max-height: 75vh; image-rendering: -webkit-optimize-contrast;">
+  <p style="font-size: 0.7em; font-style: italic; color: #6c7385; text-align: center; margin: 0.4em 0 0;">(use this as a backup slide to save time)</p>
 </section>
 
 <!-- ============================================================
-     SLIDE 48: Ongoing work
+     SLIDE 47: Ongoing work
 ============================================================ -->
 <section>
   <h2 class="slide-title">Progress and next steps.</h2>
@@ -3406,7 +3451,7 @@ Draft content (modes need updating to urgency+placement enums):
 </section>
 
 <!-- ============================================================
-     SLIDE 49: Re-show (Interfaces highlighted, for Semantic Scheduling)
+     SLIDE 48: Re-show (Interfaces highlighted, for Semantic Scheduling)
 ============================================================ -->
 <section>
   <h2 class="slide-title">Thesis Proposal Overview</h2>
@@ -3419,7 +3464,7 @@ Draft content (modes need updating to urgency+placement enums):
 </section>
 
 <!-- ============================================================
-     SLIDE 50: Semantic Scheduling title
+     SLIDE 49: Semantic Scheduling title
 ============================================================ -->
 <section>
   <div class="title-card">
@@ -3429,7 +3474,7 @@ Draft content (modes need updating to urgency+placement enums):
 </section>
 
 <!-- ============================================================
-     SLIDE 51: Applications hold scheduling-relevant knowledge.
+     SLIDE 50: Applications hold scheduling-relevant knowledge.
      Three-band stack (App / Library / Scheduler), reuses slide 8's
      visual language. Two-lane interfaces band contrasts the library's
      wakeup-API-with-intent channel (info lands) with the existing
@@ -3599,7 +3644,7 @@ Draft content (modes need updating to urgency+placement enums):
 </section>
 
 <!-- ============================================================
-     SLIDE 52: Making threads non-anonymous.
+     SLIDE 51: Making threads non-anonymous.
      5-fragment reveal (outer thread_t compacted, comments at 13px
      italic matching the placeholder).
 ============================================================ -->
@@ -3639,7 +3684,7 @@ Draft content (modes need updating to urgency+placement enums):
       <text x="830" y="36" font-size="18" font-weight="700" fill="#1b4d8f" text-anchor="middle" letter-spacing="1.5">WITH SEMANTIC CONTEXT</text>
       <line x1="480" y1="155" x2="555" y2="155" stroke="#1b4d8f" stroke-width="4" marker-end="url(#s53-arrowhead)" stroke-linecap="round"/>
 
-      <rect x="570" y="60" width="600" height="431" rx="10" fill="#f4f7fb" stroke="#1b4d8f" stroke-width="3"/>
+      <rect x="570" y="60" width="600" height="441" rx="10" fill="#f4f7fb" stroke="#1b4d8f" stroke-width="3"/>
       <g font-family="SF Mono, Menlo, Consolas, monospace" font-size="16" fill="#1f2a40">
         <text x="598" y="96" font-weight="700">struct thread_t {</text>
         <text x="598" y="122">&nbsp;&nbsp;&nbsp;&nbsp;tid;</text>
@@ -3649,15 +3694,15 @@ Draft content (modes need updating to urgency+placement enums):
       </g>
 
       <!-- Nested semantic_context rect (enlarged: y=205..495, h=290) -->
-      <rect x="588" y="205" width="568" height="246" rx="8" fill="#e6eef8" stroke="#1b4d8f" stroke-width="2" stroke-dasharray="6,4"/>
+      <rect x="588" y="205" width="568" height="256" rx="8" fill="#e6eef8" stroke="#1b4d8f" stroke-width="2" stroke-dasharray="6,4"/>
 
       <text x="598" y="232" font-family="SF Mono, Menlo, Consolas, monospace" font-size="17" font-weight="700" fill="#1b4d8f">&nbsp;&nbsp;&nbsp;&nbsp;struct thread_semantic_context {</text>
 
       <text x="598" y="270" font-family="SF Mono, Menlo, Consolas, monospace" font-size="15" fill="#1f2a40">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;thread_role =</text>
 
       <!-- Closing braces (inside/after nested rect) -->
-      <text x="598" y="441" font-family="SF Mono, Menlo, Consolas, monospace" font-size="17" font-weight="700" fill="#1b4d8f">&nbsp;&nbsp;&nbsp;&nbsp;} sem_ctx;</text>
-      <text x="598" y="476" font-family="SF Mono, Menlo, Consolas, monospace" font-size="18" font-weight="700" fill="#1f2a40">};</text>
+      <text x="598" y="451" font-family="SF Mono, Menlo, Consolas, monospace" font-size="17" font-weight="700" fill="#1b4d8f">&nbsp;&nbsp;&nbsp;&nbsp;} sem_ctx;</text>
+      <text x="598" y="486" font-family="SF Mono, Menlo, Consolas, monospace" font-size="18" font-weight="700" fill="#1f2a40">};</text>
     </g>
 
     <!-- F4: user-facing + background tag chips -->
@@ -3669,30 +3714,30 @@ Draft content (modes need updating to urgency+placement enums):
       <text x="1028" y="272" font-size="17" font-weight="700" fill="#6c7385" text-anchor="middle">background</text>
     </g>
 
-    <!-- F5: 3 fields + comments (13px italic, same size as placeholder) + placeholder -->
+    <!-- F5: 2 fields + comments + placeholder (comments same size as fields) -->
     <g class="fragment" data-fragment-index="5">
       <g font-family="SF Mono, Menlo, Consolas, monospace" fill="#1f2a40">
         <!-- request_type -->
         <text x="598" y="308" font-size="15">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;request_type;</text>
-        <text x="598" y="326" font-size="13" font-style="italic" fill="#8a92a6">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// Is this a short (get/put) or long (scan) request?</text>
+        <text x="598" y="328" font-size="14.5" font-style="italic" fill="#8a92a6">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// Is this a short (get/put) or long (scan) request?</text>
         <!-- write_stall_warning (comment wraps to two lines) -->
-        <text x="598" y="352" font-size="15">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;write_stall_warning;</text>
-        <text x="598" y="370" font-size="13" font-style="italic" fill="#8a92a6">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// Will writes stall if this thread doesn&rsquo;t run soon</text>
-        <text x="598" y="388" font-size="13" font-style="italic" fill="#8a92a6">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(e.g., if this thread is flush)?</text>
+        <text x="598" y="358" font-size="15">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;write_stall_warning;</text>
+        <text x="598" y="378" font-size="14.5" font-style="italic" fill="#8a92a6">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// Will writes stall if this thread doesn&rsquo;t run soon</text>
+        <text x="598" y="398" font-size="14.5" font-style="italic" fill="#8a92a6">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(e.g., if this thread is flush)?</text>
       </g>
-      <!-- Placeholder (same 13px italic as comments) -->
-      <text x="598" y="416" font-family="SF Mono, Menlo, Consolas, monospace" font-size="13" font-style="italic" fill="#8a92a6">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;/* ... more fields */</text>
+      <!-- Placeholder (same size as comments/fields) -->
+      <text x="598" y="426" font-family="SF Mono, Menlo, Consolas, monospace" font-size="15" font-style="italic" fill="#8a92a6">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;/* ... more fields */</text>
     </g>
 
     <!-- F6: "threads are non-anonymous" label lands on its own click, after all fields -->
     <g class="fragment" data-fragment-index="6">
-      <text x="870" y="521" font-size="19" font-weight="700" fill="#1b4d8f" text-anchor="middle">threads are non-anonymous.</text>
+      <text x="870" y="531" font-size="19" font-weight="700" fill="#1b4d8f" text-anchor="middle">threads are non-anonymous.</text>
     </g>
   </svg>
 </section>
 
 <!-- ============================================================
-     SLIDE 53: Key Idea: App describes, Scheduler decides.
+     SLIDE 52: Key Idea: App describes, Scheduler decides.
      Layout: pill + icon + scope label all on ONE horizontal row
      (left-aligned), then the code/description box underneath.
      Fragments: F1 LEFT, F2 RIGHT.
@@ -3732,9 +3777,15 @@ sched_setaffinity(tid, CPU_<span style="color: #c0392b; font-weight: 800; backgr
 
       <div style="text-align: center; font-weight: 700; color: #666; font-size: 0.55em; margin: 0.25em 0;">&darr;</div>
 
-      <!-- SCHED row: [SCHEDULER pill] alone -->
-      <div style="display: flex; align-items: center; justify-content: flex-start; margin-bottom: 0.25em;">
+      <!-- SCHED row: [SCHEDULER pill]  [icon: 3 filled / 1 outlined] -->
+      <div style="display: flex; align-items: center; justify-content: flex-start; gap: 0.35em; margin-bottom: 0.25em;">
         <span style="font-weight: 800; letter-spacing: 1.3px; font-size: 0.42em; padding: 2px 7px; border-radius: 3px; background: #7a7a7a; color: #fff;">SCHEDULER</span>
+        <svg width="18" height="18" viewBox="0 0 28 28" style="flex-shrink:0;">
+          <circle cx="8" cy="8" r="5" fill="#7a7a7a"/>
+          <circle cx="20" cy="8" r="5" fill="#7a7a7a"/>
+          <circle cx="8" cy="20" r="5" fill="#7a7a7a"/>
+          <circle cx="20" cy="20" r="4" fill="none" stroke="#c0c6d2" stroke-width="1.5"/>
+        </svg>
       </div>
       <div style="background: #f0f0f2; border: 1.5px solid #8a92a6; border-radius: 4px; padding: 0.35em 0.55em; font-size: 0.46em; line-height: 1.35; color: #4a5167;">
         Schedules with whatever priority &amp; core the app picked.
@@ -3785,7 +3836,7 @@ semantic_ctx.write_stall_warning = <span style="color: #1b4d8f; font-weight: 600
 </section>
 
 <!-- ============================================================
-     SLIDE 54: Q→A — question visible, answer fades in on click.
+     SLIDE 53: Q→A — question visible, answer fades in on click.
      No title. Motivates slide 55's LLM elaboration.
 ============================================================ -->
 <section>
@@ -3794,25 +3845,21 @@ semantic_ctx.write_stall_warning = <span style="color: #1b4d8f; font-weight: 600
       How do we know each app&rsquo;s semantics?
     </div>
     <div class="fragment fade-up" style="font-size: 1.6em; font-weight: 800; color: var(--accent); line-height: 1.3; margin-top: 1.4em;">
-      LLMs read the source code.
+      LLMs read source code, extract semantics for scheduling.
+    </div>
+    <div class="fragment fade-up" style="font-size: 1.6em; font-weight: 800; color: var(--accent); line-height: 1.3; margin-top: 0.9em;">
+      Also writes the scheduling policy.
     </div>
   </div>
 </section>
 
 <!-- ============================================================
-     SLIDE 55: (empty — placeholder, will remove)
-============================================================ -->
-<section>
-  <h2 class="slide-title">(empty, will remove it)</h2>
-</section>
-
-<!-- ============================================================
-     SLIDE 56: Runtime — App updates, Scheduler decides.
-     Unified two-box layout (App top, Scheduler bottom), matches slide 55.
+     SLIDE 54: Runtime — App updates, Scheduler decides.
+     Unified two-box layout (App top, Scheduler bottom).
      Single blue dashed connector: "updates values" (runtime).
      Context card carries static flush-thread scenario;
      write_stall_warning pulses "rising" as the dynamic element.
-     Policy card shows the same 4 rules as slide 55, faded.
+     Policy card shows the same 4 rules.
 ============================================================ -->
 <section class="s56-slide">
   <h2 class="slide-title">Scheduler design.</h2>
@@ -3820,7 +3867,7 @@ semantic_ctx.write_stall_warning = <span style="color: #1b4d8f; font-weight: 600
   <!-- App -->
   <div class="s56-app-box">
     <div class="s56-app-header">
-      <span class="s56-run"></span>App
+      <span class="s56-run"></span>Application
       <span class="s56-sub">(RocksDB &mdash; flush thread)</span>
     </div>
     <div class="s56-app-code">
@@ -3857,7 +3904,8 @@ semantic_ctx.write_stall_warning = <span style="color: #1b4d8f; font-weight: 600
     <div class="s56-spark"></div>
     <div class="s56-head"></div>
   </div>
-  <div class="s56-read-lbl">drained by scheduler</div>
+  <div class="s56-read-lbl-l">drained by scheduler</div>
+  <div class="s56-read-lbl"><span class="s56-tick-extra"><span class="s56-clock" id="s56-tickClock"></span>at scheduler tick</span></div>
 
   <!-- Scheduler -->
   <div class="s56-sched">
@@ -3875,40 +3923,41 @@ semantic_ctx.write_stall_warning = <span style="color: #1b4d8f; font-weight: 600
       </div>
       <div class="s56-mech-chips">
         <span class="s56-mech-chip s56-mech-chip-hero">Per-CPU Red-Black Tree &#9662;</span>
-        <span class="s56-mech-chip">Preemption mechanism</span>
+        <span class="s56-mech-chip">Preemption</span>
         <span class="s56-mech-chip">Migration</span>
+        <span class="s56-mech-chip">&hellip;</span>
       </div>
       <div class="s56-tree-box">
       <div class="s56-ds-head">
         <span class="s56-ds-cap"><span class="s56-em">leftmost</span> = highest priority</span>
       </div>
-      <svg class="s56-tree-svg" viewBox="0 0 540 235" preserveAspectRatio="xMidYMid meet">
+      <svg class="s56-tree-svg" viewBox="0 0 870 312" preserveAspectRatio="xMidYMid meet">
         <g id="s56-treeBefore">
-          <line x1="265" y1="66" x2="175" y2="86" stroke="#0b4d9c" stroke-width="1.5"/>
-          <line x1="265" y1="66" x2="355" y2="86" stroke="#0b4d9c" stroke-width="1.5"/>
-          <line x1="175" y1="136" x2="75" y2="156" stroke="#0b4d9c" stroke-width="1.4"/>
-          <line x1="175" y1="136" x2="275" y2="156" stroke="#0b4d9c" stroke-width="1.4"/>
-          <line x1="355" y1="136" x2="455" y2="156" stroke="#0b4d9c" stroke-width="1.4"/>
-          <g transform="translate(190,16)"><rect class="s56-nrect" width="150" height="50" rx="14" ry="14"/><text class="s56-ntxt" x="75" y="21" text-anchor="middle">rocksdb-write</text><text class="s56-npri" x="75" y="40" text-anchor="middle">0.5</text></g>
-          <g transform="translate(100,86)"><rect class="s56-nrect" width="150" height="50" rx="14" ry="14"/><text class="s56-ntxt" x="75" y="21" text-anchor="middle">rocksdb-get</text><text class="s56-npri" x="75" y="40" text-anchor="middle">0.68</text></g>
-          <g transform="translate(280,86)"><rect class="s56-nrect" width="150" height="50" rx="14" ry="14"/><text class="s56-ntxt" x="75" y="21" text-anchor="middle">redis</text><text class="s56-npri" x="75" y="40" text-anchor="middle">0.4</text></g>
-          <g transform="translate(0,156)"><rect class="s56-nrect" width="150" height="50" rx="14" ry="14"/><text class="s56-ntxt" x="75" y="21" text-anchor="middle">rocksdb-get</text><text class="s56-npri" x="75" y="40" text-anchor="middle">0.72</text></g>
-          <g transform="translate(200,156)"><rect class="s56-nrect" width="150" height="50" rx="14" ry="14"/><text class="s56-ntxt" x="75" y="21" text-anchor="middle">nginx</text><text class="s56-npri" x="75" y="40" text-anchor="middle">0.6</text></g>
-          <g transform="translate(380,156)"><rect class="s56-nrect" width="150" height="50" rx="14" ry="14"/><text class="s56-ntxt" x="75" y="21" text-anchor="middle">rocksdb-flush</text><text class="s56-npri" x="75" y="40" text-anchor="middle">0.2</text></g>
+          <line x1="435" y1="72" x2="275" y2="102" stroke="#0b4d9c" stroke-width="1.5"/>
+          <line x1="435" y1="72" x2="595" y2="102" stroke="#0b4d9c" stroke-width="1.5"/>
+          <line x1="275" y1="174" x2="115" y2="204" stroke="#0b4d9c" stroke-width="1.4"/>
+          <line x1="275" y1="174" x2="435" y2="204" stroke="#0b4d9c" stroke-width="1.4"/>
+          <line x1="595" y1="174" x2="755" y2="204" stroke="#0b4d9c" stroke-width="1.4"/>
+          <g transform="translate(320,0)"><rect class="s56-nrect" width="230" height="72" rx="16" ry="16"/><text class="s56-ntxt" x="115" y="30" text-anchor="middle">rocksdb-write</text><text class="s56-npri" x="115" y="58" text-anchor="middle">0.5</text></g>
+          <g transform="translate(160,102)"><rect class="s56-nrect" width="230" height="72" rx="16" ry="16"/><text class="s56-ntxt" x="115" y="30" text-anchor="middle">rocksdb-get</text><text class="s56-npri" x="115" y="58" text-anchor="middle">0.68</text></g>
+          <g transform="translate(480,102)"><rect class="s56-nrect" width="230" height="72" rx="16" ry="16"/><text class="s56-ntxt" x="115" y="30" text-anchor="middle">redis</text><text class="s56-npri" x="115" y="58" text-anchor="middle">0.4</text></g>
+          <g transform="translate(0,204)"><rect class="s56-nrect" width="230" height="72" rx="16" ry="16"/><text class="s56-ntxt" x="115" y="30" text-anchor="middle">rocksdb-get</text><text class="s56-npri" x="115" y="58" text-anchor="middle">0.72</text></g>
+          <g transform="translate(320,204)"><rect class="s56-nrect" width="230" height="72" rx="16" ry="16"/><text class="s56-ntxt" x="115" y="30" text-anchor="middle">nginx</text><text class="s56-npri" x="115" y="58" text-anchor="middle">0.6</text></g>
+          <g transform="translate(640,204)"><rect class="s56-nrect" width="230" height="72" rx="16" ry="16"/><text class="s56-ntxt" x="115" y="30" text-anchor="middle">rocksdb-flush</text><text class="s56-npri" x="115" y="58" text-anchor="middle">0.2</text></g>
         </g>
         <g id="s56-treeAfter" style="display:none">
-          <line x1="265" y1="66" x2="175" y2="86" stroke="#0b4d9c" stroke-width="1.5"/>
-          <line x1="265" y1="66" x2="355" y2="86" stroke="#0b4d9c" stroke-width="1.5"/>
-          <line x1="175" y1="136" x2="75" y2="156" stroke="#c23b3b" stroke-width="2"/>
-          <line x1="175" y1="136" x2="275" y2="156" stroke="#0b4d9c" stroke-width="1.4"/>
-          <line x1="355" y1="136" x2="455" y2="156" stroke="#0b4d9c" stroke-width="1.4"/>
-          <g transform="translate(190,16)"><rect class="s56-nrect" width="150" height="50" rx="14" ry="14"/><text class="s56-ntxt" x="75" y="21" text-anchor="middle">nginx</text><text class="s56-npri" x="75" y="40" text-anchor="middle">0.6</text></g>
-          <g transform="translate(100,86)"><rect class="s56-nrect" width="150" height="50" rx="14" ry="14"/><text class="s56-ntxt" x="75" y="21" text-anchor="middle">rocksdb-get</text><text class="s56-npri" x="75" y="40" text-anchor="middle">0.72</text></g>
-          <g transform="translate(280,86)"><rect class="s56-nrect" width="150" height="50" rx="14" ry="14"/><text class="s56-ntxt" x="75" y="21" text-anchor="middle">rocksdb-write</text><text class="s56-npri" x="75" y="40" text-anchor="middle">0.5</text></g>
-          <g class="s56-hot-flush" transform="translate(0,156)"><rect class="s56-nrect" width="150" height="50" rx="14" ry="14"/><text class="s56-ntxt" x="75" y="21" text-anchor="middle">rocksdb-flush</text><text class="s56-npri" x="75" y="40" text-anchor="middle">0.95</text></g>
-          <text class="s56-next-marker" x="75" y="222" text-anchor="middle">&uarr; runs next</text>
-          <g transform="translate(200,156)"><rect class="s56-nrect" width="150" height="50" rx="14" ry="14"/><text class="s56-ntxt" x="75" y="21" text-anchor="middle">rocksdb-get</text><text class="s56-npri" x="75" y="40" text-anchor="middle">0.68</text></g>
-          <g transform="translate(380,156)"><rect class="s56-nrect" width="150" height="50" rx="14" ry="14"/><text class="s56-ntxt" x="75" y="21" text-anchor="middle">redis</text><text class="s56-npri" x="75" y="40" text-anchor="middle">0.4</text></g>
+          <line x1="435" y1="72" x2="275" y2="102" stroke="#0b4d9c" stroke-width="1.5"/>
+          <line x1="435" y1="72" x2="595" y2="102" stroke="#0b4d9c" stroke-width="1.5"/>
+          <line x1="275" y1="174" x2="115" y2="204" stroke="#c23b3b" stroke-width="2"/>
+          <line x1="275" y1="174" x2="435" y2="204" stroke="#0b4d9c" stroke-width="1.4"/>
+          <line x1="595" y1="174" x2="755" y2="204" stroke="#0b4d9c" stroke-width="1.4"/>
+          <g transform="translate(320,0)"><rect class="s56-nrect" width="230" height="72" rx="16" ry="16"/><text class="s56-ntxt" x="115" y="30" text-anchor="middle">nginx</text><text class="s56-npri" x="115" y="58" text-anchor="middle">0.6</text></g>
+          <g transform="translate(160,102)"><rect class="s56-nrect" width="230" height="72" rx="16" ry="16"/><text class="s56-ntxt" x="115" y="30" text-anchor="middle">rocksdb-get</text><text class="s56-npri" x="115" y="58" text-anchor="middle">0.72</text></g>
+          <g transform="translate(480,102)"><rect class="s56-nrect" width="230" height="72" rx="16" ry="16"/><text class="s56-ntxt" x="115" y="30" text-anchor="middle">rocksdb-write</text><text class="s56-npri" x="115" y="58" text-anchor="middle">0.5</text></g>
+          <g class="s56-hot-flush" transform="translate(0,204)"><rect class="s56-nrect" width="230" height="72" rx="16" ry="16"/><text class="s56-ntxt" x="115" y="30" text-anchor="middle">rocksdb-flush</text><text class="s56-npri" x="115" y="58" text-anchor="middle">0.95</text></g>
+          <text class="s56-next-marker" x="115" y="308" text-anchor="middle">&uarr; runs next</text>
+          <g transform="translate(320,204)"><rect class="s56-nrect" width="230" height="72" rx="16" ry="16"/><text class="s56-ntxt" x="115" y="30" text-anchor="middle">rocksdb-get</text><text class="s56-npri" x="115" y="58" text-anchor="middle">0.68</text></g>
+          <g transform="translate(640,204)"><rect class="s56-nrect" width="230" height="72" rx="16" ry="16"/><text class="s56-ntxt" x="115" y="30" text-anchor="middle">redis</text><text class="s56-npri" x="115" y="58" text-anchor="middle">0.4</text></g>
         </g>
       </svg>
       </div>
@@ -3919,14 +3968,16 @@ semantic_ctx.write_stall_warning = <span style="color: #1b4d8f; font-weight: 600
       <div class="s56-policy-header">
         <div class="s56-policy-title">POLICY</div>
         <div class="s56-policy-badge">LLM-generated</div>
-        <div class="s56-policy-mutable" id="s56-policyMutable">might change when new app arrives</div>
         <div class="s56-policy-sub">use app semantics to make scheduling decisions</div>
       </div>
-      <div class="s56-fn-grid">
-        <div class="s56-fn-box" id="s56-fn-priority"><div class="s56-sig">priority(sem_ctx) &rarr; float</div><div class="s56-note">// calculate thread's priority</div></div>
-        <div class="s56-fn-box" id="s56-fn-place"><div class="s56-sig">place(sem_ctx) &rarr; cpu_id</div><div class="s56-note">// pick which CPU thread runs on</div></div>
-        <div class="s56-fn-box" id="s56-fn-timeslice"><div class="s56-sig">time_slice(sem_ctx) &rarr; duration</div><div class="s56-note">// the timeslice of thread</div></div>
-        <div class="s56-fn-box" id="s56-fn-preempt"><div class="s56-sig">should_preempt(new, cur) &rarr; bool</div><div class="s56-note">// preempt cur thread for new?</div></div>
+      <div class="s56-policy-box">
+        <div class="s56-policy-mutable" id="s56-policyMutable">reloaded when a new app has new semantics</div>
+        <div class="s56-fn-grid">
+          <div class="s56-fn-box" id="s56-fn-priority"><div class="s56-sig">priority(sem_ctx) &rarr; float</div><div class="s56-note">// calculate thread's priority</div></div>
+          <div class="s56-fn-box" id="s56-fn-place"><div class="s56-sig">placement(sem_ctx) &rarr; cpu_id</div><div class="s56-note">// pick which CPU thread runs on</div></div>
+          <div class="s56-fn-box" id="s56-fn-timeslice"><div class="s56-sig">time_slice(sem_ctx) &rarr; duration</div><div class="s56-note">// the timeslice of thread</div></div>
+          <div class="s56-fn-box" id="s56-fn-preempt"><div class="s56-sig">should_preempt(new, cur) &rarr; bool</div><div class="s56-note">// preempt cur thread for new?</div></div>
+        </div>
       </div>
     </div>
   </div>
@@ -3939,13 +3990,15 @@ semantic_ctx.write_stall_warning = <span style="color: #1b4d8f; font-weight: 600
   <span class="fragment" data-s56-state="5"></span>
   <span class="fragment" data-s56-state="6"></span>
   <span class="fragment" data-s56-state="7"></span>
+  <span class="fragment" data-s56-state="8"></span>
+  <span class="fragment" data-s56-state="9"></span>
 </section>
 
 <!-- ============================================================
-     SLIDE 57: A scalability concern — N apps × K semantic fields?
+     SLIDE 55: A scalability concern — N apps × K semantic fields?
 ============================================================ -->
 <section>
-  <h2 class="slide-title">A scalability concern.</h2>
+  <h2 class="slide-title">Many apps, many semantics?</h2>
   <div style="display: flex; flex-direction: column; justify-content: center; align-items: center; height: 78%; text-align: center;">
 
     <!-- Side-by-side visual: 1 app -> 20 apps -->
@@ -3957,11 +4010,10 @@ semantic_ctx.write_stall_warning = <span style="color: #1b4d8f; font-weight: 600
         <div style="font-size: 0.42em; font-family: 'SF Mono', Menlo, Consolas, monospace; color: #8a92a6; line-height: 1.55;">
           thread_role<br>
           request_type<br>
-          is_group_leader<br>
           write_stall_warning<br>
           &hellip;
         </div>
-        <div style="font-size: 0.5em; font-weight: 700; color: #1b4d8f; margin-top: 0.35em; border-top: 1px solid #c4d6e8; padding-top: 0.22em;">
+        <div style="font-size: 0.62em; font-weight: 700; color: #1b4d8f; margin-top: 0.35em; border-top: 1px solid #c4d6e8; padding-top: 0.22em;">
           &asymp; 5 semantic fields
         </div>
       </div>
@@ -3994,7 +4046,7 @@ semantic_ctx.write_stall_warning = <span style="color: #1b4d8f; font-weight: 600
           <div style="background: #fff; border: 1.2px solid var(--warn); border-radius: 0.06em;"></div>
           <div style="background: #fff; border: 1.2px solid var(--warn); border-radius: 0.06em;"></div>
         </div>
-        <div style="font-size: 0.5em; font-weight: 700; color: var(--warn); border-top: 1px solid #e8c6c0; padding-top: 0.22em;">
+        <div style="font-size: 0.62em; font-weight: 700; color: var(--warn); border-top: 1px solid #e8c6c0; padding-top: 0.22em;">
           &asymp; ~100 semantic fields?
         </div>
       </div>
@@ -4003,27 +4055,27 @@ semantic_ctx.write_stall_warning = <span style="color: #1b4d8f; font-weight: 600
 
     <!-- Question below visual -->
     <div style="margin-top: 1em; font-size: 1.3em; font-weight: 800; color: var(--accent); max-width: 90%; line-height: 1.3;">
-      Does this approach scale to many apps?
+      Will the policy get too complicated?
     </div>
   </div>
 </section>
 
 <!-- ============================================================
-     SLIDE 58: Most apps don't introduce new dimensions.
+     SLIDE 56: Most apps don't introduce new dimensions.
      Sub-linear-growth answer from the 20-app LLM study.
 ============================================================ -->
 <section>
-  <h2 class="slide-title">Most apps don&rsquo;t introduce new dimensions.</h2>
-  <div class="insight-line"><strong>Methodology:</strong> LLMs analyzed <strong>20 applications</strong> and identified semantics for each app.</div>
-  <div class="insight-line" style="margin-top: -0.4em;"><strong>Conclusions:</strong> The semantic space grows <strong>sub-linearly</strong> with apps &mdash; 6 cover most scheduling-relevant semantics, with only <strong>21 total</strong> across 20 apps.</div>
+  <h2 class="slide-title">Apps share most of their semantics.</h2>
+  <div class="insight-line" style="color: #000; font-weight: 400;"><strong>Methodology:</strong> LLMs analyzed <strong>20 apps</strong> and identified semantics for each app.</div>
+  <div class="insight-line" style="margin-top: -0.4em; color: #000; font-weight: 400;"><strong>Conclusions:</strong> <strong>6 semantics</strong> are commonly used; <strong>21 total</strong> across all 20.</div>
 
   <div class="s57-wrap">
     <table class="s57-table s57-table-compact">
       <thead>
         <tr>
-          <th style="width: 28%;">Semantics Information</th>
-          <th>What It Is</th>
-          <th class="center" style="width: 14%;">Apps</th>
+          <th style="width: 28%;">The 6 common semantics</th>
+          <th>Description</th>
+          <th class="center" style="width: 14%;">Used in (apps)</th>
         </tr>
       </thead>
       <tbody>
@@ -4065,12 +4117,12 @@ semantic_ctx.write_stall_warning = <span style="color: #1b4d8f; font-weight: 600
 </section>
 
 <!-- ============================================================
-     SLIDE 59: Open challenges.
+     SLIDE 57: Open challenges.
      Three numbered cards, one-question bodies.
 ============================================================ -->
 <section>
   <h2 class="slide-title">Open challenges.</h2>
-  <div class="insight-line">Three challenges to make semantic scheduling deployable.</div>
+  <div class="insight-line" style="color: #000; font-weight: 400;">Three challenges to make semantic scheduling deployable.</div>
 
   <div class="s58-wrap">
     <div class="num-cards">
@@ -4078,7 +4130,7 @@ semantic_ctx.write_stall_warning = <span style="color: #1b4d8f; font-weight: 600
         <div class="num">1</div>
         <h3>Runtime channel.</h3>
         <div class="body">
-          How can apps deliver live semantics into the kernel without syscalls or interrupts?
+          How can apps deliver live semantics into the kernel scheduler efficiently?
         </div>
       </div>
 
@@ -4086,7 +4138,7 @@ semantic_ctx.write_stall_warning = <span style="color: #1b4d8f; font-weight: 600
         <div class="num">2</div>
         <h3>Coexistence.</h3>
         <div class="body">
-          How should a semantic-aware policy share cores with <code>CFS</code>&nbsp;/&nbsp;<code>EEVDF</code> threads that have no LLM analysis?
+          How should a semantic-aware policy co-exist with <code>CFS</code>&nbsp;/&nbsp;<code>EEVDF</code> threads that have no LLM analysis?
         </div>
       </div>
 
@@ -4094,9 +4146,50 @@ semantic_ctx.write_stall_warning = <span style="color: #1b4d8f; font-weight: 600
         <div class="num">3</div>
         <h3>Verification.</h3>
         <div class="body">
-          The semantic space is bounded &mdash; can we check <strong>no-starvation</strong> and <strong>bounded latency</strong> before deployment?
+          Can we check the LLM-generated policies for no-starvation and bounded latency before deployment?
         </div>
       </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     SLIDE 58: Summary &mdash; published works + ongoing/proposed.
+============================================================ -->
+<section>
+  <h2 class="slide-title">Summary.</h2>
+
+  <!-- Published works -->
+  <div style="margin-top: 0.4em;">
+    <div style="font-size: 0.5em; font-weight: 800; letter-spacing: 1.8px; color: #1b4d8f; margin-bottom: 0.3em;">PUBLISHED</div>
+
+    <div style="background: #f4f7fb; border-left: 4px solid #1b4d8f; padding: 0.45em 0.8em; margin-bottom: 0.35em; border-radius: 0 6px 6px 0;">
+      <div style="font-size: 0.58em; font-weight: 700; color: #1f2a40; line-height: 1.3;">The Benefits and Limitations of User Interrupts for Preemptive Userspace Scheduling</div>
+      <div style="font-size: 0.46em; color: #4a5167; margin-top: 0.25em; line-height: 1.4;"><strong>Linsong Guo</strong>, Danial Zuberi, Tal Garfinkel, Amy Ousterhout</div>
+      <div style="font-size: 0.42em; color: #1b4d8f; font-weight: 700; font-style: italic; margin-top: 0.18em;">USENIX NSDI 2025</div>
+    </div>
+
+    <div style="background: #f4f7fb; border-left: 4px solid #1b4d8f; padding: 0.45em 0.8em; border-radius: 0 6px 6px 0;">
+      <div style="font-size: 0.58em; font-weight: 700; color: #1f2a40; line-height: 1.3;">Extended User Interrupts (xUI): Fast and Flexible Notification without Polling</div>
+      <div style="font-size: 0.46em; color: #4a5167; margin-top: 0.25em; line-height: 1.4;">Berk Aydogmus, <strong>Linsong Guo</strong>, Danial Zuberi, Tal Garfinkel, Dean Tullsen, Amy Ousterhout, Kazem Taram</div>
+      <div style="font-size: 0.42em; color: #1b4d8f; font-weight: 700; font-style: italic; margin-top: 0.25em; display: flex; align-items: center; justify-content: center; flex-wrap: wrap; gap: 0.55em;">
+        <span>ASPLOS 2025</span>
+        <span style="background: #d4af37; color: #fff; padding: 1px 9px; border-radius: 10px; font-style: normal; font-size: 0.92em; font-weight: 700; letter-spacing: 0.4px;">&starf; Best Paper Award</span>
+        <span style="background: #d4af37; color: #fff; padding: 1px 9px; border-radius: 10px; font-style: normal; font-size: 0.92em; font-weight: 700; letter-spacing: 0.4px;">&starf; IEEE MICRO Top Picks 2026</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Ongoing / proposed -->
+  <div style="margin-top: 0.7em;">
+    <div style="font-size: 0.5em; font-weight: 800; letter-spacing: 1.8px; color: #c0392b; margin-bottom: 0.3em;">ONGOING / PROPOSED</div>
+
+    <div style="background: #fff4f2; border-left: 4px solid #c0392b; padding: 0.45em 0.8em; margin-bottom: 0.3em; border-radius: 0 6px 6px 0;">
+      <div style="font-size: 0.58em; font-weight: 700; color: #1f2a40; line-height: 1.3;">Scheduling with Intent: Exposing Library Knowledge to the Scheduler</div>
+    </div>
+
+    <div style="background: #fff4f2; border-left: 4px solid #c0392b; padding: 0.45em 0.8em; border-radius: 0 6px 6px 0;">
+      <div style="font-size: 0.58em; font-weight: 700; color: #1f2a40; line-height: 1.3;">Semantic Scheduling: Flowing Application Semantics into the Scheduler via LLMs</div>
     </div>
   </div>
 </section>
@@ -4346,6 +4439,7 @@ semantic_ctx.write_stall_warning = <span style="color: #1b4d8f; font-weight: 600
     setVis('.s56-write-lbl', 1);
     setVis('.s56-shm-zone', 1);
     setVis('.s56-read-channel', 1);
+    setVis('.s56-read-lbl-l', 1);
     setVis('.s56-read-lbl', 1);
     setVis('.s56-rbtree', 2);
     setVis('.s56-policy', 3);
@@ -4370,17 +4464,24 @@ semantic_ctx.write_stall_warning = <span style="color: #1b4d8f; font-weight: 600
     ['s56-fn-place','s56-fn-priority','s56-fn-timeslice','s56-fn-preempt'].forEach(id => {
       const el = sec.querySelector('#' + id);
       if (!el) return;
-      const hot = state === 6 && (id === 's56-fn-priority' || id === 's56-fn-timeslice');
+      const hot = state >= 7 && id === 's56-fn-priority';
       el.classList.toggle('hot', hot);
     });
 
     const before = sec.querySelector('#s56-treeBefore');
     const after  = sec.querySelector('#s56-treeAfter');
-    if (before) before.style.display = state >= 7 ? 'none' : '';
-    if (after)  after.style.display  = state >= 7 ? '' : 'none';
+    if (before) before.style.display = state >= 8 ? 'none' : '';
+    if (after)  after.style.display  = state >= 8 ? '' : 'none';
 
     const mut = sec.querySelector('#s56-policyMutable');
-    if (mut) mut.classList.toggle('show', state >= 7);
+    if (mut) mut.classList.toggle('show', state >= 9);
+
+    const tickClock = sec.querySelector('#s56-tickClock');
+    if (tickClock) {
+      tickClock.classList.toggle('fixed', state >= 6);
+      tickClock.classList.remove('firing');
+      if (state === 6) { void tickClock.offsetWidth; tickClock.classList.add('firing'); }
+    }
 
     // Channel sparks (re-trigger animation each entry).
     const fire = (id, on) => {

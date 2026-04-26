@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Thesis Proposal — Backup slides</title>
+<link rel="stylesheet" href="revealjs/reveal.css">
+<link rel="stylesheet" href="revealjs/theme-white.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Sans+3:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400;1,600&display=swap">
+<style>
+  :root {
+    --ink: #1f2a40;
+    --ink-soft: #4a5167;
+    --accent: #1b4d8f;
+    --warn: #c0392b;
+    --muted: #8a92a6;
+  }
+  .reveal { font-family: "Source Sans 3", "Helvetica Neue", Arial, sans-serif; font-weight: 400; color: var(--ink); }
+  .reveal h1, .reveal h2, .reveal h3 { color: var(--ink); text-transform: none; letter-spacing: 0; font-weight: 700; }
+  .reveal .slide-title { text-align: left; font-weight: 700; font-size: 1.2em; margin: 0 0 0.6em 0; }
+  /* Sparse-content slide pattern (used for backup 2). */
+  .reveal section.sparse-vcenter { display: flex; flex-direction: column; min-height: 720px; }
+  .reveal section.sparse-vcenter > .slide-title { flex: 0 0 auto; }
+  .reveal section.sparse-vcenter > .vcenter-body { flex: 1; display: flex; flex-direction: column; justify-content: center; }
+
+  /* ============================================================
+     Backup slide 1 — Scheduler design (App + shared memory + scheduler).
+     Lifted from v19.html on 2026-04-26 to make room for the simpler
+     slide 54 (mechanism + policy hooks + policy).
+  ============================================================ */
+  .reveal .s56-slide { position: relative; }
+  .reveal .s56-slide > span.fragment { position: absolute; top: 0; left: 0; width: 0; height: 0; overflow: hidden; pointer-events: none; }
+
+  /* App */
+  .reveal .s56-slide .s56-app-box {
+    position: absolute; top: 72px; left: 58px; width: 580px;
+    border: 2px solid #4a4a4a; border-radius: 10px;
+    background: white; padding: 10px 16px; box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  }
+  .reveal .s56-slide .s56-app-header { font-size: 22px; font-weight: 700; color: #222; display: flex; align-items: center; gap: 12px; }
+  .reveal .s56-slide .s56-app-header .s56-run { width: 11px; height: 11px; border-radius: 50%; background: #4caf50; }
+  .reveal .s56-slide .s56-app-header .s56-sub { font-size: 15px; font-weight: 400; color: #6c7385; font-style: italic; }
+  .reveal .s56-slide .s56-app-code { margin-top: 8px; font-family: 'SF Mono', Menlo, Consolas, monospace; font-size: 16px; line-height: 1.5; color: #2a3040; }
+  .reveal .s56-slide .s56-line { padding: 1px 4px; border-radius: 3px; transition: background 0.4s; }
+  .reveal .s56-slide .s56-kw { color: #0b4d9c; }
+  .reveal .s56-slide .s56-val { color: #8a5a00; font-weight: 700; transition: color 0.4s; }
+  .reveal .s56-slide .s56-line.hot-line { background: #fff5e0; }
+  .reveal .s56-slide .s56-line.hot-line .s56-val { color: #c23b3b; animation: s56-valuepulse 1.2s infinite; }
+  @keyframes s56-valuepulse { 0%,100% { background: transparent; } 50% { background: rgba(194,59,59,0.18); } }
+
+  /* SHM zone */
+  .reveal .s56-slide .s56-shm-zone {
+    position: absolute; top: 252px; left: 40px; right: 40px; height: 74px;
+    background: #ffffff; border: 2px dashed #c23b3b; border-radius: 12px;
+    opacity: 0; transition: opacity 0.35s;
+  }
+  .reveal .s56-slide .s56-shm-tag {
+    position: absolute; top: -18px; left: 26px;
+    background: #c23b3b; color: white;
+    font-size: 19px; font-weight: 700; letter-spacing: 0.6px;
+    padding: 5px 14px; border-radius: 6px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.15);
+  }
+  .reveal .s56-slide .s56-buffer {
+    position: absolute; top: 0; bottom: 0; left: 24px; right: 24px;
+    display: flex; align-items: center; gap: 30px;
+  }
+  .reveal .s56-slide .s56-buffer-label { font-size: 21px; font-weight: 700; color: #c23b3b; flex-shrink: 0; white-space: nowrap; width: 220px; }
+  .reveal .s56-slide .s56-slots { display: flex; gap: 16px; align-items: center; }
+  .reveal .s56-slide .s56-slot {
+    width: 230px; height: 40px; border-radius: 6px;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    font-family: 'SF Mono', Menlo, Consolas, monospace;
+    background: white; border: 1.5px dashed #d99fa3;
+    transition: all 0.4s; gap: 3px; overflow: hidden;
+  }
+  .reveal .s56-slide .s56-slot .s56-thr { font-weight: 700; font-size: 16px; line-height: 1; color: transparent; white-space: nowrap; }
+  .reveal .s56-slide .s56-slot .s56-fld { font-size: 14px; line-height: 1; color: transparent; letter-spacing: -0.1px; white-space: nowrap; }
+  .reveal .s56-slide .s56-slot.filled { background: #fff0f0; border: 1.6px solid #c23b3b; box-shadow: 0 1px 3px rgba(194,59,59,0.2); }
+  .reveal .s56-slide .s56-slot.filled .s56-thr { color: #8a3a40; }
+  .reveal .s56-slide .s56-slot.filled .s56-fld { color: #c23b3b; font-weight: 700; }
+  .reveal .s56-slide .s56-slot.draining { transform: translateY(-2px) scale(1.04); box-shadow: 0 4px 14px rgba(194,59,59,0.45); border-color: #c23b3b; }
+
+  /* Cross-zone arrows (channels) */
+  .reveal .s56-slide .s56-channel { position: absolute; pointer-events: none; opacity: 0; transition: opacity 0.35s; }
+  .reveal .s56-slide .s56-channel .s56-line-stroke {
+    position: absolute; left: 0; top: 0; width: 3px; height: 100%;
+    background: #c23b3b; border-radius: 2px;
+    transition: box-shadow 0.25s, background 0.25s;
+  }
+  .reveal .s56-slide .s56-channel .s56-head {
+    position: absolute; left: -10px; top: 100%; width: 0; height: 0;
+    border-left: 11px solid transparent; border-right: 11px solid transparent;
+    border-top: 13px solid #c23b3b;
+  }
+  .reveal .s56-slide .s56-channel .s56-spark {
+    position: absolute; left: -3px; top: -4px;
+    width: 9px; height: 9px; border-radius: 50%;
+    background: #ff5252; box-shadow: 0 0 12px rgba(255,82,82,0.95);
+    opacity: 0;
+  }
+  .reveal .s56-slide .s56-channel.active .s56-spark { animation: s56-sparkRun 0.7s ease-in 1 forwards; }
+  .reveal .s56-slide .s56-channel.active .s56-line-stroke { background: #ff4040; box-shadow: 0 0 12px rgba(255,80,80,0.55); }
+  @keyframes s56-sparkRun {
+    0%   { opacity: 0; top: -6px; }
+    15%  { opacity: 1; }
+    85%  { opacity: 1; }
+    100% { opacity: 0; top: 100%; }
+  }
+  .reveal .s56-slide .s56-write-channel { top: 208px; left: 427px; width: 3px; height: 31px; }
+  .reveal .s56-slide .s56-write-lbl { position: absolute; top: 220px; right: 864px; font-size: 19px; font-weight: 700; color: #c23b3b; font-style: italic; white-space: nowrap; text-align: right; opacity: 0; transition: opacity 0.35s; }
+  .reveal .s56-slide .s56-read-channel  { top: 330px; left: 427px; width: 3px; height: 31px; }
+  .reveal .s56-slide .s56-read-lbl-l { position: absolute; top: 342px; right: 864px; font-size: 19px; font-weight: 700; color: #c23b3b; font-style: italic; white-space: nowrap; text-align: right; opacity: 0; transition: opacity 0.35s; }
+  .reveal .s56-slide .s56-read-lbl  { position: absolute; top: 336px; left: 441px; font-size: 17px; font-weight: 700; color: #c23b3b; font-style: italic; white-space: nowrap; opacity: 0; transition: opacity 0.35s; }
+  .reveal .s56-slide .s56-tick-extra {
+    display: inline-flex; align-items: center; gap: 5px;
+    padding: 3px 10px;
+    background: #fff0f0; border: 1.6px solid #c23b3b; border-radius: 14px;
+  }
+  .reveal .s56-slide .s56-clock {
+    display: inline-block; width: 16px; height: 16px;
+    border: 2px solid #c23b3b; border-radius: 50%;
+    position: relative; flex-shrink: 0;
+  }
+  .reveal .s56-slide .s56-clock::before {
+    content: ''; position: absolute; top: 2px; left: 50%;
+    width: 1.5px; height: 5px; background: #c23b3b;
+    transform: translateX(-50%);
+  }
+  .reveal .s56-slide .s56-clock::after {
+    content: ''; position: absolute; top: 50%; left: 50%;
+    width: 1.5px; height: 4px; background: #c23b3b;
+    transform-origin: top;
+    animation: s56-clockSpin 4s linear infinite;
+  }
+  @keyframes s56-clockSpin {
+    0%   { transform: rotate(0deg)   translateX(-50%); }
+    100% { transform: rotate(360deg) translateX(-50%); }
+  }
+  .reveal .s56-slide .s56-clock.fixed::after { animation-play-state: paused; }
+  .reveal .s56-slide .s56-clock.firing {
+    animation: s56-clockFire 0.8s cubic-bezier(0.4, 0, 0.2, 1) 1;
+  }
+  @keyframes s56-clockFire {
+    0%   { transform: scale(1);   box-shadow: 0 0 0 rgba(255,80,80,0); }
+    20%  { transform: scale(1.5); box-shadow: 0 0 24px rgba(255,80,80,1); }
+    100% { transform: scale(1);   box-shadow: 0 0 0 rgba(255,80,80,0); }
+  }
+
+  /* Scheduler box */
+  .reveal .s56-slide .s56-sched {
+    position: absolute; top: 374px; left: 40px; width: 1200px; height: 336px;
+    border: 2.5px solid #0b4d9c; background: #f3f7fc; border-radius: 12px;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+  }
+  .reveal .s56-slide .s56-sched-header { position: absolute; top: 10px; left: 22px; display: flex; align-items: center; gap: 14px; }
+  .reveal .s56-slide .s56-sched-title { font-size: 22px; font-weight: 700; color: #0b4d9c; }
+  .reveal .s56-slide .s56-sched-badge { background: #0b4d9c; color: white; font-size: 17px; font-weight: 700; padding: 4px 13px; border-radius: 11px; }
+  .reveal .s56-slide .s56-sched-hr { border: none; border-top: 1px solid #cfd9ea; position: absolute; top: 46px; left: 22px; right: 22px; margin: 0; }
+
+  /* Mechanism column (left) */
+  .reveal .s56-slide .s56-rbtree { position: absolute; top: 52px; left: 22px; width: 542px; bottom: 10px; opacity: 0; transition: opacity 0.35s; display: flex; flex-direction: column; }
+  .reveal .s56-slide .s56-mech-head { display: flex; gap: 10px; align-items: baseline; margin-bottom: 2px; flex-wrap: wrap; }
+  .reveal .s56-slide .s56-mech-label { font-size: 19px; font-weight: 700; color: #0b4d9c; letter-spacing: 0.5px; }
+  .reveal .s56-slide .s56-mech-cap { font-size: 18px; color: #0b4d9c; font-style: italic; }
+  .reveal .s56-slide .s56-mech-chips { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; margin-bottom: 4px; }
+  .reveal .s56-slide .s56-mech-chip { background: white; border: 1.6px solid #0b4d9c; border-radius: 14px; padding: 6px 14px; font-size: 16px; font-weight: 600; color: #0b4d9c; white-space: nowrap; }
+  .reveal .s56-slide .s56-mech-chip-hero { background: #0b4d9c; color: white; }
+  .reveal .s56-slide .s56-tree-box { background: white; border: 1.5px solid #0b4d9c; border-radius: 6px; padding: 6px 10px; position: absolute; top: 66px; left: 0; right: 0; bottom: 0; display: flex; flex-direction: column; }
+  .reveal .s56-slide .s56-ds-head { display: flex; gap: 12px; align-items: baseline; margin-bottom: 2px; }
+  .reveal .s56-slide .s56-ds-cap { font-size: 16px; color: #6c7385; font-style: italic; }
+  .reveal .s56-slide .s56-ds-cap .s56-em { color: #0b4d9c; font-weight: 700; font-style: normal; }
+  .reveal .s56-slide .s56-tree-svg { width: 100%; flex: 1; min-height: 0; }
+
+  /* Policy column (right) */
+  .reveal .s56-slide .s56-policy {
+    position: absolute; top: 52px; left: 586px; right: 22px; bottom: 10px;
+    opacity: 0; transition: opacity 0.35s;
+    display: flex; flex-direction: column;
+  }
+  .reveal .s56-slide .s56-policy-box {
+    background: white; border: 1.5px solid #d9862a; border-radius: 6px; padding: 52px 10px 6px;
+    position: absolute; top: 62px; left: 0; right: 0; bottom: 0;
+    display: flex; flex-direction: column;
+  }
+  .reveal .s56-slide .s56-policy-header { display: flex; align-items: center; gap: 12px; margin-bottom: 8px; flex-wrap: wrap; }
+  .reveal .s56-slide .s56-policy-title { font-size: 19px; font-weight: 700; color: #8a5a00; letter-spacing: 0.5px; }
+  .reveal .s56-slide .s56-policy-badge { background: #d9862a; color: white; font-size: 17px; font-weight: 700; padding: 4px 13px; border-radius: 11px; }
+  .reveal .s56-slide .s56-policy-sub { font-size: 18px; color: #8a5a00; font-style: italic; }
+  .reveal .s56-slide .s56-policy-mutable {
+    position: absolute; top: 6px; left: 50%; transform: translateX(-50%);
+    background: white; border: 1.8px solid #d9862a; color: #8a5a00;
+    font-size: 21px; font-weight: 700; padding: 5px 16px; border-radius: 13px;
+    opacity: 0; transition: opacity 0.35s;
+    animation: s56-pulseborder 1.6s infinite;
+    z-index: 2; white-space: nowrap;
+  }
+  .reveal .s56-slide .s56-policy-mutable.show { opacity: 1; }
+  @keyframes s56-pulseborder { 0%,100% { box-shadow: 0 0 0 rgba(217,134,42,0); } 50% { box-shadow: 0 0 12px rgba(217,134,42,0.6); } }
+
+  .reveal .s56-slide .s56-fn-grid { display: grid; grid-template-columns: auto auto; grid-template-rows: auto auto; gap: 12px; flex: 1; align-content: space-evenly; justify-content: space-evenly; }
+  .reveal .s56-slide .s56-fn-box { background: white; border: 1.6px solid #d9862a; border-radius: 6px; padding: 8px 5px; display: flex; flex-direction: column; justify-content: center; transition: all 0.3s; min-width: 0; }
+  .reveal .s56-slide .s56-fn-box .s56-sig { font-family: 'SF Mono', Menlo, Consolas, monospace; font-size: 14px; font-weight: 700; color: #8a5a00; white-space: nowrap; line-height: 1.3; }
+  .reveal .s56-slide .s56-fn-box .s56-note { font-family: 'SF Mono', Menlo, Consolas, monospace; font-size: 12px; color: #a77838; font-style: italic; margin-top: 6px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .reveal .s56-slide .s56-fn-box.hot { background: #d9862a; border-color: #8a5a00; transform: translateY(-2px) scale(1.03); box-shadow: 0 6px 20px rgba(217, 134, 42, 0.45); }
+  .reveal .s56-slide .s56-fn-box.hot .s56-sig, .reveal .s56-slide .s56-fn-box.hot .s56-note { color: white; }
+
+  /* RB tree node */
+  .reveal .s56-slide .s56-nrect { fill: #eef5fc; stroke: #0b4d9c; stroke-width: 1.5; }
+  .reveal .s56-slide .s56-ntxt { font-family: 'SF Mono', Menlo, Consolas, monospace; font-weight: 700; font-size: 26px; fill: #0b4d9c; }
+  .reveal .s56-slide .s56-npri { font-family: 'SF Mono', Menlo, Consolas, monospace; font-weight: 700; font-size: 20px; fill: #8a5a00; }
+  .reveal .s56-slide .s56-next-marker { font-family: 'SF Mono', Menlo, Consolas, monospace; font-size: 32px; font-weight: 700; fill: #c23b3b; }
+  .reveal .s56-slide .s56-hot-flush .s56-nrect { fill: #fff0d6; stroke: #c23b3b; stroke-width: 2.4; filter: drop-shadow(0 0 4px rgba(255,184,77,0.45)); }
+  .reveal .s56-slide .s56-hot-flush .s56-ntxt { fill: #c23b3b; }
+  .reveal .s56-slide .s56-hot-flush .s56-npri { fill: #c23b3b; }
+</style>
+</head>
+<body>
+<div class="reveal">
+<div class="slides">
+
+<!-- ============================================================
+     BACKUP 1 — Scheduler design (App + SHM + scheduler).
+     Original slide-54 (lifted on 2026-04-26).
+============================================================ -->
+<section class="s56-slide">
+  <h2 class="slide-title">Scheduler design</h2>
+
+  <!-- App -->
+  <div class="s56-app-box">
+    <div class="s56-app-header">
+      <span class="s56-run"></span>Application
+      <span class="s56-sub">(RocksDB &mdash; flush thread)</span>
+    </div>
+    <div class="s56-app-code">
+      <div class="s56-line"><span class="s56-kw">flush.sem_ctx.thread_role</span> = <span class="s56-val">BACKGROUND</span>;</div>
+      <div class="s56-line"><span class="s56-kw">flush.sem_ctx.request_type</span> = <span class="s56-val">FLUSH</span>;</div>
+      <div class="s56-line" id="s56-stallLine"><span class="s56-kw">flush.sem_ctx.write_stall_warning</span> = <span class="s56-val" id="s56-stallVal">false</span>;</div>
+    </div>
+  </div>
+
+  <!-- Write channel (App &rarr; SHM) -->
+  <div class="s56-channel s56-write-channel" id="s56-writeChannel">
+    <div class="s56-line-stroke"></div>
+    <div class="s56-spark"></div>
+    <div class="s56-head"></div>
+  </div>
+  <div class="s56-write-lbl">written by app</div>
+
+  <!-- Shared memory zone -->
+  <div class="s56-shm-zone">
+    <div class="s56-shm-tag">SHARED MEMORY</div>
+    <div class="s56-buffer">
+      <div class="s56-buffer-label">Per-CPU Ring Buffer</div>
+      <div class="s56-slots">
+        <div class="s56-slot" data-slot="0"><div class="s56-thr"></div><div class="s56-fld"></div></div>
+        <div class="s56-slot" data-slot="1"><div class="s56-thr"></div><div class="s56-fld"></div></div>
+        <div class="s56-slot" data-slot="2"><div class="s56-thr"></div><div class="s56-fld"></div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Read channel (SHM &rarr; Scheduler) -->
+  <div class="s56-channel s56-read-channel" id="s56-readChannel">
+    <div class="s56-line-stroke"></div>
+    <div class="s56-spark"></div>
+    <div class="s56-head"></div>
+  </div>
+  <div class="s56-read-lbl-l">drained by scheduler</div>
+  <div class="s56-read-lbl"><span class="s56-tick-extra"><span class="s56-clock" id="s56-tickClock"></span>at scheduler tick</span></div>
+
+  <!-- Scheduler -->
+  <div class="s56-sched">
+    <div class="s56-sched-header">
+      <div class="s56-sched-title">Scheduler</div>
+      <div class="s56-sched-badge">provided by us</div>
+    </div>
+    <hr class="s56-sched-hr">
+
+    <!-- Tree on LEFT -->
+    <div class="s56-rbtree">
+      <div class="s56-mech-head">
+        <span class="s56-mech-label">MECHANISMS</span>
+        <span class="s56-mech-cap">not rely on semantics</span>
+      </div>
+      <div class="s56-mech-chips">
+        <span class="s56-mech-chip s56-mech-chip-hero">Per-CPU Red-Black Tree &#9662;</span>
+        <span class="s56-mech-chip">Preemption</span>
+        <span class="s56-mech-chip">Migration</span>
+        <span class="s56-mech-chip">&hellip;</span>
+      </div>
+      <div class="s56-tree-box">
+      <div class="s56-ds-head">
+        <span class="s56-ds-cap"><span class="s56-em">leftmost</span> = highest priority</span>
+      </div>
+      <svg class="s56-tree-svg" viewBox="0 0 870 312" preserveAspectRatio="xMidYMid meet">
+        <g id="s56-treeBefore">
+          <line x1="435" y1="72" x2="275" y2="102" stroke="#0b4d9c" stroke-width="1.5"/>
+          <line x1="435" y1="72" x2="595" y2="102" stroke="#0b4d9c" stroke-width="1.5"/>
+          <line x1="275" y1="174" x2="115" y2="204" stroke="#0b4d9c" stroke-width="1.4"/>
+          <line x1="275" y1="174" x2="435" y2="204" stroke="#0b4d9c" stroke-width="1.4"/>
+          <line x1="595" y1="174" x2="755" y2="204" stroke="#0b4d9c" stroke-width="1.4"/>
+          <g transform="translate(320,0)"><rect class="s56-nrect" width="230" height="72" rx="16" ry="16"/><text class="s56-ntxt" x="115" y="30" text-anchor="middle">rocksdb-write</text><text class="s56-npri" x="115" y="58" text-anchor="middle">0.5</text></g>
+          <g transform="translate(160,102)"><rect class="s56-nrect" width="230" height="72" rx="16" ry="16"/><text class="s56-ntxt" x="115" y="30" text-anchor="middle">rocksdb-get</text><text class="s56-npri" x="115" y="58" text-anchor="middle">0.68</text></g>
+          <g transform="translate(480,102)"><rect class="s56-nrect" width="230" height="72" rx="16" ry="16"/><text class="s56-ntxt" x="115" y="30" text-anchor="middle">redis</text><text class="s56-npri" x="115" y="58" text-anchor="middle">0.4</text></g>
+          <g transform="translate(0,204)"><rect class="s56-nrect" width="230" height="72" rx="16" ry="16"/><text class="s56-ntxt" x="115" y="30" text-anchor="middle">rocksdb-get</text><text class="s56-npri" x="115" y="58" text-anchor="middle">0.72</text></g>
+          <g transform="translate(320,204)"><rect class="s56-nrect" width="230" height="72" rx="16" ry="16"/><text class="s56-ntxt" x="115" y="30" text-anchor="middle">nginx</text><text class="s56-npri" x="115" y="58" text-anchor="middle">0.6</text></g>
+          <g transform="translate(640,204)"><rect class="s56-nrect" width="230" height="72" rx="16" ry="16"/><text class="s56-ntxt" x="115" y="30" text-anchor="middle">rocksdb-flush</text><text class="s56-npri" x="115" y="58" text-anchor="middle">0.2</text></g>
+        </g>
+        <g id="s56-treeAfter" style="display:none">
+          <line x1="435" y1="72" x2="275" y2="102" stroke="#0b4d9c" stroke-width="1.5"/>
+          <line x1="435" y1="72" x2="595" y2="102" stroke="#0b4d9c" stroke-width="1.5"/>
+          <line x1="275" y1="174" x2="115" y2="204" stroke="#c23b3b" stroke-width="2"/>
+          <line x1="275" y1="174" x2="435" y2="204" stroke="#0b4d9c" stroke-width="1.4"/>
+          <line x1="595" y1="174" x2="755" y2="204" stroke="#0b4d9c" stroke-width="1.4"/>
+          <g transform="translate(320,0)"><rect class="s56-nrect" width="230" height="72" rx="16" ry="16"/><text class="s56-ntxt" x="115" y="30" text-anchor="middle">nginx</text><text class="s56-npri" x="115" y="58" text-anchor="middle">0.6</text></g>
+          <g transform="translate(160,102)"><rect class="s56-nrect" width="230" height="72" rx="16" ry="16"/><text class="s56-ntxt" x="115" y="30" text-anchor="middle">rocksdb-get</text><text class="s56-npri" x="115" y="58" text-anchor="middle">0.72</text></g>
+          <g transform="translate(480,102)"><rect class="s56-nrect" width="230" height="72" rx="16" ry="16"/><text class="s56-ntxt" x="115" y="30" text-anchor="middle">rocksdb-write</text><text class="s56-npri" x="115" y="58" text-anchor="middle">0.5</text></g>
+          <g class="s56-hot-flush" transform="translate(0,204)"><rect class="s56-nrect" width="230" height="72" rx="16" ry="16"/><text class="s56-ntxt" x="115" y="30" text-anchor="middle">rocksdb-flush</text><text class="s56-npri" x="115" y="58" text-anchor="middle">0.95</text></g>
+          <text class="s56-next-marker" x="115" y="308" text-anchor="middle">&uarr; runs next</text>
+          <g transform="translate(320,204)"><rect class="s56-nrect" width="230" height="72" rx="16" ry="16"/><text class="s56-ntxt" x="115" y="30" text-anchor="middle">rocksdb-get</text><text class="s56-npri" x="115" y="58" text-anchor="middle">0.68</text></g>
+          <g transform="translate(640,204)"><rect class="s56-nrect" width="230" height="72" rx="16" ry="16"/><text class="s56-ntxt" x="115" y="30" text-anchor="middle">redis</text><text class="s56-npri" x="115" y="58" text-anchor="middle">0.4</text></g>
+        </g>
+      </svg>
+      </div>
+    </div>
+
+    <!-- Policy on RIGHT (2x2 grid) -->
+    <div class="s56-policy">
+      <div class="s56-policy-header">
+        <div class="s56-policy-title">POLICY</div>
+        <div class="s56-policy-badge">LLM-generated</div>
+        <div class="s56-policy-sub">use app semantics to make scheduling decisions</div>
+      </div>
+      <div class="s56-policy-box">
+        <div class="s56-policy-mutable" id="s56-policyMutable">reloaded when a new app has new semantics</div>
+        <div class="s56-fn-grid">
+          <div class="s56-fn-box" id="s56-fn-priority"><div class="s56-sig">priority(sem_ctx) &rarr; float</div><div class="s56-note">// calculate thread's priority</div></div>
+          <div class="s56-fn-box" id="s56-fn-place"><div class="s56-sig">placement(sem_ctx) &rarr; cpu_id</div><div class="s56-note">// pick which CPU thread runs on</div></div>
+          <div class="s56-fn-box" id="s56-fn-timeslice"><div class="s56-sig">time_slice(sem_ctx) &rarr; duration</div><div class="s56-note">// the timeslice of thread</div></div>
+          <div class="s56-fn-box" id="s56-fn-preempt"><div class="s56-sig">should_preempt(new, cur) &rarr; bool</div><div class="s56-note">// preempt cur thread for new?</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Fragment markers drive the state machine. -->
+  <span class="fragment" data-s56-state="1"></span>
+  <span class="fragment" data-s56-state="2"></span>
+  <span class="fragment" data-s56-state="3"></span>
+  <span class="fragment" data-s56-state="4"></span>
+  <span class="fragment" data-s56-state="5"></span>
+  <span class="fragment" data-s56-state="6"></span>
+  <span class="fragment" data-s56-state="7"></span>
+  <span class="fragment" data-s56-state="8"></span>
+  <span class="fragment" data-s56-state="9"></span>
+</section>
+
+<!-- ============================================================
+     BACKUP 2 — Synthetic benchmark (lifted from main deck slide 46
+     on 2026-04-26).
+============================================================ -->
+<section class="sparse-vcenter">
+  <h2 class="slide-title">Synthetic benchmark</h2>
+  <div class="vcenter-body">
+    <p style="font-size: 0.85em; margin: 0;">Gains hold across a wide config space.</p>
+    <img src="assets/figures/slide47.png" alt="Synthetic benchmark goodput across configurations" style="display:block; margin: 0.5em auto 0; width: 90%; max-height: 75vh; image-rendering: -webkit-optimize-contrast;">
+  </div>
+</section>
+
+</div>
+</div>
+
+<script src="revealjs/reveal.js"></script>
+<script>
+  Reveal.initialize({
+    hash: true,
+    slideNumber: 'c/t',
+    width: 1280,
+    height: 720,
+    margin: 0.04,
+    center: false,
+    controls: true,
+    progress: true,
+    transition: 'none'
+  });
+</script>
+
+<!-- ============================================================
+     Slide state machine (Scheduler design — App + SHM + sched).
+============================================================ -->
+<script>
+(function() {
+  function s56Section() { return document.querySelector('section.s56-slide'); }
+
+  function applyS56(state) {
+    const sec = s56Section();
+    if (!sec) return;
+
+    const stallVal = sec.querySelector('#s56-stallVal');
+    const stallLine = sec.querySelector('#s56-stallLine');
+    if (stallVal) stallVal.textContent = state >= 4 ? 'true' : 'false';
+    if (stallLine) stallLine.classList.toggle('hot-line', state >= 4 && state <= 6);
+
+    const setVis = (sel, visAt) => {
+      const el = sec.querySelector(sel);
+      if (el) el.style.opacity = state >= visAt ? '1' : '0';
+    };
+    setVis('.s56-write-channel', 1);
+    setVis('.s56-write-lbl', 1);
+    setVis('.s56-shm-zone', 1);
+    setVis('.s56-read-channel', 1);
+    setVis('.s56-read-lbl-l', 1);
+    setVis('.s56-read-lbl', 1);
+    setVis('.s56-rbtree', 2);
+    setVis('.s56-policy', 3);
+
+    for (let i = 0; i < 3; i++) {
+      const slot = sec.querySelector('.s56-slot[data-slot="' + i + '"]');
+      if (!slot) continue;
+      slot.classList.remove('filled', 'draining');
+      slot.querySelector('.s56-thr').textContent = '';
+      slot.querySelector('.s56-fld').textContent = '';
+    }
+    if (state >= 5) {
+      const s0 = sec.querySelector('.s56-slot[data-slot="0"]');
+      if (s0) {
+        s0.classList.add('filled');
+        s0.querySelector('.s56-thr').textContent = 'flush';
+        s0.querySelector('.s56-fld').textContent = 'write_stall_warning = true';
+        if (state === 6) s0.classList.add('draining');
+      }
+    }
+
+    ['s56-fn-place','s56-fn-priority','s56-fn-timeslice','s56-fn-preempt'].forEach(id => {
+      const el = sec.querySelector('#' + id);
+      if (!el) return;
+      const hot = state >= 7 && id === 's56-fn-priority';
+      el.classList.toggle('hot', hot);
+    });
+
+    const before = sec.querySelector('#s56-treeBefore');
+    const after  = sec.querySelector('#s56-treeAfter');
+    if (before) before.style.display = state >= 8 ? 'none' : '';
+    if (after)  after.style.display  = state >= 8 ? '' : 'none';
+
+    const mut = sec.querySelector('#s56-policyMutable');
+    if (mut) mut.classList.toggle('show', state >= 9);
+
+    const tickClock = sec.querySelector('#s56-tickClock');
+    if (tickClock) {
+      tickClock.classList.toggle('fixed', state >= 6);
+      tickClock.classList.remove('firing');
+      if (state === 6) { void tickClock.offsetWidth; tickClock.classList.add('firing'); }
+    }
+
+    const fire = (id, on) => {
+      const el = sec.querySelector('#' + id);
+      if (!el) return;
+      el.classList.remove('active');
+      if (on) { void el.offsetWidth; el.classList.add('active'); }
+    };
+    fire('s56-writeChannel', state === 5);
+    fire('s56-readChannel',  state === 6);
+  }
+
+  function syncS56(section) {
+    if (!section || !section.classList.contains('s56-slide')) return;
+    const vis = section.querySelectorAll('.fragment.visible[data-s56-state]');
+    const maxSt = vis.length === 0
+      ? 0
+      : Math.max.apply(null, Array.from(vis).map(f => parseInt(f.dataset.s56State, 10)));
+    applyS56(maxSt);
+  }
+
+  if (window.Reveal) {
+    Reveal.on('ready', () => {
+      const cur = Reveal.getCurrentSlide ? Reveal.getCurrentSlide() : null;
+      if (cur) syncS56(cur);
+      else applyS56(0);
+    });
+    Reveal.on('slidechanged', e => { syncS56(e.currentSlide); });
+    Reveal.on('fragmentshown', e => {
+      const st = e.fragment && e.fragment.dataset && e.fragment.dataset.s56State;
+      if (st) applyS56(parseInt(st, 10));
+    });
+    Reveal.on('fragmenthidden', e => {
+      const st = e.fragment && e.fragment.dataset && e.fragment.dataset.s56State;
+      if (st) applyS56(parseInt(st, 10) - 1);
+    });
+  } else {
+    applyS56(0);
+  }
+})();
+</script>
+
+</body>
+</html>

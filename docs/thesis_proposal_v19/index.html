@@ -35,9 +35,14 @@
   .reveal .sparse { display: flex; flex-direction: column; justify-content: center; height: 100%; text-align: center; }
   .reveal .sparse .headline { font-size: 1.3em; font-weight: 500; color: var(--ink-soft); }
   .reveal .sparse .kicker { font-size: 2em; font-weight: 800; color: var(--accent); margin-top: 0.4em; }
-  .reveal .title-card { display:flex; flex-direction:column; justify-content:center; align-items:center; height:100%; }
+  .reveal .title-card { display:flex; flex-direction:column; justify-content:center; align-items:center; min-height:720px; }
   .reveal .title-card h1 { font-size: 1.5em; font-weight: 800; margin: 0; }
-  .reveal .title-card .subtitle { color: var(--muted); margin-top: 0.8em; font-size: 0.8em; }
+  .reveal .title-card .subtitle { color: var(--ink); margin-top: 0.8em; font-size: 1em; }
+
+  /* Sparse-content slides: title anchored at top, body fills remaining height and centers vertically */
+  .reveal section.sparse-vcenter { display: flex; flex-direction: column; min-height: 720px; }
+  .reveal section.sparse-vcenter > .slide-title { flex: 0 0 auto; }
+  .reveal section.sparse-vcenter > .vcenter-body { flex: 1; display: flex; flex-direction: column; justify-content: center; }
   .reveal .borrow { display: flex; justify-content: center; align-items: center; height: 100%; }
   .reveal .borrow img { max-width: 100%; max-height: 92vh; box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
   .reveal .borrow-caption { position: absolute; bottom: 0.4em; right: 0.8em; font-size: 0.4em; color: var(--muted); }
@@ -100,12 +105,12 @@
   .reveal .s4-axis::after { content: ''; position: absolute; top: 0; bottom: 0; left: 66.67%; width: 1px; background: #e6e8ee; }
   .reveal .s4-axis.with-baseline { border-bottom: 1.5px solid #c0c4ce; }
   .reveal .s4-bar { position: absolute; top: 0.15em; height: 1.1em; background: var(--warn); border-radius: 4px; display: flex; align-items: center; justify-content: center; color: #fff; font-weight: 700; font-size: 0.48em; box-sizing: border-box; padding: 0 0.35em; white-space: nowrap; z-index: 1; }
-  .reveal .s4-scale { position: relative; height: 0.9em; font-size: 0.42em; color: #6c7385; margin-top: 0.15em; }
-  .reveal .s4-scale span { position: absolute; transform: translateX(-50%); }
+  .reveal .s4-scale { position: relative; height: 0.9em; font-size: 0.5em; color: #6c7385; margin-top: 0.15em; }
+  .reveal .s4-scale span { position: absolute; top: 0; transform: translateX(-50%); white-space: nowrap; }
   .reveal .s4-scale span.first { transform: translateX(0); }
   .reveal .s4-scale span.last { transform: translateX(-100%); }
   .reveal .s4-chart > .s4-row:last-child { margin-top: -0.4em; }
-  .reveal .s4-axis-title { text-align: center; font-size: 0.5em; color: #6c7385; }
+  .reveal .s4-axis-title { text-align: center; font-size: 0.62em; color: #1f2a40; font-weight: 600; }
 
   /* Slide 8: app-level info gap diagram */
   .reveal .s9-stage { width: 70%; margin: 0 auto; display: flex; flex-direction: column; align-items: center; gap: 0.3em; }
@@ -779,9 +784,9 @@
 ============================================================ -->
 <section>
   <div class="title-card">
-    <h1>Advancing Microsecond-Scale Scheduling:<br>Interfaces, Runtime, and Hardware</h1>
-    <div class="subtitle">Linsong Guo &middot; Advisor: Amy Ousterhout &middot; UC San Diego</div>
-    <div class="subtitle">Thesis Proposal &middot; 2026</div>
+    <h1><span style="white-space:nowrap;">Advancing Microsecond-Scale Scheduling:</span><br>Interfaces, Runtime, and Hardware</h1>
+    <div class="subtitle">Linsong Guo</div>
+    <div class="subtitle">Advisor: Amy Ousterhout</div>
   </div>
 </section>
 
@@ -789,8 +794,8 @@
      SLIDE 2 (merged from old 2+3): μs-scale latency targets + fan-out/chain
 ============================================================ -->
 <section>
-  <h2 class="slide-title">Many datacenter workloads face <span style="color:#c0392b;">microsecond-scale</span> latency targets.</h2>
-  <p class="fragment fade-in" data-fragment-index="1" style="font-size:0.85em;color:#1f2a40;font-weight:500;margin:-0.4em 0 0.1em;">A single task often needs to be &mu;s-fast.</p>
+  <h2 class="slide-title">Many datacenter workloads face <span style="color:#c0392b;">microsecond-scale</span> latency targets</h2>
+  <p class="fragment fade-in" data-fragment-index="1" style="font-size:0.85em;color:#1f2a40;font-weight:500;margin:-0.4em 0 0.1em;">A single task often needs to complete in microseconds.</p>
   <div class="row" style="height:78%;">
     <div class="ppt-slide" data-source="pptx/s2" style="flex:1;">
       <div style="position:absolute;inset:0 3% 8% 3%;display:flex;gap:4%;align-items:stretch;">
@@ -872,7 +877,7 @@
      SLIDE 3
 ============================================================ -->
 <section>
-  <h2 class="slide-title">Examples of &mu;s-scale workloads.</h2>
+  <h2 class="slide-title">Examples of &mu;s-scale workloads</h2>
 
   <div class="s4-chart">
     <div class="s4-row">
@@ -907,7 +912,7 @@
 
     <div class="s4-row">
       <div class="s4-label">
-        <div class="name">RPCs</div>
+        <div class="name">Remote Procedure Calls (RPCs)</div>
         <div class="sub">Google RPC study [SOSP '23]</div>
       </div>
       <div class="s4-axis with-baseline">
@@ -935,90 +940,96 @@
 <!-- ============================================================
      SLIDE 4
 ============================================================ -->
-<section>
-  <h2 class="slide-title">Scheduling must react correctly and quickly.</h2>
-  <p style="font-size:0.7em;margin-top:-0.4em;color:var(--ink);">Tight latency targets leave no room for suboptimal or slow decisions.</p>
-  <div class="spine-cards">
-    <div class="spine-card c1 fragment fade-in" data-fragment-index="1">
-      <div class="num">1</div>
-      <div class="icon-wrap">
-        <svg width="26" height="26" viewBox="0 0 28 28" fill="none"><circle cx="14" cy="14" r="11" stroke="#1f2a40" stroke-width="2"/><circle cx="14" cy="14" r="6.5" stroke="#1f2a40" stroke-width="2"/><circle cx="14" cy="14" r="2.2" fill="#c0392b"/></svg>
+<section class="sparse-vcenter">
+  <h2 class="slide-title">Scheduling must react correctly and quickly</h2>
+  <div class="vcenter-body">
+    <p style="font-size:0.7em;margin-top:-0.4em;color:var(--ink);">Tight latency targets leave no room for suboptimal or slow decisions.</p>
+    <div class="spine-cards">
+      <div class="spine-card c1 fragment fade-in" data-fragment-index="1">
+        <div class="num">1</div>
+        <div class="icon-wrap">
+          <svg width="26" height="26" viewBox="0 0 28 28" fill="none"><circle cx="14" cy="14" r="11" stroke="#1f2a40" stroke-width="2"/><circle cx="14" cy="14" r="6.5" stroke="#1f2a40" stroke-width="2"/><circle cx="14" cy="14" r="2.2" fill="#c0392b"/></svg>
+        </div>
+        <h3>Make good scheduling decisions</h3>
+        <ul class="pts">
+          <li>Which thread to run?</li>
+          <li>On which core?</li>
+        </ul>
       </div>
-      <h3>Make good scheduling decisions</h3>
-      <ul class="pts">
-        <li>Which thread?</li>
-        <li>On which core?</li>
-      </ul>
-    </div>
-    <div class="spine-card c2 fragment fade-in" data-fragment-index="2">
-      <div class="num">2</div>
-      <div class="icon-wrap">
-        <svg width="26" height="26" viewBox="0 0 28 28" fill="none"><circle cx="14" cy="14" r="11" stroke="#1f2a40" stroke-width="2"/><circle cx="14" cy="8.2" r="1.6" fill="#1f2a40"/><rect x="12.8" y="11.6" width="2.4" height="9.2" rx="1" fill="#1f2a40"/></svg>
+      <div class="spine-card c2 fragment fade-in" data-fragment-index="2">
+        <div class="num">2</div>
+        <div class="icon-wrap">
+          <svg width="26" height="26" viewBox="0 0 28 28" fill="none"><circle cx="14" cy="14" r="11" stroke="#1f2a40" stroke-width="2"/><circle cx="14" cy="8.2" r="1.6" fill="#1f2a40"/><rect x="12.8" y="11.6" width="2.4" height="9.2" rx="1" fill="#1f2a40"/></svg>
+        </div>
+        <h3>Based on the right information</h3>
+        <p class="lead">Scheduler sometimes benefits from app-level info, such as:</p>
+        <ul class="pts">
+          <li>Which threads are urgent?</li>
+          <li>Any preference for placement?</li>
+          <li>Their relationships?</li>
+        </ul>
       </div>
-      <h3>With the right information</h3>
-      <p class="lead">Scheduler sometimes needs app-level info, such as:</p>
-      <ul class="pts">
-        <li>Which threads are urgent?</li>
-        <li>Any preference for placement?</li>
-        <li>Their relationships?</li>
-      </ul>
-    </div>
-    <div class="spine-card c3 fragment fade-in" data-fragment-index="3">
-      <div class="num">3</div>
-      <div class="icon-wrap">
-        <svg width="26" height="26" viewBox="0 0 28 28" fill="none"><path d="M 16 3 L 6 15.5 L 13 15.5 L 11 25 L 22 11.5 L 15 11.5 Z" fill="#c0392b" stroke="#1f2a40" stroke-width="1.5" stroke-linejoin="round"/></svg>
+      <div class="spine-card c3 fragment fade-in" data-fragment-index="3">
+        <div class="num">3</div>
+        <div class="icon-wrap">
+          <svg width="26" height="26" viewBox="0 0 28 28" fill="none"><path d="M 16 3 L 6 15.5 L 13 15.5 L 11 25 L 22 11.5 L 15 11.5 Z" fill="#c0392b" stroke="#1f2a40" stroke-width="1.5" stroke-linejoin="round"/></svg>
+        </div>
+        <h3>Enforce decisions quickly</h3>
+        <ul class="pts">
+          <li>When the decision involves a remote core, notify it</li>
+          <li>Preempt its running thread if it has one</li>
+        </ul>
       </div>
-      <h3>Enforce decisions quickly</h3>
-      <ul class="pts">
-        <li>When the decision involves a remote core, notify it</li>
-        <li>Preempt its running thread if it has one</li>
-      </ul>
     </div>
+    <p class="fragment fade-in" data-fragment-index="4" style="margin-top:0.6em;font-size:0.75em;font-weight:600;color:var(--warn);text-align:center;">But today's scheduling stacks fall short on all three.</p>
   </div>
-  <p class="fragment fade-in" data-fragment-index="4" style="margin-top:0.6em;font-size:0.75em;font-weight:600;color:var(--warn);text-align:center;">But today's scheduling stack falls short on all three.</p>
 </section>
 
 <!-- ============================================================
      SLIDE 5: re-show slide 4, highlight #1
 ============================================================ -->
-<section>
-  <h2 class="slide-title">Today's scheduling stack falls short.</h2>
-  <div class="spine-cards">
-    <div class="spine-card c1 active">
-      <div class="num">1</div>
-      <div class="icon-wrap">
-        <svg width="26" height="26" viewBox="0 0 28 28" fill="none"><circle cx="14" cy="14" r="11" stroke="#1f2a40" stroke-width="2"/><circle cx="14" cy="14" r="6.5" stroke="#1f2a40" stroke-width="2"/><circle cx="14" cy="14" r="2.2" fill="#c0392b"/></svg>
+<section class="sparse-vcenter">
+  <h2 class="slide-title">Today's scheduling stacks fall short</h2>
+  <div class="vcenter-body">
+    <p style="font-size:0.7em;margin-top:-0.4em;color:var(--ink);visibility:hidden;">Tight latency targets leave no room for suboptimal or slow decisions.</p>
+    <div class="spine-cards">
+      <div class="spine-card c1 active">
+        <div class="num">1</div>
+        <div class="icon-wrap">
+          <svg width="26" height="26" viewBox="0 0 28 28" fill="none"><circle cx="14" cy="14" r="11" stroke="#1f2a40" stroke-width="2"/><circle cx="14" cy="14" r="6.5" stroke="#1f2a40" stroke-width="2"/><circle cx="14" cy="14" r="2.2" fill="#c0392b"/></svg>
+        </div>
+        <h3>Make good scheduling decisions</h3>
+        <ul class="pts">
+          <li>Which thread to run?</li>
+          <li>On which core?</li>
+        </ul>
       </div>
-      <h3>Make good scheduling decisions</h3>
-      <ul class="pts">
-        <li>Which thread?</li>
-        <li>On which core?</li>
-      </ul>
-    </div>
-    <div class="spine-card c2 muted">
-      <div class="num">2</div>
-      <div class="icon-wrap">
-        <svg width="26" height="26" viewBox="0 0 28 28" fill="none"><circle cx="14" cy="14" r="11" stroke="#1f2a40" stroke-width="2"/><circle cx="14" cy="8.2" r="1.6" fill="#1f2a40"/><rect x="12.8" y="11.6" width="2.4" height="9.2" rx="1" fill="#1f2a40"/></svg>
+      <div class="spine-card c2 muted">
+        <div class="num">2</div>
+        <div class="icon-wrap">
+          <svg width="26" height="26" viewBox="0 0 28 28" fill="none"><circle cx="14" cy="14" r="11" stroke="#1f2a40" stroke-width="2"/><circle cx="14" cy="8.2" r="1.6" fill="#1f2a40"/><rect x="12.8" y="11.6" width="2.4" height="9.2" rx="1" fill="#1f2a40"/></svg>
+        </div>
+        <h3>Based on the right information</h3>
+        <p class="lead">Scheduler sometimes benefits from app-level info, such as:</p>
+        <ul class="pts">
+          <li>Which threads are urgent?</li>
+          <li>Any preference for placement?</li>
+          <li>Their relationships?</li>
+        </ul>
       </div>
-      <h3>With the right information</h3>
-      <p class="lead">Scheduler sometimes needs app-level info, such as:</p>
-      <ul class="pts">
-        <li>Which threads are urgent?</li>
-        <li>Any preference for placement?</li>
-        <li>Their relationships?</li>
-      </ul>
-    </div>
-    <div class="spine-card c3 muted">
-      <div class="num">3</div>
-      <div class="icon-wrap">
-        <svg width="26" height="26" viewBox="0 0 28 28" fill="none"><path d="M 16 3 L 6 15.5 L 13 15.5 L 11 25 L 22 11.5 L 15 11.5 Z" fill="#c0392b" stroke="#1f2a40" stroke-width="1.5" stroke-linejoin="round"/></svg>
+      <div class="spine-card c3 muted">
+        <div class="num">3</div>
+        <div class="icon-wrap">
+          <svg width="26" height="26" viewBox="0 0 28 28" fill="none"><path d="M 16 3 L 6 15.5 L 13 15.5 L 11 25 L 22 11.5 L 15 11.5 Z" fill="#c0392b" stroke="#1f2a40" stroke-width="1.5" stroke-linejoin="round"/></svg>
+        </div>
+        <h3>Enforce decisions quickly</h3>
+        <ul class="pts">
+          <li>When the decision involves a remote core, notify it</li>
+          <li>Preempt its running thread if it has one</li>
+        </ul>
       </div>
-      <h3>Enforce decisions quickly</h3>
-      <ul class="pts">
-        <li>When the decision involves a remote core, notify it</li>
-        <li>Preempt its running thread if it has one</li>
-      </ul>
     </div>
+    <p style="margin-top:0.6em;font-size:0.75em;font-weight:600;color:var(--warn);text-align:center;visibility:hidden;">But today's scheduling stacks fall short on all three.</p>
   </div>
 </section>
 
@@ -1026,7 +1037,7 @@
      SLIDE 6: Example of suboptimal decisions — borrow slide 15 HoL diagram
 ============================================================ -->
 <section>
-  <h2 class="slide-title">Example: head-of-line blocking.</h2>
+  <h2 class="slide-title">Example: head-of-line blocking</h2>
   <div class="ppt-wrap">
     <div class="ppt-slide" data-source="pptx/s4">
   <!-- C1: Sub-text overlay — 2 balanced lines, shifted slightly left -->
@@ -1066,44 +1077,48 @@
 <!-- ============================================================
      SLIDE 7: re-show slide 4, highlight #2
 ============================================================ -->
-<section>
-  <h2 class="slide-title">Today's scheduling stack falls short.</h2>
-  <div class="spine-cards">
-    <div class="spine-card c1 muted">
-      <div class="num">1</div>
-      <div class="icon-wrap">
-        <svg width="26" height="26" viewBox="0 0 28 28" fill="none"><circle cx="14" cy="14" r="11" stroke="#1f2a40" stroke-width="2"/><circle cx="14" cy="14" r="6.5" stroke="#1f2a40" stroke-width="2"/><circle cx="14" cy="14" r="2.2" fill="#c0392b"/></svg>
+<section class="sparse-vcenter">
+  <h2 class="slide-title">Today's scheduling stacks fall short</h2>
+  <div class="vcenter-body">
+    <p style="font-size:0.7em;margin-top:-0.4em;color:var(--ink);visibility:hidden;">Tight latency targets leave no room for suboptimal or slow decisions.</p>
+    <div class="spine-cards">
+      <div class="spine-card c1 muted">
+        <div class="num">1</div>
+        <div class="icon-wrap">
+          <svg width="26" height="26" viewBox="0 0 28 28" fill="none"><circle cx="14" cy="14" r="11" stroke="#1f2a40" stroke-width="2"/><circle cx="14" cy="14" r="6.5" stroke="#1f2a40" stroke-width="2"/><circle cx="14" cy="14" r="2.2" fill="#c0392b"/></svg>
+        </div>
+        <h3>Make good scheduling decisions</h3>
+        <ul class="pts">
+          <li>Which thread to run?</li>
+          <li>On which core?</li>
+        </ul>
       </div>
-      <h3>Make good scheduling decisions</h3>
-      <ul class="pts">
-        <li>Which thread?</li>
-        <li>On which core?</li>
-      </ul>
-    </div>
-    <div class="spine-card c2 active">
-      <div class="num">2</div>
-      <div class="icon-wrap">
-        <svg width="26" height="26" viewBox="0 0 28 28" fill="none"><circle cx="14" cy="14" r="11" stroke="#1f2a40" stroke-width="2"/><circle cx="14" cy="8.2" r="1.6" fill="#1f2a40"/><rect x="12.8" y="11.6" width="2.4" height="9.2" rx="1" fill="#1f2a40"/></svg>
+      <div class="spine-card c2 active">
+        <div class="num">2</div>
+        <div class="icon-wrap">
+          <svg width="26" height="26" viewBox="0 0 28 28" fill="none"><circle cx="14" cy="14" r="11" stroke="#1f2a40" stroke-width="2"/><circle cx="14" cy="8.2" r="1.6" fill="#1f2a40"/><rect x="12.8" y="11.6" width="2.4" height="9.2" rx="1" fill="#1f2a40"/></svg>
+        </div>
+        <h3>Based on the right information</h3>
+        <p class="lead">Scheduler sometimes benefits from app-level info, such as:</p>
+        <ul class="pts">
+          <li>Which threads are urgent?</li>
+          <li>Any preference for placement?</li>
+          <li>Their relationships?</li>
+        </ul>
       </div>
-      <h3>With the right information</h3>
-      <p class="lead">Scheduler sometimes needs app-level info, such as:</p>
-      <ul class="pts">
-        <li>Which threads are urgent?</li>
-        <li>Any preference for placement?</li>
-        <li>Their relationships?</li>
-      </ul>
-    </div>
-    <div class="spine-card c3 muted">
-      <div class="num">3</div>
-      <div class="icon-wrap">
-        <svg width="26" height="26" viewBox="0 0 28 28" fill="none"><path d="M 16 3 L 6 15.5 L 13 15.5 L 11 25 L 22 11.5 L 15 11.5 Z" fill="#c0392b" stroke="#1f2a40" stroke-width="1.5" stroke-linejoin="round"/></svg>
+      <div class="spine-card c3 muted">
+        <div class="num">3</div>
+        <div class="icon-wrap">
+          <svg width="26" height="26" viewBox="0 0 28 28" fill="none"><path d="M 16 3 L 6 15.5 L 13 15.5 L 11 25 L 22 11.5 L 15 11.5 Z" fill="#c0392b" stroke="#1f2a40" stroke-width="1.5" stroke-linejoin="round"/></svg>
+        </div>
+        <h3>Enforce decisions quickly</h3>
+        <ul class="pts">
+          <li>When the decision involves a remote core, notify it</li>
+          <li>Preempt its running thread if it has one</li>
+        </ul>
       </div>
-      <h3>Enforce decisions quickly</h3>
-      <ul class="pts">
-        <li>When the decision involves a remote core, notify it</li>
-        <li>Preempt its running thread if it has one</li>
-      </ul>
     </div>
+    <p style="margin-top:0.6em;font-size:0.75em;font-weight:600;color:var(--warn);text-align:center;visibility:hidden;">But today's scheduling stacks fall short on all three.</p>
   </div>
 </section>
 
@@ -1111,7 +1126,7 @@
      SLIDE 8
 ============================================================ -->
 <section>
-  <h2 class="slide-title">Schedulers lack application-level information.</h2>
+  <h2 class="slide-title">Schedulers lack application-level information</h2>
 
   <div class="s9-stage">
 
@@ -1266,44 +1281,48 @@
 <!-- ============================================================
      SLIDE 9: re-show slide 4, highlight #3
 ============================================================ -->
-<section>
-  <h2 class="slide-title">Today's scheduling stack falls short.</h2>
-  <div class="spine-cards">
-    <div class="spine-card c1 muted">
-      <div class="num">1</div>
-      <div class="icon-wrap">
-        <svg width="26" height="26" viewBox="0 0 28 28" fill="none"><circle cx="14" cy="14" r="11" stroke="#1f2a40" stroke-width="2"/><circle cx="14" cy="14" r="6.5" stroke="#1f2a40" stroke-width="2"/><circle cx="14" cy="14" r="2.2" fill="#c0392b"/></svg>
+<section class="sparse-vcenter">
+  <h2 class="slide-title">Today's scheduling stacks fall short</h2>
+  <div class="vcenter-body">
+    <p style="font-size:0.7em;margin-top:-0.4em;color:var(--ink);visibility:hidden;">Tight latency targets leave no room for suboptimal or slow decisions.</p>
+    <div class="spine-cards">
+      <div class="spine-card c1 muted">
+        <div class="num">1</div>
+        <div class="icon-wrap">
+          <svg width="26" height="26" viewBox="0 0 28 28" fill="none"><circle cx="14" cy="14" r="11" stroke="#1f2a40" stroke-width="2"/><circle cx="14" cy="14" r="6.5" stroke="#1f2a40" stroke-width="2"/><circle cx="14" cy="14" r="2.2" fill="#c0392b"/></svg>
+        </div>
+        <h3>Make good scheduling decisions</h3>
+        <ul class="pts">
+          <li>Which thread to run?</li>
+          <li>On which core?</li>
+        </ul>
       </div>
-      <h3>Make good scheduling decisions</h3>
-      <ul class="pts">
-        <li>Which thread?</li>
-        <li>On which core?</li>
-      </ul>
-    </div>
-    <div class="spine-card c2 muted">
-      <div class="num">2</div>
-      <div class="icon-wrap">
-        <svg width="26" height="26" viewBox="0 0 28 28" fill="none"><circle cx="14" cy="14" r="11" stroke="#1f2a40" stroke-width="2"/><circle cx="14" cy="8.2" r="1.6" fill="#1f2a40"/><rect x="12.8" y="11.6" width="2.4" height="9.2" rx="1" fill="#1f2a40"/></svg>
+      <div class="spine-card c2 muted">
+        <div class="num">2</div>
+        <div class="icon-wrap">
+          <svg width="26" height="26" viewBox="0 0 28 28" fill="none"><circle cx="14" cy="14" r="11" stroke="#1f2a40" stroke-width="2"/><circle cx="14" cy="8.2" r="1.6" fill="#1f2a40"/><rect x="12.8" y="11.6" width="2.4" height="9.2" rx="1" fill="#1f2a40"/></svg>
+        </div>
+        <h3>Based on the right information</h3>
+        <p class="lead">Scheduler sometimes benefits from app-level info, such as:</p>
+        <ul class="pts">
+          <li>Which threads are urgent?</li>
+          <li>Any preference for placement?</li>
+          <li>Their relationships?</li>
+        </ul>
       </div>
-      <h3>With the right information</h3>
-      <p class="lead">Scheduler sometimes needs app-level info, such as:</p>
-      <ul class="pts">
-        <li>Which threads are urgent?</li>
-        <li>Any preference for placement?</li>
-        <li>Their relationships?</li>
-      </ul>
-    </div>
-    <div class="spine-card c3 active">
-      <div class="num">3</div>
-      <div class="icon-wrap">
-        <svg width="26" height="26" viewBox="0 0 28 28" fill="none"><path d="M 16 3 L 6 15.5 L 13 15.5 L 11 25 L 22 11.5 L 15 11.5 Z" fill="#c0392b" stroke="#1f2a40" stroke-width="1.5" stroke-linejoin="round"/></svg>
+      <div class="spine-card c3 active">
+        <div class="num">3</div>
+        <div class="icon-wrap">
+          <svg width="26" height="26" viewBox="0 0 28 28" fill="none"><path d="M 16 3 L 6 15.5 L 13 15.5 L 11 25 L 22 11.5 L 15 11.5 Z" fill="#c0392b" stroke="#1f2a40" stroke-width="1.5" stroke-linejoin="round"/></svg>
+        </div>
+        <h3>Enforce decisions quickly</h3>
+        <ul class="pts">
+          <li>When the decision involves a remote core, notify it</li>
+          <li>Preempt its running thread if it has one</li>
+        </ul>
       </div>
-      <h3>Enforce decisions quickly</h3>
-      <ul class="pts">
-        <li>When the decision involves a remote core, notify it</li>
-        <li>Preempt its running thread if it has one</li>
-      </ul>
     </div>
+    <p style="margin-top:0.6em;font-size:0.75em;font-weight:600;color:var(--warn);text-align:center;visibility:hidden;">But today's scheduling stacks fall short on all three.</p>
   </div>
 </section>
 
@@ -1311,7 +1330,7 @@
      SLIDE 10
 ============================================================ -->
 <section>
-  <h2 class="slide-title">Cross-core notification is the bottleneck.</h2>
+  <h2 class="slide-title">Cross-core notification is a bottleneck</h2>
 
   <div style="display: flex; flex-direction: column; justify-content: center; height: 78%;">
     <div class="s11-chart">
@@ -1352,7 +1371,7 @@
       <!-- axis title (x-axis label) -->
       <div class="s11-row fragment fade-in" data-fragment-index="1" style="margin-top:-0.1em;">
         <div></div>
-        <div style="text-align:center;font-size:0.48em;color:var(--ink-soft);padding-right:15%;">(Cost per notification)</div>
+        <div style="text-align:center;font-size:0.62em;color:#1f2a40;font-weight:600;padding-right:15%;">Cost per notification</div>
       </div>
 
     </div>
@@ -1371,19 +1390,19 @@
         <div class="layer-name">Interfaces</div>
         <div class="works"><span class="work-a">Exposing Library Intent [ongoing]</span><br/><span class="work-b">Exposing App Semantics [proposed]</span></div>
       </div>
-      <div class="role">With the right information</div>
+      <div class="role">Based on the right information</div>
     </div>
     <div class="layer runtime">
       <div class="lhs">
         <div class="layer-name">Runtime</div>
-        <div class="works">Aspen [NSDI&rsquo;25, published]</div>
+        <div class="works">Aspen [NSDI&rsquo;25]</div>
       </div>
       <div class="role">Make good scheduling decisions</div>
     </div>
     <div class="layer hardware">
       <div class="lhs">
         <div class="layer-name">Hardware</div>
-        <div class="works">xUI [ASPLOS&rsquo;25, published]</div>
+        <div class="works">xUI [ASPLOS&rsquo;25]</div>
       </div>
       <div class="role">Enforce decisions quickly</div>
     </div>
@@ -1397,9 +1416,9 @@
   <h2 class="slide-title">Thesis Proposal Overview</h2>
   <p class="center" style="font-size: 0.75em; margin-top: -0.3em; margin-bottom: 0.5em; color: var(--ink);">Advancing microsecond-scale scheduling across three layers</p>
   <div class="layer-stack">
-    <div class="layer interfaces grayed"><div class="lhs"><div class="layer-name">Interfaces</div><div class="works"><span class="work-a">Exposing Library Intent [ongoing]</span><br/><span class="work-b">Exposing App Semantics [proposed]</span></div></div><div class="role">With the right information</div></div>
-    <div class="layer runtime highlight"><div class="lhs"><div class="layer-name">Runtime</div><div class="works">Aspen [NSDI&rsquo;25, published]</div></div><div class="role">Make good scheduling decisions</div></div>
-    <div class="layer hardware grayed"><div class="lhs"><div class="layer-name">Hardware</div><div class="works">xUI [ASPLOS&rsquo;25, published]</div></div><div class="role">Enforce decisions quickly</div></div>
+    <div class="layer interfaces grayed"><div class="lhs"><div class="layer-name">Interfaces</div><div class="works"><span class="work-a">Exposing Library Intent [ongoing]</span><br/><span class="work-b">Exposing App Semantics [proposed]</span></div></div><div class="role">Based on the right information</div></div>
+    <div class="layer runtime highlight"><div class="lhs"><div class="layer-name">Runtime</div><div class="works">Aspen [NSDI&rsquo;25]</div></div><div class="role">Make good scheduling decisions</div></div>
+    <div class="layer hardware grayed"><div class="lhs"><div class="layer-name">Hardware</div><div class="works">xUI [ASPLOS&rsquo;25]</div></div><div class="role">Enforce decisions quickly</div></div>
   </div>
   <p class="center muted" style="margin-top: 0.8em; font-size: 0.9em;">We are here.</p>
 </section>
@@ -1410,25 +1429,15 @@
 <section>
   <div class="title-card">
     <h1 style="font-size: 1.2em;">The Benefits and Limitations of User Interrupts<br>for Preemptive Userspace Scheduling</h1>
-    <div class="subtitle">NSDI&rsquo;25 &middot; Published</div>
+    <div class="subtitle">NSDI&rsquo;25</div>
   </div>
 </section>
 
 <!-- ============================================================
-     SLIDE 14: HoL blocking is a real problem
+     SLIDE 14: Head-of-Line Blocking diagram (familiar callback) — was SLIDE 15
 ============================================================ -->
 <section>
-  <h2 class="slide-title">Head-of-Line Blocking.</h2>
-  <p style="font-size: 0.85em; margin: 0;">RocksDB workload: 95% GET task (~1 &mu;s) and 5% SCAN task (~260 &mu;s).</p>
-  <img src="assets/figures/slide14.png" alt="RocksDB GET and SCAN 99.9% latency vs load under non-preemptive scheduling" style="display:block; margin: 0.5em auto 0; width: 56%; max-height: 60vh; image-rendering: -webkit-optimize-contrast;">
-  <p style="font-size: 0.85em; font-weight: 600; text-align: center; margin: 0.5em 0 0;">Short GETs are blocked by long SCANs.</p>
-</section>
-
-<!-- ============================================================
-     SLIDE 15: Fine-grained preemption (HoL diagram, p4)
-============================================================ -->
-<section>
-  <h2 class="slide-title">Problem: Head-of-Line Blocking.</h2>
+  <h2 class="slide-title">Head-of-Line Blocking</h2>
   <div class="ppt-wrap">
     <div class="ppt-slide" data-source="pptx/s4">
   <!-- Legend (always visible, matches slide 6, shifted slightly left) -->
@@ -1460,10 +1469,20 @@
 </section>
 
 <!-- ============================================================
+     SLIDE 15: HoL inflates tail latency — RocksDB graph (was SLIDE 14)
+============================================================ -->
+<section>
+  <h2 class="slide-title">Head-of-Line Blocking inflates tail latency</h2>
+  <p style="font-size: 0.85em; margin: 0;">RocksDB workload: 95% GET task (~1 &mu;s) and 5% SCAN task (~260 &mu;s).</p>
+  <img src="assets/figures/slide14.png" alt="RocksDB GET and SCAN 99.9% latency vs load under non-preemptive scheduling" style="display:block; margin: 0.5em auto 0; width: 56%; max-height: 60vh; image-rendering: -webkit-optimize-contrast;">
+  <p style="font-size: 0.85em; font-weight: 600; text-align: center; margin: 0.5em 0 0;">Short GETs are blocked by long SCANs.</p>
+</section>
+
+<!-- ============================================================
      SLIDE 16: Fine-grained preemption (p7 → p8 animation)
 ============================================================ -->
 <section>
-  <h2 class="slide-title">Solution: Fine-grained preemption.</h2>
+  <h2 class="slide-title">Solution: Fine-grained preemption</h2>
   <div class="ppt-wrap">
     <div class="ppt-slide" data-source="pptx/s6">
   <!-- Legend (always visible, matches slide 15, shifted slightly left) -->
@@ -1497,7 +1516,8 @@
      SLIDE 17: preemption-granularity log-scale timeline
 ============================================================ -->
 <section>
-  <h2 class="slide-title">Existing schedulers lack fine-grained preemption.</h2>
+  <h2 class="slide-title">Existing schedulers lack fine-grained preemption</h2>
+  <p style="font-size: 0.7em; margin: -0.4em 0 0.4em; color: #1f2a40; text-align: center;">Requests run in tens of &mu;s &mdash; a ms-scale preemption gap inflates tail latency.</p>
   <div class="s17-wrap">
     <!-- axis line + arrow head -->
     <div class="s17-axis-line"></div>
@@ -1678,7 +1698,7 @@
      SLIDE 20: Aspen-KB design (p18)
 ============================================================ -->
 <section>
-  <h2 class="slide-title">Aspen-KB design: a dedicated timer core.</h2>
+  <h2 class="slide-title">Aspen-KB design: a dedicated timer core</h2>
   <div class="ppt-wrap">
     <div class="ppt-slide" data-source="pptx/s16">
   <!-- Custom arrow replacing the auto-extracted LINE (spid=5) -->
@@ -1741,7 +1761,7 @@
      SLIDE 21: Policy #1 (p19 → p20 → p21 animation)
 ============================================================ -->
 <section>
-  <h2 class="slide-title">Policy #1: Preempt only when necessary.</h2>
+  <h2 class="slide-title">Policy #1: Preempt only when necessary</h2>
   <div class="ppt-wrap">
     <div class="ppt-slide" data-source="pptx/s17">
   <div class="ppt-txt fragment fade-in ppt-frag" data-fragment-index="1" data-spid="76" style="position:absolute;left:3.694%;top:16%;width:99%;height:14%;"><div class="ppt-txt-content" style="text-align:left;"><span style="font-size:5cqh; font-weight:700; font-family:'Source Sans 3', Arial, sans-serif; color:#182a49">Policy #1:</span><span style="font-size:5cqh; font-weight:400; font-family:'Source Sans 3', Arial, sans-serif; color:#182a49"> Preempt only when necessary.</span><div style="height:0.86cqh;"></div><span style="font-size:4.5cqh; font-family:'Source Sans 3', Arial, sans-serif; font-weight:400; color:#6c7385; font-style:italic">Only when a task is waiting in the NIC or runqueue.</span></div></div>
@@ -1800,7 +1820,7 @@
      SLIDE 22: Policy #2 (p22 → p23 animation)
 ============================================================ -->
 <section>
-  <h2 class="slide-title">Policy #2: Two-queue scheduling.</h2>
+  <h2 class="slide-title">Policy #2: Two-queue scheduling</h2>
   <div class="ppt-wrap">
     <div class="ppt-slide" data-source="pptx/s18">
   <div class="ppt-txt fragment fade-in ppt-frag" data-fragment-index="1" data-spid="76" style="position:absolute;left:3.694%;top:6.5%;width:99%;height:14%;"><div class="ppt-txt-content" style="text-align:left;"><span style="font-size:5cqh; font-weight:700; font-family:'Source Sans 3', Arial, sans-serif; color:#182a49">Policy #2:</span><span style="font-size:5cqh; font-weight:400; font-family:'Source Sans 3', Arial, sans-serif; color:#182a49"> Two-queue scheduling policy.</span><div style="height:0.86cqh;"></div><span style="font-size:4.5cqh; font-family:'Source Sans 3', Arial, sans-serif; font-weight:400; color:#6c7385; font-style:italic">New tasks run first; preempted tasks wait in a separate queue.</span></div></div>
@@ -1854,10 +1874,10 @@
      SLIDE 23: Policy #3 (p24 → p25 animation)
 ============================================================ -->
 <section>
-  <h2 class="slide-title">Policy #3: Poll on every preemption.</h2>
+  <h2 class="slide-title">Policy #3: Poll NIC on every preemption</h2>
   <div class="ppt-wrap">
     <div class="ppt-slide" data-source="pptx/s19">
-  <div class="ppt-txt fragment fade-in ppt-frag" data-fragment-index="2" data-spid="76" style="position:absolute;left:3.694%;top:16%;width:99%;height:14%;"><div class="ppt-txt-content" style="text-align:left;"><span style="font-size:5cqh; font-weight:700; font-family:'Source Sans 3', Arial, sans-serif; color:#182a49">Policy #3:</span><span style="font-size:5cqh; font-weight:400; font-family:'Source Sans 3', Arial, sans-serif; color:#182a49"> Poll on every preemption.</span><div style="height:0.86cqh;"></div><span style="font-size:4.5cqh; font-family:'Source Sans 3', Arial, sans-serif; font-weight:400; color:#6c7385; font-style:italic">New packets reach the scheduler quickly, not blocked in the network stack.</span></div></div>
+  <div class="ppt-txt fragment fade-in ppt-frag" data-fragment-index="2" data-spid="76" style="position:absolute;left:3.694%;top:16%;width:99%;height:14%;"><div class="ppt-txt-content" style="text-align:left;"><span style="font-size:5cqh; font-weight:700; font-family:'Source Sans 3', Arial, sans-serif; color:#182a49">Policy #3:</span><span style="font-size:5cqh; font-weight:400; font-family:'Source Sans 3', Arial, sans-serif; color:#182a49"> Poll NIC on every preemption.</span><div style="height:0.86cqh;"></div><span style="font-size:4.5cqh; font-family:'Source Sans 3', Arial, sans-serif; font-weight:400; color:#6c7385; font-style:italic">New packets reach the scheduler quickly, not blocked in the network stack.</span></div></div>
   <img data-spid="335" src="assets/pptx/s19/sp_335.png" style="position:absolute;left:30.307%;top:51.253%;width:11.939%;height:20.076%;">
   <img data-spid="336" src="assets/pptx/s19/sp_336.png" style="position:absolute;left:46.102%;top:51.253%;width:11.939%;height:20.076%;">
   <img data-spid="337" src="assets/pptx/s19/sp_337.png" style="position:absolute;left:62.018%;top:51.253%;width:11.939%;height:20.076%;">
@@ -2002,17 +2022,16 @@
      SLIDE 25: Aspen-Go limitation #1 — infrequent packet polling
 ============================================================ -->
 <section>
-  <h2 class="slide-title">Aspen-Go limitation #1: infrequent packet polling.</h2>
+  <h2 class="slide-title">Aspen-Go limitation #1: infrequent packet polling</h2>
   <div class="cmp-wrap cmp-tall">
-    <div class="cmp-axis">Network polling</div>
     <div class="cmp-cards">
       <div class="cmp-card kb">
         <div class="cmp-name">Aspen-KB</div>
-        <div class="cmp-body">Matches network polling and preemption frequencies.</div>
+        <div class="cmp-body">Kernel-bypass network stack &mdash; polling is <b>cheap</b>, done on every preemption.</div>
       </div>
       <div class="cmp-card go">
         <div class="cmp-name">Aspen-Go</div>
-        <div class="cmp-body fragment fade-in" data-fragment-index="1"><span class="label">Unmodified Go:</span> poll only when scheduler runqueue is empty.</div>
+        <div class="cmp-body fragment fade-in" data-fragment-index="1">Network polling in Go is <b>expensive</b> (no kernel bypass), so it can't be done as often.</div>
         <div class="cmp-body fragment fade-in" data-fragment-index="2" style="margin-top: 0.4em;"><span class="label">Aspen-Go:</span> offload polling to a timer core (polls every 100 &micro;s).</div>
       </div>
     </div>
@@ -2027,9 +2046,8 @@
      SLIDE 26: Aspen-Go limitation #2 — high preemption cost
 ============================================================ -->
 <section>
-  <h2 class="slide-title">Aspen-Go limitation #2: high preemption cost.</h2>
+  <h2 class="slide-title">Aspen-Go limitation #2: high preemption cost</h2>
   <div class="cmp-wrap cmp-tall">
-    <div class="cmp-axis">Preemption cost</div>
     <div class="cmp-cards">
       <div class="cmp-card kb">
         <div class="cmp-name">Aspen-KB</div>
@@ -2052,7 +2070,7 @@
      SLIDE 27: RocksDB results
 ============================================================ -->
 <section>
-  <h2 class="slide-title">Aspen-KB provides significant gains.</h2>
+  <h2 class="slide-title">Aspen-KB provides significant gains</h2>
   <p style="font-size: 0.85em; margin: 0;">RocksDB workload: 95% GET task (~1 &mu;s) and 5% SCAN task (~260 &mu;s).</p>
   <img src="assets/figures/slide27.png" alt="RocksDB 99.9% latency vs load: GET (short) and SCAN (long) under Non-preemptive, UINTR, Signals" style="display:block; margin: 0.5em auto 0; width: 63%; max-height: 65vh; image-rendering: -webkit-optimize-contrast;">
 </section>
@@ -2060,10 +2078,12 @@
 <!-- ============================================================
      SLIDE 28: Aspen-Go BadgerDB (p30)
 ============================================================ -->
-<section>
-  <h2 class="slide-title">Aspen-Go provides limited gains.</h2>
-  <p style="font-size: 0.85em; margin: 0;">BadgerDB workload: 99% GET task (~5 &mu;s) and 1% SCAN task (~800 &mu;s).</p>
-  <img src="assets/figures/slide28.png" alt="BadgerDB GET 99.9% latency vs load: Aspen-Go User Interrupts vs unmodified Go" style="display:block; margin: 0.5em auto 0; width: 44%; max-height: 60vh; image-rendering: -webkit-optimize-contrast;">
+<section class="sparse-vcenter">
+  <h2 class="slide-title">Aspen-Go provides limited gains</h2>
+  <div class="vcenter-body">
+    <p style="font-size: 0.85em; margin: 0;">BadgerDB workload: 99% GET task (~5 &mu;s) and 1% SCAN task (~800 &mu;s).</p>
+    <img src="assets/figures/slide28.png" alt="BadgerDB GET 99.9% latency vs load: Aspen-Go User Interrupts vs unmodified Go" style="display:block; margin: 0.5em auto 0; width: 44%; max-height: 60vh; image-rendering: -webkit-optimize-contrast;">
+  </div>
 </section>
 
 <!-- ============================================================
@@ -2104,9 +2124,9 @@
   <h2 class="slide-title">Thesis Proposal Overview</h2>
   <p class="center" style="font-size: 0.75em; margin-top: -0.3em; margin-bottom: 0.5em; color: var(--ink);">Advancing microsecond-scale scheduling across three layers</p>
   <div class="layer-stack">
-    <div class="layer interfaces grayed"><div class="lhs"><div class="layer-name">Interfaces</div><div class="works"><span class="work-a">Exposing Library Intent [ongoing]</span><br/><span class="work-b">Exposing App Semantics [proposed]</span></div></div><div class="role">With the right information</div></div>
-    <div class="layer runtime grayed"><div class="lhs"><div class="layer-name">Runtime</div><div class="works">Aspen [NSDI&rsquo;25, published]</div></div><div class="role">Make good scheduling decisions</div></div>
-    <div class="layer hardware highlight"><div class="lhs"><div class="layer-name">Hardware</div><div class="works">xUI [ASPLOS&rsquo;25, published]</div></div><div class="role">Enforce decisions quickly</div></div>
+    <div class="layer interfaces grayed"><div class="lhs"><div class="layer-name">Interfaces</div><div class="works"><span class="work-a">Exposing Library Intent [ongoing]</span><br/><span class="work-b">Exposing App Semantics [proposed]</span></div></div><div class="role">Based on the right information</div></div>
+    <div class="layer runtime grayed"><div class="lhs"><div class="layer-name">Runtime</div><div class="works">Aspen [NSDI&rsquo;25]</div></div><div class="role">Make good scheduling decisions</div></div>
+    <div class="layer hardware highlight"><div class="lhs"><div class="layer-name">Hardware</div><div class="works">xUI [ASPLOS&rsquo;25]</div></div><div class="role">Enforce decisions quickly</div></div>
   </div>
   <p class="center muted" style="margin-top: 0.8em; font-size: 0.9em;">We are here.</p>
 </section>
@@ -2117,7 +2137,7 @@
 <section>
   <div class="title-card">
     <h1>Extended User Interrupts (xUI):<br>Fast and Flexible Notification without Polling</h1>
-    <div class="subtitle">ASPLOS&rsquo;25 &middot; Published</div>
+    <div class="subtitle">ASPLOS&rsquo;25</div>
   </div>
 </section>
 
@@ -2212,7 +2232,7 @@
      reordering); prefix is scoped, no functional impact.
 ============================================================ -->
 <section class="s35-slide">
-  <h2 class="slide-title">User interrupt extension #1: avoid pipeline flushing.</h2>
+  <h2 class="slide-title">User interrupt extension #1: avoid pipeline flushing</h2>
 
   <!-- Fragment drivers (invisible). Pressing right-arrow 9 times walks through states 1..9. -->
   <span class="fragment" data-s35-state="1"></span>
@@ -2321,7 +2341,7 @@
      (Aspen dedicated timer core on left vs xUI per-core physical timer on right)
 ============================================================ -->
 <section class="s35-timer-slide">
-  <h2 class="slide-title">User interrupt extension #2: hardware timer.</h2>
+  <h2 class="slide-title">User interrupt extension #2: hardware timer</h2>
 
   <svg class="s35-timer-svg" viewBox="0 0 1200 500" preserveAspectRatio="xMidYMid meet"
        style="display:block; margin:0 auto; width:100%; max-width:1180px; max-height:580px;">
@@ -2484,14 +2504,16 @@
 </section>
 
 <!-- ============================================================
-     SLIDE 35: xUI improves RocksDB
+     SLIDE 35: xUI pushes fine-grained preemption further
 ============================================================ -->
-<section>
-  <h2 class="slide-title">xUI improves RocksDB throughput.</h2>
-  <p style="font-size: 0.85em; margin: 0;">RocksDB workload: 99.5% GET task (~1 &mu;s) and 0.5% SCAN task (~260 &mu;s).</p>
-  <img src="assets/figures/slide35.png" alt="xUI RocksDB throughput vs UPI" style="display:block; margin: 0.5em auto 0; width: 80%; max-height: 60vh; image-rendering: -webkit-optimize-contrast;">
-  <p style="font-size: 0.85em; font-weight: 600; text-align: center; margin: 0.4em 0 0;">xUI achieves <b>10% higher throughput</b> than user interrupts.</p>
-  <p style="font-size: 0.7em; font-style: italic; color: #6c7385; text-align: center; margin: 0.3em 0 0;">Will update the legend labels for the final version.</p>
+<section class="sparse-vcenter">
+  <h2 class="slide-title">xUI pushes fine-grained preemption further.</h2>
+  <div class="vcenter-body">
+    <p style="font-size: 0.85em; margin: 0;">RocksDB workload: 99.5% GET task (~1 &mu;s) and 0.5% SCAN task (~260 &mu;s).</p>
+    <img src="assets/figures/slide35.png" alt="xUI RocksDB throughput vs UPI" style="display:block; margin: 0.5em auto 0; width: 80%; max-height: 60vh; image-rendering: -webkit-optimize-contrast;">
+    <p style="font-size: 0.85em; font-weight: 600; text-align: center; margin: 0.4em 0 0;">xUI achieves <b>10% higher throughput</b> than user interrupts.</p>
+    <p style="font-size: 0.7em; font-style: italic; color: #6c7385; text-align: center; margin: 0.3em 0 0;">Will update the legend labels for the final version.</p>
+  </div>
 </section>
 
 <!-- ============================================================
@@ -2603,9 +2625,9 @@
   <h2 class="slide-title">Thesis Proposal Overview</h2>
   <p class="center" style="font-size: 0.75em; margin-top: -0.3em; margin-bottom: 0.5em; color: var(--ink);">Advancing microsecond-scale scheduling across three layers</p>
   <div class="layer-stack">
-    <div class="layer interfaces highlight-a"><div class="lhs"><div class="layer-name">Interfaces</div><div class="works"><span class="work-a">Exposing Library Intent [ongoing]</span><br/><span class="work-b">Exposing App Semantics [proposed]</span></div></div><div class="role">With the right information</div></div>
-    <div class="layer runtime grayed"><div class="lhs"><div class="layer-name">Runtime</div><div class="works">Aspen [NSDI&rsquo;25, published]</div></div><div class="role">Make good scheduling decisions</div></div>
-    <div class="layer hardware grayed"><div class="lhs"><div class="layer-name">Hardware</div><div class="works">xUI [ASPLOS&rsquo;25, published]</div></div><div class="role">Enforce decisions quickly</div></div>
+    <div class="layer interfaces highlight-a"><div class="lhs"><div class="layer-name">Interfaces</div><div class="works"><span class="work-a">Exposing Library Intent [ongoing]</span><br/><span class="work-b">Exposing App Semantics [proposed]</span></div></div><div class="role">Based on the right information</div></div>
+    <div class="layer runtime grayed"><div class="lhs"><div class="layer-name">Runtime</div><div class="works">Aspen [NSDI&rsquo;25]</div></div><div class="role">Make good scheduling decisions</div></div>
+    <div class="layer hardware grayed"><div class="lhs"><div class="layer-name">Hardware</div><div class="works">xUI [ASPLOS&rsquo;25]</div></div><div class="role">Enforce decisions quickly</div></div>
   </div>
   <p class="center muted" style="margin-top: 0.8em; font-size: 0.9em;">We are here.</p>
 </section>
@@ -2687,7 +2709,7 @@
       transform: translateY(-50%);
     }
   </style>
-  <h2 class="slide-title">Wakeup interfaces convey limited information.</h2>
+  <h2 class="slide-title">Wakeup interfaces convey limited information</h2>
 
   <div class="s9-stage">
 
@@ -2857,7 +2879,7 @@
     .s40-punch { text-align: center; margin-top: 0.9em; font-size: 0.85em; font-weight: 700; color: var(--accent); }
     .s40-punch .hl { background: #fff0d0; color: #a66a00; border: 1px solid #d89a2b; padding: 0 0.4em; border-radius: 0.4em; }
   </style>
-  <h2 class="slide-title">Wakeup interfaces in existing systems.</h2>
+  <h2 class="slide-title">Wakeup interfaces in existing systems</h2>
   <table class="s40-tbl">
     <thead>
       <tr><th>System</th><th>Wakeup Interface</th><th>What the interface conveys</th></tr>
@@ -2887,7 +2909,7 @@
      SLIDE 41: Lock contention — waker unlocks, W1 stuck at runqueue tail
 ============================================================ -->
 <section>
-  <h2 class="slide-title">Example: existing interfaces amplify lock contention.</h2>
+  <h2 class="slide-title">Example: existing interfaces amplify lock contention</h2>
   <p class="fragment fade-in" data-fragment-index="2" style="font-size: 0.8em; color: #1f2a40; font-weight: 500; margin: 0.3em 0 0.4em; text-align: center;">
     <code class="api">thread_ready()</code> says waiter 1 is ready &mdash; but doesn&rsquo;t say this wakeup is urgent.
   </p>
@@ -3156,7 +3178,7 @@
     .reveal #slide43 .entry .second { margin-left: 0; color: #4a5160; font-weight: 400; margin-top: 0.1em; font-size: 0.85em; text-wrap: balance; }
   </style>
 
-  <h2 class="slide-title">Proposed interface: <code class="api">thread_wakeup()</code> with intent.</h2>
+  <h2 class="slide-title">Proposed interface: <code class="api">thread_wakeup()</code> with intent</h2>
   <pre style="font-size: 0.7em; background: #f3f4f8; padding: 0.5em 0.8em; border-radius: 4px; margin: 0.3em 0 0.3em 1.5em;"><code class="api" style="background: transparent; padding: 0; font-size: 1em;">void thread_wakeup(thread_t *wakee,
                    enum <span class="sig-urg">wakee_urgency</span>,
                    enum <span class="sig-plc">placement</span>);</code></pre>
@@ -3416,38 +3438,44 @@ Draft content (modes need updating to urgency+placement enums):
 <!-- ============================================================
      SLIDE 45: Memcached results
 ============================================================ -->
-<section>
-  <h2 class="slide-title">Performance on lock-contention workloads.</h2>
-  <ul style="font-size: 0.85em; margin: 0.2em 0 0; padding-left: 1.2em;">
-    <li>Memcached workload: GETs only.</li>
-    <li>Each GET acquires a lock on its key; keys with the same hash share the lock.</li>
-    <li>Key accesses follow a skewed Zipfian distribution (&alpha;=0.99).
-      <div style="font-style: italic; color: #6c7385; font-size: 0.9em; margin-top: 0.1em;">Top 10% of keys receive ~80% of GETs.</div>
-    </li>
-  </ul>
-  <img src="assets/figures/slide46.png" alt="Memcached YCSB skewed GET-only results" style="display:block; margin: 0.5em auto 0; width: 70%; max-height: 60vh; image-rendering: -webkit-optimize-contrast;">
+<section class="sparse-vcenter">
+  <h2 class="slide-title">Performance on lock-contention workloads</h2>
+  <div class="vcenter-body">
+    <ul style="font-size: 0.75em; line-height: 1.3; margin: 0.2em 0 0; padding-left: 1.2em;">
+      <li style="margin-bottom: 0.1em;">Memcached workload: GETs only.</li>
+      <li style="margin-bottom: 0.1em;">Each GET acquires a lock on its key; keys with the same hash share the lock.</li>
+      <li style="margin-bottom: 0.1em;">Key accesses follow a skewed Zipfian distribution (&alpha;=0.99).
+        <div style="font-style: italic; color: #6c7385; font-size: 0.9em; margin-top: 0.05em;">Top 10% of keys receive ~80% of GETs.</div>
+      </li>
+    </ul>
+    <img src="assets/figures/slide46.png" alt="Memcached YCSB skewed GET-only results" style="display:block; margin: 0 auto; width: 70%; max-height: 60vh; image-rendering: -webkit-optimize-contrast;">
+  </div>
 </section>
 
 <!-- ============================================================
      SLIDE 46: Synthetic
 ============================================================ -->
-<section>
-  <h2 class="slide-title">Synthetic benchmark.</h2>
-  <p style="font-size: 0.85em; margin: 0;">Gains hold across a wide config space.</p>
-  <img src="assets/figures/slide47.png" alt="Synthetic benchmark goodput across configurations" style="display:block; margin: 0.5em auto 0; width: 90%; max-height: 75vh; image-rendering: -webkit-optimize-contrast;">
-  <p style="font-size: 0.7em; font-style: italic; color: #6c7385; text-align: center; margin: 0.4em 0 0;">(use this as a backup slide to save time)</p>
+<section class="sparse-vcenter">
+  <h2 class="slide-title">Synthetic benchmark</h2>
+  <div class="vcenter-body">
+    <p style="font-size: 0.85em; margin: 0;">Gains hold across a wide config space.</p>
+    <img src="assets/figures/slide47.png" alt="Synthetic benchmark goodput across configurations" style="display:block; margin: 0.5em auto 0; width: 90%; max-height: 75vh; image-rendering: -webkit-optimize-contrast;">
+    <p style="font-size: 0.7em; font-style: italic; color: #6c7385; text-align: center; margin: 0.4em 0 0;">(use this as a backup slide to save time)</p>
+  </div>
 </section>
 
 <!-- ============================================================
      SLIDE 47: Ongoing work
 ============================================================ -->
-<section>
-  <h2 class="slide-title">Progress and next steps.</h2>
-  <ul>
-    <li>Used for mutexes, reader-writer locks, and barriers.</li>
-    <li>Apply to more scenarios (e.g., I/O libraries).</li>
-    <li>Extend the interface as new libraries reveal new needs.</li>
-  </ul>
+<section class="sparse-vcenter">
+  <h2 class="slide-title">Progress and next steps</h2>
+  <div class="vcenter-body">
+    <ul>
+      <li>Used for mutexes, reader-writer locks, and barriers.</li>
+      <li>Apply to more scenarios (e.g., I/O libraries).</li>
+      <li>Extend the interface as new libraries reveal new needs.</li>
+    </ul>
+  </div>
 </section>
 
 <!-- ============================================================
@@ -3456,9 +3484,9 @@ Draft content (modes need updating to urgency+placement enums):
 <section>
   <h2 class="slide-title">Thesis Proposal Overview</h2>
   <div class="layer-stack">
-    <div class="layer interfaces highlight-b"><div class="lhs"><div class="layer-name">Interfaces</div><div class="works"><span class="work-a">Exposing Library Intent [ongoing]</span><br/><span class="work-b">Exposing App Semantics [proposed]</span></div></div><div class="role">With the right information</div></div>
-    <div class="layer runtime grayed"><div class="lhs"><div class="layer-name">Runtime</div><div class="works">Aspen [NSDI&rsquo;25, published]</div></div><div class="role">Make good scheduling decisions</div></div>
-    <div class="layer hardware grayed"><div class="lhs"><div class="layer-name">Hardware</div><div class="works">xUI [ASPLOS&rsquo;25, published]</div></div><div class="role">Enforce decisions quickly</div></div>
+    <div class="layer interfaces highlight-b"><div class="lhs"><div class="layer-name">Interfaces</div><div class="works"><span class="work-a">Exposing Library Intent [ongoing]</span><br/><span class="work-b">Exposing App Semantics [proposed]</span></div></div><div class="role">Based on the right information</div></div>
+    <div class="layer runtime grayed"><div class="lhs"><div class="layer-name">Runtime</div><div class="works">Aspen [NSDI&rsquo;25]</div></div><div class="role">Make good scheduling decisions</div></div>
+    <div class="layer hardware grayed"><div class="lhs"><div class="layer-name">Hardware</div><div class="works">xUI [ASPLOS&rsquo;25]</div></div><div class="role">Enforce decisions quickly</div></div>
   </div>
   <p class="center muted" style="margin-top: 0.8em; font-size: 0.9em;">We are here.</p>
 </section>
@@ -3484,7 +3512,7 @@ Draft content (modes need updating to urgency+placement enums):
      F3: punchline + closing question.
 ============================================================ -->
 <section>
-  <h2 class="slide-title">Applications hold scheduling-relevant knowledge.</h2>
+  <h2 class="slide-title">Applications hold scheduling-relevant knowledge</h2>
 
   <div class="s52-stage">
 
@@ -3649,7 +3677,7 @@ Draft content (modes need updating to urgency+placement enums):
      italic matching the placeholder).
 ============================================================ -->
 <section>
-  <h2 class="slide-title">Making threads non-anonymous.</h2>
+  <h2 class="slide-title">Making threads non-anonymous</h2>
 
   <svg class="s53-svg" viewBox="0 0 1200 590" preserveAspectRatio="xMidYMid meet">
     <defs>
@@ -3743,7 +3771,7 @@ Draft content (modes need updating to urgency+placement enums):
      Fragments: F1 LEFT, F2 RIGHT.
 ============================================================ -->
 <section>
-  <h2 class="slide-title">Key Idea: App describes, Scheduler decides.</h2>
+  <h2 class="slide-title">Key Idea: App describes, Scheduler decides</h2>
 
   <div style="background: #fff8e4; border: 1.3px solid #d9a93a; border-radius: 6px; padding: 0.25em 0.7em; margin: 0.2em auto 0.5em; max-width: 88%; text-align: center; font-size: 0.56em; line-height: 1.35;">
     <span style="font-weight: 700; color: #8a6a00; letter-spacing: 1px; font-size: 0.9em; margin-right: 0.35em;">SCENARIO:</span>
@@ -3862,7 +3890,7 @@ semantic_ctx.write_stall_warning = <span style="color: #1b4d8f; font-weight: 600
      Policy card shows the same 4 rules.
 ============================================================ -->
 <section class="s56-slide">
-  <h2 class="slide-title">Scheduler design.</h2>
+  <h2 class="slide-title">Scheduler design</h2>
 
   <!-- App -->
   <div class="s56-app-box">
@@ -4065,7 +4093,7 @@ semantic_ctx.write_stall_warning = <span style="color: #1b4d8f; font-weight: 600
      Sub-linear-growth answer from the 20-app LLM study.
 ============================================================ -->
 <section>
-  <h2 class="slide-title">Apps share most of their semantics.</h2>
+  <h2 class="slide-title">Apps share most of their semantics</h2>
   <div class="insight-line" style="color: #000; font-weight: 400;"><strong>Methodology:</strong> LLMs analyzed <strong>20 apps</strong> and identified semantics for each app.</div>
   <div class="insight-line" style="margin-top: -0.4em; color: #000; font-weight: 400;"><strong>Conclusions:</strong> <strong>6 semantics</strong> are commonly used; <strong>21 total</strong> across all 20.</div>
 
@@ -4121,7 +4149,7 @@ semantic_ctx.write_stall_warning = <span style="color: #1b4d8f; font-weight: 600
      Three numbered cards, one-question bodies.
 ============================================================ -->
 <section>
-  <h2 class="slide-title">Open challenges.</h2>
+  <h2 class="slide-title">Open challenges</h2>
   <div class="insight-line" style="color: #000; font-weight: 400;">Three challenges to make semantic scheduling deployable.</div>
 
   <div class="s58-wrap">
@@ -4157,7 +4185,7 @@ semantic_ctx.write_stall_warning = <span style="color: #1b4d8f; font-weight: 600
      SLIDE 58: Summary &mdash; published works + ongoing/proposed.
 ============================================================ -->
 <section>
-  <h2 class="slide-title">Summary.</h2>
+  <h2 class="slide-title">Summary</h2>
 
   <!-- Published works -->
   <div style="margin-top: 0.4em;">

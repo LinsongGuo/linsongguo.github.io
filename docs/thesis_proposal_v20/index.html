@@ -2787,7 +2787,7 @@
       </div>
       <div style="display: flex; align-items: flex-start; gap: 0.45em;">
         <span style="color: #2e7d3c; font-weight: 800; flex-shrink: 0;">2.</span>
-        <span>No dedicated timer core is needed.</span>
+        <span>xUI saves one CPU core from timer.</span>
       </div>
     </div>
   </div>
@@ -2826,8 +2826,8 @@
     <!-- x-axis title -->
     <text x="570" y="455" font-size="26" font-weight="400" fill="#1f2a40" text-anchor="middle">Cost per preemption</text>
 
-    <!-- F1: Preemption-cost legend + red segments of Aspen-KB bars + Aspen-KB row labels -->
-    <g class="fragment fade-in" data-fragment-index="1">
+    <!-- F0: Preemption-cost legend + red segments of Aspen-KB bars (visible from the start) -->
+    <g>
       <!-- legend entry -->
       <rect x="220" y="56" width="22" height="22" fill="#c0392b"/>
       <text x="250" y="74" font-size="26" font-weight="700" fill="#1f2a40">Preemption cost</text>
@@ -2843,8 +2843,8 @@
       <text x="210" y="253" font-size="21" font-weight="700" fill="#c0392b" text-anchor="start">0.05 &#x00b5;s</text>
     </g>
 
-    <!-- F2: Context-switch legend + gray segments of Aspen-KB bars + Aspen-KB row labels -->
-    <g class="fragment fade-in" data-fragment-index="2">
+    <!-- F1: Context-switch legend + gray segments of Aspen-KB bars + Aspen-KB row labels -->
+    <g class="fragment fade-in" data-fragment-index="1">
       <!-- legend entry -->
       <rect x="560" y="56" width="22" height="22" fill="#6c7385"/>
       <text x="590" y="74" font-size="26" font-weight="700" fill="#1f2a40">Runtime cost</text>
@@ -2861,8 +2861,8 @@
       <text x="350" y="308" font-size="22" fill="#1f2a40" font-style="italic">Aspen-KB</text>
     </g>
 
-    <!-- F3: Aspen-Go rows (full red + gray) -->
-    <g class="fragment fade-in" data-fragment-index="3">
+    <!-- F2: Aspen-Go rows (full red + gray) -->
+    <g class="fragment fade-in" data-fragment-index="2">
       <!-- UI-Go bar -->
       <rect x="220" y="190" width="112" height="42" fill="#c0392b"/>
       <text x="276" y="218" font-size="23" font-weight="700" fill="#fff" text-anchor="middle">0.56 &#x00b5;s</text>
@@ -2878,8 +2878,8 @@
     </g>
     </g>
   </svg>
-  <!-- F4: takeaways box (matches slide 35 style) -->
-  <div class="fragment fade-in" data-fragment-index="4" style="margin: 0.5em auto 0; max-width: 70%; background: #eaf5ec; border: 1.3px solid #2e7d3c; border-radius: 6px; padding: 0.45em 0.8em; font-size: 0.7em; line-height: 1.35; color: #1f2a40; text-align: left;">
+  <!-- F3: takeaways box (matches slide 35 style) -->
+  <div class="fragment fade-in" data-fragment-index="3" style="margin: 0.5em auto 0; max-width: 70%; background: #eaf5ec; border: 1.3px solid #2e7d3c; border-radius: 6px; padding: 0.45em 0.8em; font-size: 0.7em; line-height: 1.35; color: #1f2a40; text-align: left;">
     <div style="display: flex; align-items: flex-start; gap: 0.45em; margin-bottom: 0.15em;">
       <span style="color: #2e7d3c; font-weight: 800; flex-shrink: 0;">1.</span>
       <span>Runtime cost is also a bottleneck.</span>
@@ -2890,14 +2890,12 @@
     </div>
   </div>
   <aside class="notes">
-    <p>Finally, let's conclude with xUI's big-picture impact. We'll also see what's still left. This chart shows the cost per preemption. The top group is user interrupts; the bottom is xUI.</p>
-    <p><strong>[CLICK 1 — red legend + Aspen-KB red segments]</strong></p>
-    <p>The red part is <strong>preemption cost</strong>. This includes sending and receiving the interrupt. xUI achieves much lower preemption cost than user interrupts.</p>
-    <p><strong>[CLICK 2 — runtime-cost legend + Aspen-KB gray segments]</strong></p>
+    <p>Finally, let's conclude with xUI's big-picture impact. We'll also see what's still left. This chart shows the cost per preemption. The top group is user interrupts; the bottom is xUI. The red part is <strong>preemption cost</strong>. This includes sending and receiving the interrupt. xUI achieves much lower preemption cost than user interrupts.</p>
+    <p><strong>[CLICK 1 — runtime-cost legend + Aspen-KB gray segments]</strong></p>
     <p>However, even though we reduced the preemption cost, there is still runtime cost here. This includes scheduler traversal, thread switch, and cache contention. On Aspen-KB it's 0.2 to 0.9 microseconds. So the runtime cost is a non-negligible part of the total cost.</p>
-    <p><strong>[CLICK 3 — Aspen-Go bars]</strong></p>
+    <p><strong>[CLICK 2 — Aspen-Go bars]</strong></p>
     <p>Now let's look at Aspen-Go. The Go runtime has much higher overhead because of its complicated scheduler design.</p>
-    <p><strong>[CLICK 4 — bottom box appears]</strong></p>
+    <p><strong>[CLICK 3 — bottom box appears]</strong></p>
     <p>So overall, runtime cost is also a bottleneck. so, hardware and runtime must advance together.</p>
   </aside>
 </section>
@@ -2928,7 +2926,7 @@
     <div class="subtitle">Ongoing work</div>
   </div>
   <aside class="notes">
-    <p>In this work, we try to expose library knowledge to the scheduler. This is ongoing work.</p>
+    <p>In this work, we aim to let the library expose some scheduling hints to the scheduler. This is ongoing work.</p>
   </aside>
 </section>
 
@@ -4726,7 +4724,7 @@ semantic_ctx.request_type = <span style="color: #1b4d8f; font-weight: 600;">FLUS
     { caption: "",
       u: { insts:{ uP1:{t:'prog',s:9,op:0}, uP2:{t:'prog',s:8,op:0}, uP3:{t:'prog',s:5}, uP4:{t:'prog',s:4}, uP5:{t:'prog',s:3}, uP6:{t:'prog',s:2}, uP7:{t:'prog',s:1}, uP8:{t:'prog',s:0} }, binVisible:false, intFlash:true },
       x: { visible:false, insts:{}, intFlash:false } },
-    { caption: "Pipeline flushed.",
+    { caption: "",
       u: {
         insts: {
           uP1:{t:'prog',s:9,op:0}, uP2:{t:'prog',s:8,op:0},
@@ -4740,22 +4738,22 @@ semantic_ctx.request_type = <span style="color: #1b4d8f; font-weight: 600;">FLUS
         binVisible:true, intFlash:true
       },
       x: { visible:false, insts:{}, intFlash:false } },
-    { caption: "Interrupt handler runs — but program work is gone.",
+    { caption: "",
       u: U_POST_FLUSH,
       x: { visible:false, insts:{}, intFlash:false } },
-    { caption: "xUI: same starting state.",
+    { caption: "",
       u: U_POST_FLUSH,
       x: { visible:true, insts:{ xP1:{t:'prog',s:5}, xP2:{t:'prog',s:4}, xP3:{t:'prog',s:3}, xP4:{t:'prog',s:2}, xP5:{t:'prog',s:1}, xP6:{t:'prog',s:0} }, intFlash:false } },
     { caption: "",
       u: U_POST_FLUSH,
       x: { visible:true, insts:{ xP1:{t:'prog',s:5}, xP2:{t:'prog',s:4}, xP3:{t:'prog',s:3}, xP4:{t:'prog',s:2}, xP5:{t:'prog',s:1}, xP6:{t:'prog',s:0} }, intFlash:true } },
-    { caption: "Handler instruction injected at tail. No flush.",
+    { caption: "",
       u: U_POST_FLUSH,
       x: { visible:true, insts:{ xP1:{t:'prog',s:8,op:0}, xP2:{t:'prog',s:5}, xP3:{t:'prog',s:4}, xP4:{t:'prog',s:3}, xP5:{t:'prog',s:2}, xP6:{t:'prog',s:1}, xH1:{t:'handler',s:0} }, intFlash:true } },
     { caption: "",
       u: U_POST_FLUSH,
       x: { visible:true, insts:{ xP1:{t:'prog',s:9,op:0}, xP2:{t:'prog',s:8,op:0}, xP3:{t:'prog',s:5}, xP4:{t:'prog',s:4}, xP5:{t:'prog',s:3}, xP6:{t:'prog',s:2}, xH1:{t:'handler',s:1}, xH2:{t:'handler',s:0} }, intFlash:false } },
-    { caption: "Zero in-flight work lost.",
+    { caption: "",
       u: U_POST_FLUSH,
       x: { visible:true, insts:{ xP1:{t:'prog',s:9,op:0}, xP2:{t:'prog',s:9,op:0}, xP3:{t:'prog',s:8,op:0}, xP4:{t:'prog',s:5}, xP5:{t:'prog',s:4}, xP6:{t:'prog',s:3}, xH1:{t:'handler',s:2}, xH2:{t:'handler',s:1}, xH3:{t:'handler',s:0} }, intFlash:false } }
   ];

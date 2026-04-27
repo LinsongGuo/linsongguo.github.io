@@ -761,6 +761,7 @@
     <div class="wordmark">UC San Diego &middot; CSE</div>
   </div>
   <aside class="notes">
+    <p><strong>00:00</strong></p>
     <p>Good morning, everyone. My name is Linsong. My advised by Amy. Today I'll present my thesis proposal: <strong>Advancing Microsecond-Scale Scheduling — across interfaces, runtime, and hardware.</strong></p>
     <p>I'd also like to thank Professor Voelker, Professor Zhao, and Professor Zhang for serving on my thesis committee. Also thanks everyone coming here.</p>
     <p>Let's get started.</p>
@@ -849,6 +850,7 @@
     </div>
   </div>
   <aside class="notes">
+    <p><strong>00:29</strong></p>
     <p>Over the past ten years, many datacenter workloads have much lower latency targets. We're not talking about milliseconds anymore. Modern systems now often target the <strong>microsecond scale</strong>.</p>
     <p><strong>[CLICK — subtitle appears]</strong></p>
     <p>This means a single task needs to finish very quickly — in microsecond scale. Here are two examples.</p>
@@ -925,6 +927,7 @@
     </div>
   </div>
   <aside class="notes">
+    <p><strong>01:37</strong></p>
     <p>Here are some example workloads at microsecond scale, like key-value stores and short database transactions. Specifically, for Memcached and RocksDB, a simple read can be as fast as one microsecond.</p>
     <p>A Google study also found that 90% of RPC methods in their production could finish in hundreds of microseconds.</p>
   </aside>
@@ -977,6 +980,7 @@
     <p class="fragment fade-in" data-fragment-index="4" style="margin-top:0.6em;font-size:0.75em;font-weight:600;color:var(--warn);text-align:center;">But today's scheduling stacks fall short on all three.</p>
   </div>
   <aside class="notes">
+    <p><strong>02:05</strong></p>
     <p>So in order to meet these microsecond-scale latency targets, the scheduler has to schedule these tasks quickly. We identified three requirements for this.</p>
     <p><strong>[CLICK — card 1 appears]</strong></p>
     <p>First, the scheduler has to <strong>make good scheduling decisions</strong>. When many threads are ready to run, it has to decide which thread to run next, and which core to run it on.</p>
@@ -1036,6 +1040,7 @@
     <p style="margin-top:0.6em;font-size:0.75em;font-weight:600;color:var(--warn);text-align:center;visibility:hidden;">But today's scheduling stacks fall short on all three.</p>
   </div>
   <aside class="notes">
+    <p><strong>03:23</strong></p>
     <p>Let's first zoom in on scheduling decisions. At microsecond scale, today's schedulers could make bad decisions.</p>
   </aside>
 </section>
@@ -1080,6 +1085,7 @@
 </div>
   </div>
   <aside class="notes">
+    <p><strong>03:35</strong></p>
     <p>Bad scheduling decisions can cause performance problems. Head-of-line blocking is one example. Short and long tasks often co-exist within the same system — for instance, transactional and analytical queries in databases.</p>
     <p><strong>[CLICK 1 — main diagram appears]</strong></p>
     <p>Specifically, there is a long task running on the CPU, and short tasks are waiting in the runqueue.</p>
@@ -1135,7 +1141,8 @@
     <p style="margin-top:0.6em;font-size:0.75em;font-weight:600;color:var(--warn);text-align:center;visibility:hidden;">But today's scheduling stacks fall short on all three.</p>
   </div>
   <aside class="notes">
-    <p>Next, let's zoom in on the second requirement. Schedulers need the right information about threads to make good decisions. But there's no interface for applications to share this kind of information with the scheduler.</p>
+    <p><strong>04:19</strong></p>
+    <p>Next, let's zoom in on the second requirement. Schedulers need the right information.</p>
   </aside>
 </section>
 
@@ -1295,8 +1302,9 @@
 
   </div>
   <aside class="notes">
+    <p><strong>04:30</strong></p>
     <p><strong>[CLICK 1 — Scheduler + Application appear]</strong></p>
-    <p>Applications have rich information about their threads. For example, in a web server, some threads handle incoming requests — they are user-facing and latency-critical. There are also some threads that flush logs in the background — they can wait. The application knows their difference.</p>
+    <p>Our insight is applications have rich information about their threads. For example, in a web server, some threads handle incoming requests — they are user-facing and latency-critical. There are also some threads that flush logs in the background — they can wait. The application knows their difference.</p>
     <p>Also, library layer <strong>[CLICK 2 — Library header appears]</strong>  also knows some information.</p>
     <p>For example, in the pthreads library, consider <strong>[CLICK 3 — T3 holder + T4 waiter appear]</strong> one thread holding a mutex  and another thread waiting for it.</p>
     <p><strong>[CLICK 4 — mutex_unlock arrow appears]</strong> When the holder releases the mutex, it wakes up the waiter.</p>
@@ -1355,7 +1363,8 @@
     <p style="margin-top:0.6em;font-size:0.75em;font-weight:600;color:var(--warn);text-align:center;visibility:hidden;">But today's scheduling stacks fall short on all three.</p>
   </div>
   <aside class="notes">
-    <p>Today's schedulers cannot enforce decisions quickly. The bottleneck is from cross-core notification.</p>
+    <p><strong>06:11</strong></p>
+    <p>Next let's zoom into enforce scheduling decisions quickly. The bottleneck is from cross-core notification.</p>
   </aside>
 </section>
 
@@ -1410,6 +1419,7 @@
     </div>
   </div>
   <aside class="notes">
+    <p><strong>06:23</strong></p>
     <p>We need cross-core notification when a scheduling decision could involve a remote core. The common mechanism is the signal.</p>
     <p><strong>[CLICK 1 — Signal bar appears]</strong></p>
     <p>One signal has a high cost — about 2.4 microseconds. This means if we use signals for notification, every notification spends at least 2.4 microseconds of CPU time. But in microsecond-scale workloads, scheduling happens very frequently. So the overhead is too high.</p>
@@ -1450,6 +1460,7 @@
     </div>
   </div>
   <aside class="notes">
+    <p><strong>07:10</strong></p>
     <p>My thesis proposal involves improvement in three layers, each layer addressing one problem we discussed.</p>
     <p>The interfaces layer aims to expose application-level information into schedulers.</p>
     <p>The runtime layer aims to have good scheduling policies.</p>
@@ -1471,7 +1482,7 @@
   </div>
   <p class="center muted" style="margin-top: 0.8em; font-size: 0.9em;">We are here.</p>
   <aside class="notes">
-
+    <p><strong>07:39</strong></p>
   </aside>
 </section>
 
@@ -1487,6 +1498,7 @@
     <div style="font-size: 0.5em; color: #1b4d8f; font-style: italic; font-weight: 700; margin-top: 0.6em; letter-spacing: 0.3px;">USENIX NSDI 2025</div>
   </div>
   <aside class="notes">
+    <p><strong>07:44</strong></p>
     <p>In this work, we designed a runtime that achieves fine-grained preemption.</p>
   </aside>
 </section>
@@ -1525,6 +1537,7 @@
 </div>
   </div>
   <aside class="notes">
+    <p><strong>07:54</strong></p>
     <p>Recall the head-of-line blocking problem we saw earlier. Short tasks wait behind a long task, missing their latency target.</p>
   </aside>
 </section>
@@ -1538,6 +1551,7 @@
   <img src="assets/figures/slide14.png" alt="RocksDB GET and SCAN 99.9% latency vs load under non-preemptive scheduling" style="display:block; margin: 0.5em auto 0; width: 56%; max-height: 60vh; image-rendering: -webkit-optimize-contrast;">
   <p style="font-size: 0.85em; font-weight: 600; text-align: center; margin: 0.5em 0 0;">Short GETs are blocked by long SCANs.</p>
   <aside class="notes">
+    <p><strong>08:08</strong></p>
     <p>Now let me show that head-of-line blocking is a real problem. We use RocksDB as the workload. It has 95% short GET tasks at one microsecond, and 5% long SCAN tasks at 260 microseconds.</p>
     <p>The figure shows tail latency. The x-axis is the load, and the y-axis is the 99.9 percent tail latency. By comparing these two figures, we can see that GET latency increases at much lower load than SCAN. So SCAN requests are blocking GET requests.</p>
   </aside>
@@ -1576,6 +1590,7 @@
 </div>
   </div>
   <aside class="notes">
+    <p><strong>08:49</strong></p>
     <p>The natural solution is preemption.</p>
     <p>Specifically, we can</p>
     <p><strong>[CLICK 1 — preemption indicator appears]</strong></p>
@@ -1645,6 +1660,7 @@
     <div class="s17-focus-label fragment fade-in" data-fragment-index="3" style="left: 17.5%;">&mu;s-scale: our focus</div>
   </div>
   <aside class="notes">
+    <p><strong>09:17</strong></p>
     <p>For example, Linux's minimum preemption quantum is 0.75 milliseconds.</p>
     <p><strong>[CLICK 1 — Golang]</strong></p>
     <p>The Golang runtime is even higher, at 10 milliseconds.</p>
@@ -1739,6 +1755,7 @@
     </div>
   </div>
   <aside class="notes">
+    <p><strong>09:53</strong></p>
     <p>To achieve microsecond-scale preemption, we need the right mechanism. The most common one is signal.</p>
     <p><strong>[CLICK 1 — Signal diagram appears]</strong></p>
     <p>This figures the process of using signal for preemption.</p>
@@ -1788,6 +1805,7 @@
     </div>
   </div>
   <aside class="notes">
+    <p><strong>11:03</strong></p>
     <p>Our research question is: can user interrupts help achieve fine-grained preemption?</p>
     <p><strong>[CLICK 1 — two cards]</strong></p>
     <p>To answer this, we built two user-level schedulers with fine-grained preemption.</p>
@@ -1860,6 +1878,7 @@
 </div>
   </div>
   <aside class="notes">
+    <p><strong>11:40</strong></p>
     <p>This shows the main components of Aspen-KB. We have several application cores, and each core has a run queue managed by the scheduler. Each core also has a receive queue in the network stack.</p>
     <p>There's also a dedicated timer core.</p>
     <p><strong>[CLICK — timer core appears]</strong></p>
@@ -1926,6 +1945,7 @@
 </div>
   </div>
   <aside class="notes">
+    <p><strong>12:15</strong></p>
     <p>Let's first talk about first policy.</p>
     <p>Existing schedulers preempt application cores periodically. For example, the Linux scheduler sends preemption every few milliseconds. However, when preemption is at microsecond scale, periodic preemption becomes expensive. Even though user interrupts have lower overhead, they're still not free.</p>
     <p>Instead, our policy is to</p>
@@ -1995,6 +2015,7 @@
 </div>
   </div>
   <aside class="notes">
+    <p><strong>13:22</strong></p>
     <p>To further reduce head-of-line blocking, another policy is to</p>
     <p><strong>[CLICK 1 — "prioritize short tasks" reveals]</strong></p>
     <p>prioritize short tasks with a two-queue scheduling policy. In addition to the runqueue, we add a</p>
@@ -2066,6 +2087,7 @@
 </div>
   </div>
   <aside class="notes">
+    <p><strong>14:07</strong></p>
     <p>The third policy is to poll network stack on every preemption.</p>
     <p><strong>[CLICK 1 — polling issue reveals]</strong> The existing schedulers don't poll the network stack frequently. They either have a background thread polling new packets, or poll only when the scheduler runqueue is empty. As a result, even with preemption, newly arriving packets stay blocked in the network stack.</p>
     <p>Our solution is to <strong>[CLICK 2 — polling-on-preemption reveals]</strong> poll the network stack on every preemption. So new packets reach the scheduler quickly, not blocked in the network stack.</p>
@@ -2166,6 +2188,7 @@
     </div>
   </div>
   <aside class="notes">
+    <p><strong>15:15</strong></p>
     <p>We also added fine-grained preemption to the popular Go runtime. Our principle is to not overhaul the runtime, but to make minimal and realistic changes. Under this principle, some designs from Aspen-KB can't be applied to Aspen-Go without significant changes.</p>
     <p>This is mainly because of the limations of Go.</p>
   </aside>
@@ -2193,6 +2216,7 @@
     </div>
   </div>
   <aside class="notes">
+    <p><strong>15:43</strong></p>
     <p>The first limitation comes from Go's network stack.</p>
     <p><strong>[CLICK 1 — Go card: "poll only when runqueue empty"]</strong></p>
     <p>Because polling is expensive, Go only polls the network stack when the scheduler runqueue is empty, so new tasks are still blocked in the network stack.</p>
@@ -2224,6 +2248,7 @@
     </div>
   </div>
   <aside class="notes">
+    <p><strong>16:29</strong></p>
     <p>The second limitation is preemption cost.</p>
     <p><strong>[CLICK 1 — F1: KB reveals low context-switch cost]</strong></p>
     <p>Aspen-KB has low context-switch overhead — 0.2 to 0.9 microseconds.</p>
@@ -2241,6 +2266,7 @@
   <p style="font-size: 0.85em; margin: 0;">RocksDB workload: 95% GET task (~1 &mu;s) and 5% SCAN task (~260 &mu;s).</p>
   <img src="assets/figures/slide27.png" alt="RocksDB 99.9% latency vs load: GET (short) and SCAN (long) under Non-preemptive, UINTR, Signals" style="display:block; margin: 0.5em auto 0; width: 63%; max-height: 65vh; image-rendering: -webkit-optimize-contrast;">
   <aside class="notes">
+    <p><strong>17:00</strong></p>
     <p>Now let's go to the evaluation. To evaluate Aspen-KB, we use RocksDB as the workload. It has 95% short GET tasks, and 5% long SCAN tasks. So this is the head-of-line blocking scenario from earlier.</p>
     <p>The figure shows performance. The x-axis is the load, and the y-axis is the tail latency. We compare three setups: non-preemptive, signals, and user interrupts. The left figure is for GET, and the right figure is for SCAN.</p>
     <p>For GET, user interrupts achieve over 50% higher throughput than the non-preemptive setup. But signals do not help, because their overhead is too high.</p>
@@ -2257,6 +2283,7 @@
     <img src="assets/figures/slide28.png" alt="BadgerDB GET 99.9% latency vs load: Aspen-Go User Interrupts vs unmodified Go" style="display:block; margin: 0.5em auto 0; width: 44%; max-height: 60vh; image-rendering: -webkit-optimize-contrast;">
   </div>
   <aside class="notes">
+    <p><strong>17:50</strong></p>
     <p>However, Aspen-Go provides limited gains. We use BadgerDB, which is implemented in Go, as the workload. The workload has 99% GET tasks and 1% SCAN tasks. Again, this is a head-of-line blocking scenario.</p>
     <p>The figure shows GET tail latency. The x-axis is the load, and the y-axis is the tail latency. We compare unmodified Go and Aspen-Go with user interrupts.</p>
     <p>Aspen-Go does provide some improvement over unmodified Go. But the improvement is much smaller compared to Aspen-KB. This is because of the limitations of Go we discussed before.</p>
@@ -2293,6 +2320,7 @@
   </div>
   <p class="s29-punch fragment fade-in" data-fragment-index="3">Runtime design matters.</p>
   <aside class="notes">
+    <p><strong>18:36</strong></p>
     <p>Finally, let's go back to our research question — can user interrupts help achieve fine-grained preemption?</p>
     <p><strong>[CLICK 1 — F1: green card appears]</strong></p>
     <p>Yes, user interrupts do help. Aspen-KB shows fine-grained preemption becomes feasible.</p>
@@ -2316,6 +2344,7 @@
   </div>
   <p class="center muted" style="margin-top: 0.8em; font-size: 0.9em;">We are here.</p>
   <aside class="notes">
+    <p><strong>19:20</strong></p>
     <p>Now let's focus on the hardware layer.</p>
   </aside>
 </section>
@@ -2337,6 +2366,7 @@
     </div>
   </div>
   <aside class="notes">
+    <p><strong>19:28</strong></p>
     <p>In hardware layer, we extend user interrupts to address their limitations.</p>
   </aside>
 </section>
@@ -2429,6 +2459,7 @@
     </g>
   </svg>
   <aside class="notes">
+    <p><strong>19:38</strong></p>
     <p>In the last work, we have shown that user interrupts already help achieve preemption, but they still have some limitations.</p>
     <p>First, when <strong>app cores</strong> are preempted, they spend around 700 cycles handling the interrupt. That's a lot of CPU cycles taken away from the applications.</p>
     <p>As we mentioned, Aspen uses a dedicated timer core <strong>[CLICK — timer-core panel + chart appear]</strong> to fire preemptions.</p>
@@ -2547,6 +2578,7 @@
 
   <div class="s35-caption" id="s35-caption">&nbsp;</div>
   <aside class="notes">
+    <p><strong>20:46</strong></p>
     <p>Now I'll talk about the optimizations of xUI. As we mentioned earlier, the interrupt overhead on app cores is high. The high overhead comes from the pipeline flushing.</p>
     <p>Let me use a processor pipeline to explain this. In the pipeline, the front-end fetches and decodes instructions, and they enter the buffer and start to run. The buffer can hold hundreds of them in flight.</p>
     <p>Each cycle, one instruction <strong>[CLICK 1]</strong> commits and retires, and a new instruction <strong>[CLICK 2]</strong> enters the buffer.</p>
@@ -2709,6 +2741,7 @@
     </g>
   </svg>
   <aside class="notes">
+    <p><strong>22:19</strong></p>
     <p>The second extension is to introduce hardware timer.</p>
     <p>As we mentioned earlier, Aspen has a timer running on one dedicated core.</p>
     <p>The timer core <strong>[CLICK 1]</strong> sends interrupts to app cores and invokes the interrupt handler.</p>
@@ -2774,6 +2807,7 @@
     </div>
   </div>
   <aside class="notes">
+    <p><strong>23:24</strong></p>
     <p>Here we ran the RocksDB experiment again. We use user interrupts and xUI to implement fine-grained preemption. The figures compare thee three setups: non-preemptive, user interrupts, and xUI. The left figure shows GET performance, and the right figure shows SCAN performance. The x-axis is throughput and the y-axis is tail latency.</p>
     <p><strong>[CLICK — benefits box appears]</strong></p>
     <p>We can see in the figure, for GET requests, xUI achieves about ten percent higher throughput than user interrupts. Also, another benefit not shown this figure is that xUI saves one CPU core from timer, which means more CPU resource could be used for running applications.</p>
@@ -2872,6 +2906,7 @@
     </div>
   </div>
   <aside class="notes">
+    <p><strong>24:15</strong></p>
     <p>Finally, let's conclude xUI. The figures shows the cost per preemption.</p>
     <p>The red part is <strong>preemption cost</strong>. This includes sending and receiving the interrupt. xUI achieves much lower preemption cost than user interrupts.</p>
     <p>However, even though we reduced the preemption cost, there is still <strong>[CLICK 1 — runtime-cost]</strong> runtime cost here. This includes scheduler traversal and context switch. We can see from the figure that the gray runtime cost is much larger than the red preemption cost</p>
@@ -2895,6 +2930,7 @@
   </div>
   <p class="center muted" style="margin-top: 0.8em; font-size: 0.9em;">We are here.</p>
   <aside class="notes">
+    <p><strong>25:12</strong></p>
     <p>Now let's focus on the interface layer. The interfaces layer aims to expose application-level information into schedulers. There are two works in the interface layer.</p>
   </aside>
 </section>
@@ -2908,6 +2944,7 @@
     <div class="subtitle">Ongoing work</div>
   </div>
   <aside class="notes">
+    <p><strong>25:29</strong></p>
     <p>The first work aims to let the library expose some scheduling hints to the scheduler. This is ongoing work.</p>
   </aside>
 </section>
@@ -3131,6 +3168,7 @@
 
   </div>
   <aside class="notes">
+    <p><strong>25:43</strong></p>
     <p>We have shown the diagram before. Let me zoom into the library layer. For example, in the pthreads library, when a thread releases a mutex, the waiter is woken up.</p>
     <p>The existing interface for wakeup is called thread_ready, or a similar name. So the library just calls the interface <strong>[CLICK 1 — thread_ready blinks]</strong>  thread_ready(waiter) in this case.</p>
     <p>Once the inferface calls into the scheduler, the scheduler then marks the thread <strong>[CLICK 2 — tid=45 BLOCKED → READY]</strong> as ready.</p>
@@ -3181,6 +3219,7 @@
   </table>
   <p class="s40-punch">All say <span class="hl">READY</span> (and maybe queue position).</p>
   <aside class="notes">
+    <p><strong>26:40</strong></p>
     <p>This is not specific to one system. Linux, Go, and Caladan all have the same problem. Their wakeup APIs all say READY, maybe with queue position. None of them convey urgency or any other information. So the existing interfaces basically say "ready."</p>
   </aside>
 </section>
@@ -3318,6 +3357,7 @@
     </svg>
   </div>
   <aside class="notes">
+    <p><strong>27:04</strong></p>
     <p>Now let's see how this hurt performance at runtime.</p>
     <p>On the left is one mutex. It is held by the thread on the CPU core. At the same time, there are many waiter threads in the waiter queue. All of the threads are waiting for the lock, so we call this lock contention.</p>
     <p>At some point, this thread is releasing  <strong>[CLICK 1 — unlock]</strong> the lock by calling mutex_unlock().</p>
@@ -3452,6 +3492,7 @@
     </div>
   </div>
   <aside class="notes">
+    <p><strong>28:33</strong></p>
     <p>From the previous example, we see urgency is missing. But urgency is not the only information the library know. It knows more than this.</p>
     <p><strong>[CLICK 1 — Placement card]</strong></p>
     <p>For example, placement. Placement says whether the wakee should run in parallel with the waker. For exmaple, if both are very urgent, they should run on separate cores for parallelism.</p>
@@ -3521,6 +3562,7 @@
     <b>Group interface:</b> <span style="font-family: 'SF Mono', Menlo, Consolas, monospace;">thread_wakeup_group(thread_t[], <code class="api sep-pill">PARALLEL</code> or <code class="api any-pill">ANY</code>)</span>
   </p>
   <aside class="notes">
+    <p><strong>29:41</strong></p>
     <p>Based on this insight, we propose a new interface called thread_wakeup. It takes the wakee thread, and two dimensions of information.</p>
     <p>For urgency, we have three levels.</p>
     <p>The difference between HIGH and MEDIUM is migration cost. You know, migrating a thread to another core has overhead, so the only way to wake up one thread immediately is to run it on local core. So if one wakee thread wants to run immediately and cannot tolerate this overhead, it should use HIGH urgency. For example, the waiter in the lock contention case wants to run immeidately.</p>
@@ -3727,6 +3769,7 @@
     </svg>
   </div>
   <aside class="notes">
+    <p><strong>31:05</strong></p>
     <p>Now let me show how the new interface addresses the lock contention. The library uses thread_wakeup with HIGH and SEPARATE.</p>
     <p><strong>[CLICK 1 — HIGH: slot reserved]</strong></p>
     <p>First, the library conveys urgency HIGH to the scheduler. HIGH means waiter 1 must run on this core immediately. But this core is not available at this point, this is still runing the waker thread.</p>
@@ -3785,6 +3828,7 @@ Draft content (modes need updating to urgency+placement enums):
     <img src="assets/figures/slide46.png" alt="Memcached YCSB skewed GET-only results" style="display:block; margin: 0 auto; width: 70%; max-height: 60vh; image-rendering: -webkit-optimize-contrast;">
   </div>
   <aside class="notes">
+    <p><strong>32:51</strong></p>
     <p>Now let me show the evaluation. We use Memcached as our lock-contention workload with GET requests. Each GET request acquires a lock on its key. Keys with the same hash share the same lock. Key accesses follow a skewed Zipfian distribution. In this distribution, the top ten percent of keys receive about eighty percent of GET requests. So this skew creates lock contention because some locks are more popular than others.</p>
     <p>The figure compares the old interface and the new interface. The x-axis is the load, and the y-axis is the tail latency. So our new interface achieves much higher throughput than the old interface.</p>
   </aside>
@@ -3802,6 +3846,7 @@ Draft content (modes need updating to urgency+placement enums):
     </ul>
   </div>
   <aside class="notes">
+    <p><strong>33:45</strong></p>
     <p>This work is an ongoing work. We have already implemented the new interface for mutexes, reader-writer locks, and barriers. Next, we want to apply it to more scenarios, like condition variables and I/O libraries. We also want to extend the interface as new libraries reveal new needs.</p>
   </aside>
 </section>
@@ -3818,6 +3863,7 @@ Draft content (modes need updating to urgency+placement enums):
   </div>
   <p class="center muted" style="margin-top: 0.8em; font-size: 0.9em;">We are here.</p>
   <aside class="notes">
+    <p><strong>34:12</strong></p>
     <p>The interfaces layer has a second proposed work. This is a proposed work. I will introduce it next.</p>
   </aside>
 </section>
@@ -3831,6 +3877,7 @@ Draft content (modes need updating to urgency+placement enums):
     <div class="subtitle">Proposed work</div>
   </div>
   <aside class="notes">
+    <p><strong>34:25</strong></p>
     <p>In this work, I propose to let the application expose its semantics to the scheduler.</p>
   </aside>
 </section>
@@ -4004,6 +4051,7 @@ Draft content (modes need updating to urgency+placement enums):
 
   </div>
   <aside class="notes">
+    <p><strong>34:37</strong></p>
     <p>We have shown this diagram before. In the last project, we mentioned that the library knows some info could be used for scheduling, like urgency.</p>
     <p><strong>[CLICK 1 — urgent-wakeup chip travels through right lane]</strong></p>
     <p>With our new wakeup interface, the library can convey infomration like urgency into the scheduler.</p>
@@ -4108,6 +4156,7 @@ Draft content (modes need updating to urgency+placement enums):
     </g>
   </svg>
   <aside class="notes">
+    <p><strong>35:41</strong></p>
     <p>To answer this question, we propose to make threads non-anonymous.</p>
     <p><strong>[CLICK 1 — LEFT struct]</strong></p>
     <p>Today, the thread struct only has system-level fields, like tid, state, and runtime.</p>
@@ -4239,6 +4288,7 @@ semantic_ctx.request_type = <span style="color: #1b4d8f; font-weight: 600;">FLUS
     </div>
   </div>
   <aside class="notes">
+    <p><strong>37:22</strong></p>
     <p>Based on the non-anonymous threads, our idea called semantic scheduling. Let me explain this using RocksDB as an example. In rocksdb, the flush thread must run in time to avoid write stalls. How can the app give a warning to the scheduler?</p>
     <p><strong>[CLICK 1 — LEFT TODAY]</strong></p>
     <p>Today, the app uses interfaces like sched_setaffinity. The app has to pick a priority and a core. But this is not easy. There is a tradeoff here. Flush must run in time, but user-facing threads and other apps also matter. If the given priority is too high, flush blocks user-facing threads and other apps. If the priority is too low, flush does not run in time, and writes stall. The app has only a narrow view, so it cannot navigate this tradeoff. The given priority and core are just their guess.</p>
@@ -4272,6 +4322,7 @@ semantic_ctx.request_type = <span style="color: #1b4d8f; font-weight: 600;">FLUS
     </div>
   </div>
   <aside class="notes">
+    <p><strong>39:22</strong></p>
     <p>But how do we know each app's semantics? We don't want to do this manually for every app.</p>
     <p><strong>[CLICK 1 — answer 1 fades up]</strong></p>
     <p>Our answer is to use LLMs. The LLM is the first powerful tool that can do this. It reads the app's source code and extracts the app semantics.</p>
@@ -4386,20 +4437,22 @@ semantic_ctx.request_type = <span style="color: #1b4d8f; font-weight: 600;">FLUS
   <span class="fragment" data-s54r-state="5"></span>
   <span class="fragment" data-s54r-state="6"></span>
   <aside class="notes">
+    <p><strong>39:57</strong></p>
     <p>How do we design such a scheduler? The scheduler has two parts: mechanism and policy.</p>
     <p><strong>[CLICK 1 — mechanism appears]</strong></p>
     <p>On the left is the mechanism. The mechanism is the data structures and primitives in the scheduler, like the runqueue, preemption, and migration. They are implemented by us.</p>
     <p><strong>[CLICK 2 — mechanism why-line]</strong></p>
     <p>The mechanism does not rely on app semantics. So it stays fixed across all apps.</p>
-    <p>Basically we separate policy from mechanism. the benefit of doing this is: when a new app comes, only the policy needs to be re-genrated by LLMs and reloaded. The mechanism don't change.</p>
     <p><strong>[CLICK 3 — policy appears]</strong></p>
-    <p>The policy has some hook functions. their signatures are fixed by us, but the bodies are LLM-generated. These functions take app semantics as input and return scheduling decisions. For example, priority returns priority. placement picks a CPU. time_slice returns a duration. Because of thefixed signatures, the policies generated by LLMs are easy to understand and verify.</p>
+    <p>In the policy side, there are some hook functions. their signatures are fixed by us, but the bodies are LLM-generated. These functions take app semantics as input and return scheduling decisions. For example, priority returns priority. placement picks a CPU. time_slice returns a duration.</p>
     <p><strong>[CLICK 4 — policy why-line]</strong></p>
     <p>As we mentioned, the policy relies on app semantics. So it's reloaded when apps change.</p>
+    <p>Basically we separate policy from mechanism. the benefit of doing this is: when a new app comes, only the policy needs to be re-genrated by LLMs and reloaded. The mechanism don't change. We try to reduce the surface where LLMs could control for reliability.</p>
     <p><strong>[CLICK 5 — call policy hooks arrow]</strong></p>
-    <p>Within the scheduler, the mechanism calls the policy hooks to get decisions.</p>
+    <p>Next let's talk about the interaction between mechanism and policy. the mechanism calls the policy hooks to get decisions.</p>
     <p><strong>[CLICK 6 — runqueue example]</strong></p>
     <p>Take the runqueue as an example. When the app updates semantics, the scheduler calls the priority hook. Then the scheduler uses the  priority from the policy to reorder threads.</p>
+    <p>Overall, this is our idea of semantic scheduling. Since this is a proposed work, this work is still very speculative. Then the question is, is this idea really pratical? you know apps and their semantics could be very complicated in real word.</p>
   </aside>
 </section>
 
@@ -4471,7 +4524,8 @@ semantic_ctx.request_type = <span style="color: #1b4d8f; font-weight: 600;">FLUS
     </div>
   </div>
   <aside class="notes">
-    <p>But what if we have many apps? If one app has five semantic fields, then twenty apps would have a hundred semantic fields. So the concern here is will the policy get too complicated? If thay are too complicated, they would hard to understand and verify.</p>
+    <p><strong>42:07</strong></p>
+    <p>If one app has five semantic fields, then twenty apps will have a hundred. We cannot imagine how complicated one policy over a hundred semantics would be. It might be hard to understand and verify.</p>
   </aside>
 </section>
 
@@ -4541,12 +4595,10 @@ semantic_ctx.request_type = <span style="color: #1b4d8f; font-weight: 600;">FLUS
     </div>
   </div>
   <aside class="notes">
-    <p>To answer these two concerns, we used LLMs to analyze twenty apps. The LLM identified the semantics each app uses. The result is encouraging. Six semantics are commonly used across these apps.</p>
-    <p>[For example, every app has thread role, which tells whether a thread is user-facing or background.]</p>
-    <p>There are twenty-one semantics total across all twenty apps. So apps largely share their semantics.</p>
-    <p>[This is not a coincidence. Server applications share common design challenges, like queueing and blocking. They also distinguish latency-sensitive from background work.]</p>
+    <p><strong>42:28</strong></p>
+    <p>However, we found that the semantic space would not be large. We used LLMs to analyze twenty apps. The result is encouraging. Six semantics are commonly used across these apps, and twenty-one semantics in total for these applications.</p>
     <p><strong>[CLICK 1 — INSIGHT box appears]</strong></p>
-    <p>The insight we learned from this is that the semantic space won't be large. Because of this, when LLMs generate policies on this space, these policies are not hard to understand and verify.</p>
+    <p>So our insight is that the semantic space won't be large. Because of this, the policies over the semantic space won't be hard to understand and verify.</p>
   </aside>
 </section>
 
@@ -4586,6 +4638,7 @@ semantic_ctx.request_type = <span style="color: #1b4d8f; font-weight: 600;">FLUS
     </div>
   </div>
   <aside class="notes">
+    <p><strong>43:04</strong></p>
     <p>Now let me talk about open challenges. We have three challenges to make semantic scheduling deployable.</p>
     <p>The first challenge is the runtime channel. How can apps deliver semantic information to the scheduler at runtime?</p>
     <p>The second is coexistence. How should threads with and without semantics co-exist?</p>
@@ -4633,6 +4686,7 @@ semantic_ctx.request_type = <span style="color: #1b4d8f; font-weight: 600;">FLUS
     </div>
   </div>
   <aside class="notes">
+    <p><strong>43:37</strong></p>
     <p>Let me summarize. My thesis proposal aims to advance microsecond-scale scheduling across three layers.</p>
     <p>Thank you. I am happy to take any questions.</p>
   </aside>

@@ -763,7 +763,7 @@
   <aside class="notes">
     <p><strong>00:00</strong></p>
     <p>Good morning, everyone. My name is Linsong. My advised by Amy. Today I'll present my thesis proposal: <strong>Advancing Microsecond-Scale Scheduling — across interfaces, runtime, and hardware.</strong></p>
-    <p>I'd also like to thank Professor Voelker, Professor Zhao, and Professor Zhang for serving on my thesis committee. Also thanks everyone coming here.</p>
+    <p>Thanks everyone coming here.</p>
     <p>Let's get started.</p>
   </aside>
 </section>
@@ -1308,7 +1308,7 @@
     <p>Also, library layer <strong>[CLICK 2 — Library header appears]</strong>  also knows some information.</p>
     <p>For example, in the pthreads library, consider <strong>[CLICK 3 — T3 holder + T4 waiter appear]</strong> one thread holding a mutex  and another thread waiting for it.</p>
     <p><strong>[CLICK 4 — mutex_unlock arrow appears]</strong> When the holder releases the mutex, it wakes up the waiter.</p>
-    <p><strong>[CLICK 5 — urgent wakeup tag appears]</strong> The library knows this wakeup could be urgent. For example, in a contended lock, we should wake the waiter quickly. The waiter has already waited a long time, so we must prioritize it. Otherwise, it might miss its latency target.</p>
+    <p><strong>[CLICK 5 — urgent wakeup tag appears]</strong> The library knows this wakeup could be urgent. For example, in the case of lock contention, the waiter has already waited a long time to for the lock. So we should prioritize it. Otherwise, it might miss its latency target.</p>
     <p>But there are no existing interfaces <strong>[CLICK 6 — API band appears]</strong> that convey this information to the scheduler.</p>
     <p>So this information <strong>[CLICK 7 — Tags fall and get blocked]</strong> never reaches the scheduler.</p>
     <p>So what does the scheduler actually see? <strong>[CLICK 8 — Scheduler fills in]</strong> Just system-level info — for example, thread id and state.</p>
@@ -2327,7 +2327,7 @@
     <p><strong>[CLICK 2 — F2: red card appears]</strong></p>
     <p>But user interrupts alone aren't enough. Aspen-Go shows the improvement is limited if the runtime isn't built for fine-grained preemption.</p>
     <p><strong>[CLICK 3 — F3: punchline appears]</strong></p>
-    <p>So the takeaway is: runtime design matters. Even with the right hardware mechanism, the runtime decides whether the benefit reaches the application. This motivates the next layer of work.</p>
+    <p>So the takeaway is: runtime design matters. Even with the right hardware mechanism, the runtime need to have a low overhead to beneift from new hardwares.</p>
   </aside>
 </section>
 
@@ -2580,16 +2580,21 @@
   <aside class="notes">
     <p><strong>20:46</strong></p>
     <p>Now I'll talk about the optimizations of xUI. As we mentioned earlier, the interrupt overhead on app cores is high. The high overhead comes from the pipeline flushing.</p>
-    <p>Let me use a processor pipeline to explain this. In the pipeline, the front-end fetches and decodes instructions, and they enter the buffer and start to run. The buffer can hold hundreds of them in flight.</p>
-    <p>Each cycle, one instruction <strong>[CLICK 1]</strong> commits and retires, and a new instruction <strong>[CLICK 2]</strong> enters the buffer.</p>
+    <p>Let me use a processor pipeline to explain this. In the pipeline, the front-end fetches and decodes instructions, and they enter the pipeline and start to run. The pipeline can have hundreds of them in flight.</p>
+    <p>Each cycle, one instruction <strong>[CLICK 1]</strong> commits and retires, and a new instruction <strong>[CLICK 2]</strong> enters the pipeline.</p>
     <p>Now an <strong>[CLICK 3 — ⚡ interrupt arrives]</strong> interrupt arrives. Some instructions are still in flight.</p>
     <p>With today's user interrupts, the CPU <strong>[CLICK 4 — FLUSH]</strong> flushes all of instructions.</p>
     <p>Then the handler <strong>[CLICK 5 — handler fills]</strong> runs.</p>
     <p>But the program work is flushed. This is where the high overhead comes from.</p>
     <p>Now let's look at how xUI <strong>[CLICK 6 — xUI pipeline appears]</strong> addresses this.</p>
     <p>At some point, an <strong>[CLICK 7 — ⚡ xUI interrupt]</strong> interrupt arrives.</p>
-    <p>Instead of flushing, we <strong>[CLICK 8 — handler injected at tail]</strong> inject the handler at the tail. <strong>[CLICK]</strong> No flush. Program instructions <strong>[CLICK]</strong>  still commit.</p>
+    <p>Instead of flushing, we <strong>[CLICK 8 — handler injected at tail]</strong> inject the handler into the pipeline. <strong>[CLICK]</strong> No flush. Program instructions <strong>[CLICK]</strong>  still commit.</p>
     <p>Now Handler and program instructions run together. No program instructions are flushed.</p>
+    <p><strong>Q&A — "Isn't this trivial? Just inject the handler alongside program instructions."</strong></p>
+    <p>Yes, at the high level it sounds simple. But making it work on a real out-of-order processor is hard. We solve this with a technique called <strong>tracking</strong>.</p>
+    <p>The main challenge is <strong>misspeculation</strong>. If a branch mispredicts, the normal recovery flushes all younger instructions — and that would also flush our handler. We add a small state machine in the front-end to detect this case and re-inject the handler micro-ops.</p>
+    <p>We also have to track the <strong>return PC</strong> carefully, because the right return target can shift as misspeculations resolve.</p>
+    <p>The hardware cost is small — one bit per ROB entry plus a few logic gates. Full details are in the paper.</p>
   </aside>
 </section>
 
@@ -2751,6 +2756,15 @@
     <p>When a timer fires, it <strong>[CLICK 5]</strong> triggers the interrupt handler locally. There's no cross-core traffic.</p>
     <p><strong>[CLICK 6 — punch line]</strong></p>
     <p>So we don't need a dedicated timer core anymore. Also, there is no limit on the number of cores supported.</p>
+    <p><strong>Q&A — "Did the paper mention the cost of introducing the hardware timer?"</strong></p>
+    <p>Yes, but only qualitatively — the paper doesn't give silicon area or transistor counts.</p>
+    <p>The hardware additions per core are small: one new physical timer, similar to the existing local APIC timer; two new instructions, <strong>set_timer</strong> and <strong>clear_timer</strong>; and a couple of new MSRs to configure the timer and save its state.</p>
+    <p>On the runtime side, the timer is multiplexed across threads. On context switch, the kernel saves and restores the timer state through an MSR. Each interrupt delivery is about 105 cycles, much cheaper than the 400-cycle remote UIPI.</p>
+    <p><strong>Q&A — "How is the hardware timer implemented?"</strong></p>
+    <p>The hardware part is a per-core physical timer counter, separate from the local APIC timer. It uses the system clock for high resolution, similar to modern APIC timers.</p>
+    <p>We expose it through two new instructions, <strong>set_timer</strong> and <strong>clear_timer</strong>, plus two new MSRs. `set_timer` takes a 64-bit cycles value and a one-bit mode for periodic or one-shot.</p>
+    <p>When the timer fires, it invokes the interrupt-delivery microcode directly and jumps to the user-level handler. It skips the UPID lookup and notification processing — that's why delivery is only 105 cycles, versus 400 for UIPI.</p>
+    <p>The kernel multiplexes one physical timer across threads. On context switch, the kernel saves and restores the timer state through an MSR.</p>
   </aside>
 </section>
 
@@ -2908,8 +2922,8 @@
   <aside class="notes">
     <p><strong>24:15</strong></p>
     <p>Finally, let's conclude xUI. The figures shows the cost per preemption.</p>
-    <p>The red part is <strong>preemption cost</strong>. This includes sending and receiving the interrupt. xUI achieves much lower preemption cost than user interrupts.</p>
-    <p>However, even though we reduced the preemption cost, there is still <strong>[CLICK 1 — runtime-cost]</strong> runtime cost here. This includes scheduler traversal and context switch. We can see from the figure that the gray runtime cost is much larger than the red preemption cost</p>
+    <p>The red part is <strong>preemption cost</strong>. This includes sending and receiving the interrupt. xUI achieves much lower preemption cost than user interrupts, but as we saw in the last slide, xUI only improves 10% higher throughput.</p>
+    <p>This is because there is another cost here, which is the <strong>[CLICK 1 — runtime-cost]</strong> runtime cost. This includes scheduler traversal and context switch. We can see from the figure that the gray runtime cost is much larger than the red preemption cost</p>
     <p><strong>[CLICK 2 — Aspen-Go bars]</strong></p>
     <p>The Go runtime has much higher overhead because of its complicated scheduler design.</p>
     <p><strong>[CLICK 3 — bottom box appears]</strong></p>
@@ -3787,6 +3801,8 @@
     <p>So the scheduler sends a user interrupt to preempt the remote core.</p>
     <p><strong>[CLICK 8 — waker lands on remote]</strong></p>
     <p>Finally, the waker runs on the remote CPU. Now these two threads run in parallel. So <strong>SEPARATE</strong> is enforced.</p>
+    <p><strong>Q&A — "Isn't this just priority inheritance?"</strong></p>
+    <p>- Priority inheritance boosts the lock holder's priority while it runs the critical section, so it finishes faster. - Our work boosts the waiter's wakeup priority after the lock is released, so the scheduler runs it ahead of unrelated background threads.</p>
   </aside>
 </section>
 
@@ -4596,7 +4612,7 @@ semantic_ctx.request_type = <span style="color: #1b4d8f; font-weight: 600;">FLUS
   </div>
   <aside class="notes">
     <p><strong>42:28</strong></p>
-    <p>However, we found that the semantic space would not be large. We used LLMs to analyze twenty apps. The result is encouraging. Six semantics are commonly used across these apps, and twenty-one semantics in total for these applications.</p>
+    <p>Fortunately, we found that the semantic space would not be large. We used LLMs to analyze twenty apps. The result is encouraging. Six semantics are commonly used across these apps, and twenty-one semantics in total for these applications.</p>
     <p><strong>[CLICK 1 — INSIGHT box appears]</strong></p>
     <p>So our insight is that the semantic space won't be large. Because of this, the policies over the semantic space won't be hard to understand and verify.</p>
   </aside>

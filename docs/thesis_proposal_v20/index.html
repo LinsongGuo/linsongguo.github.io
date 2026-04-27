@@ -3564,31 +3564,31 @@
   <h2 class="slide-title">Example: <code class="api">thread_wakeup(waiter, HIGH, SEPARATE)</code></h2>
   <div style="position: relative; height: 1.3em; font-size: 0.8em; color: #1f2a40; font-weight: 500; margin: 0.3em 0 0.4em; text-align: center;">
     <span class="fragment fade-out" data-fragment-index="1" style="position: absolute; left: 0; right: 0;">
-      the library calls the new interface with intent <code class="api">HIGH × SEPARATE</code>.
+      the library calls the new interface with intent <code class="api">HIGH</code> and <code class="api">SEPARATE</code>
     </span>
     <span class="fragment current-visible" data-fragment-index="1" style="position: absolute; left: 0; right: 0;">
-      <code class="api">HIGH</code>: waiter 1 must run on the current core now &mdash; but waker still running.
+      <code class="api">HIGH</code>: waiter 1 must run on the current core now
     </span>
     <span class="fragment current-visible" data-fragment-index="2" style="position: absolute; left: 0; right: 0;">
-      waker forced to yield.
+      <code class="api">HIGH</code>: waiter 1 must run on the current core now
     </span>
     <span class="fragment current-visible" data-fragment-index="3" style="position: absolute; left: 0; right: 0;">
-      waiter 1 takes the core.
+      <code class="api">HIGH</code>: waiter 1 must run on the current core now
     </span>
     <span class="fragment current-visible" data-fragment-index="4" style="position: absolute; left: 0; right: 0;">
-      fast lock handoff, contention relieved.
+      fast lock handoff, lock contention relieved
     </span>
     <span class="fragment current-visible" data-fragment-index="5" style="position: absolute; left: 0; right: 0;">
       but wait &mdash; how does the scheduler handle the waker?
     </span>
     <span class="fragment current-visible" data-fragment-index="6" style="position: absolute; left: 0; right: 0;">
-      the scheduler picks a remote core.
+      <code class="api">SEPARATE</code>: scheduler picks a different core for the waker
     </span>
     <span class="fragment current-visible" data-fragment-index="7" style="position: absolute; left: 0; right: 0;">
-      <code class="api">SEPARATE</code>: waker takes the remote core by preemption.
+      <code class="api">SEPARATE</code>: scheduler picks a different core for the waker
     </span>
     <span class="fragment current-visible" data-fragment-index="8" style="position: absolute; left: 0; right: 0;">
-      waker lands on remote; both run in parallel.
+      <code class="api">SEPARATE</code>: two threads run in parallel
     </span>
   </div>
   <div class="lock-diagram">
@@ -3683,7 +3683,7 @@
         <g class="fragment fade-in" data-fragment-index="1">
           <g class="fragment fade-out" data-fragment-index="3">
             <rect x="516" y="53" width="68" height="54" rx="7" fill="none" stroke="#c0392b" stroke-width="2" stroke-dasharray="4,3"/>
-            <text x="550" y="125" font-size="11" fill="#c0392b" font-weight="700" font-style="italic" text-anchor="middle">waiter 1 reserved</text>
+            <text x="550" y="125" font-size="15" fill="#c0392b" font-weight="700" font-style="italic" text-anchor="middle">waiter 1 reserved</text>
           </g>
         </g>
         <!-- waiter 1 in CPU running slot (F3+) — waiter 1 takes the core; keep orange to preserve identity from waiter queue; 😊 smile contrasts slide 41 F3's 😥 -->
@@ -3711,17 +3711,12 @@
         <rect x="522" y="270" width="56" height="42" rx="7" fill="#ffe066" stroke="#1f2a40" stroke-width="2"/>
       </g>
 
-      <!-- ============= REMOTE CORE PLACEHOLDER (F0-F5) — "(other CPU cores)" dimmed box spans full height to align with runqueue tail ============= -->
-      <g class="fragment fade-out" data-fragment-index="6">
-        <rect x="820" y="20" width="160" height="430" fill="#f0f2f5" stroke="#9aa3b1" stroke-width="1.5" stroke-dasharray="6,4" rx="8" opacity="0.6"/>
-        <text x="900" y="240" font-size="15" fill="#6c7385" font-style="italic" text-anchor="middle">(other CPU cores)</text>
-      </g>
 
       <!-- ============= REMOTE CORE (F6+) — appears first with T running (F6), then T preempted + UIPI (F7), then waker arrives (F8) ============= -->
       <g class="fragment fade-in" data-fragment-index="6">
         <image href="assets/pptx/s16/sp_337.png" x="820" y="0" width="160" height="160"/>
         <!-- "a remote core" caption under the chip -->
-        <text x="900" y="158" font-size="14" font-weight="700" fill="#1f2a40" text-anchor="middle">a remote core</text>
+        <text x="900" y="158" font-size="17" font-weight="500" fill="#1f2a40" text-anchor="middle">a remote core</text>
         <!-- Running thread on remote (F6 only — fades out when UIPI fires at F7) -->
         <g class="fragment fade-out" data-fragment-index="7">
           <rect x="872" y="59" width="56" height="42" rx="7" fill="#ffe066" stroke="#1f2a40" stroke-width="2"/>
@@ -3745,9 +3740,9 @@
         <rect x="872" y="320" width="56" height="42" rx="7" fill="#ffe066" stroke="#1f2a40" stroke-width="2"/>
       </g>
 
-      <!-- UIPI: custom curved arrow in soft blue-gray (F7+), replacing the darker sp_18.png.
+      <!-- UIPI: custom curved arrow in soft blue-gray (F7 only — disappears at F8).
            Span: chip-to-chip. -->
-      <g class="fragment fade-in" data-fragment-index="7">
+      <g class="fragment current-visible" data-fragment-index="7">
         <path d="M 590 80 Q 725 -10, 860 80" fill="none" stroke="url(#uipi-grad-s47)" stroke-width="3" stroke-linecap="round" marker-end="url(#arr-uipi-s47)"/>
         <!-- STOP sign above the middle of the arrow (centered at x=688) -->
         <image href="assets/pptx/s17/sp_17.png" x="709" y="-2" width="32" height="32"/>
@@ -3862,7 +3857,7 @@ Draft content (modes need updating to urgency+placement enums):
     <div class="subtitle">Proposed work</div>
   </div>
   <aside class="notes">
-    <p>Previously, the new library interface let the library expose info to the scheduler. Now we let the application expose its semantics to the scheduler. This is a proposed work.</p>
+    <p>In this work, we let the application expose its semantics to the scheduler. This is a proposed work.</p>
   </aside>
 </section>
 
